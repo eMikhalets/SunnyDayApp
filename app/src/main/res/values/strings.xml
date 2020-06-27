@@ -1,14 +1,15 @@
 <resources>
     <string name="app_name">SunnyDayApp</string>
-    <string name="title_activity_main2">MainActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <!-- WEATHER LAYOUT -->
+    <string name="weather.text.temp">%d°</string>
+    <string name="weather.text.forecast_16_days">Прогноз на 16 дней</string>
+    <!-- WEATHER FORECAST -->
+    <string name="weather.forecast.icon_desc">weather icon</string>
+    <string name="weather.forecast.date_and_desc">%s • %s</string>
+    <string name="weather.forecast.temp">%d° / %d°</string>
+    <!-- WEATHER DETAILS -->
+    <string name="weather.details.label">Подробности</string>
+    <!-- WEATHER DETAILS -->
+    <string name="weather.rights.label">Приложение использует данные Weatherbit.io</string>
 </resources>

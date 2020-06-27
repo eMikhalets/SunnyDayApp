@@ -1,6 +1,7 @@
 package com.emikhalets.sunnydayapp.network
 
-import com.emikhalets.sunnydayapp.network.pojo.AppResponse
+import com.emikhalets.sunnydayapp.network.pojo.CurrentResponse
+import com.emikhalets.sunnydayapp.network.pojo.ForecastResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
@@ -10,8 +11,17 @@ interface ApiService {
 
     @GET("current")
     fun getCurrentWeather(
+        @Query("key") key: String,
         @Query("lang") language: String,
         @Query("units") units: String,
         @Query("city") cityName: String
-    ): Deferred<Response<AppResponse>>
+    ): Deferred<Response<CurrentResponse>>
+
+    @GET("forecast/daily")
+    fun getForecast(
+        @Query("key") key: String,
+        @Query("lang") language: String,
+        @Query("units") units: String,
+        @Query("city") cityName: String
+    ): Deferred<Response<ForecastResponse>>
 }

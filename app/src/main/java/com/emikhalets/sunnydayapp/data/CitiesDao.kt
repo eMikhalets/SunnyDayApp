@@ -12,11 +12,11 @@ interface CitiesDao {
     fun getCityById(id: Int): City
 
     @Insert
-    suspend fun insert()
+    suspend fun insert(city: City)
 
     @Update
-    suspend fun update()
+    suspend fun update(city: City)
 
     @Delete
-    suspend fun delete()
+    suspend fun delete(city: City)
 }
