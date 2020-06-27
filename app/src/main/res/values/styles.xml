@@ -1,19 +1,60 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <!-- TextViews -->
+    <style name="Text">
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="TextCurrentDetailsValue">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/current.value_text_size</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="TextCurrentDetailsDesc">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">@dimen/current.value_text_size</item>
+    </style>
+
+    <style name="TextBold">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:fontFamily">@font/roboto_black</item>
+    </style>
+
+    <style name="Text.ExtraLarge" parent="Text">
+        <item name="android:textSize">@dimen/text_size.xx_large</item>
+        <item name="android:fontFamily">@font/roboto_black</item>
+    </style>
+
+    <style name="Text.Large" parent="Text">
+        <item name="android:textSize">@dimen/text_size.large</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+    </style>
+
+    <style name="Text.Middle" parent="Text">
+        <item name="android:textSize">@dimen/text_size.middle</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+    </style>
+
+    <style name="Text.Small" parent="Text">
+        <item name="android:textSize">@dimen/text_size.small</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+    </style>
+
+    <style name="Text.ExtraSmall" parent="Text">
+        <item name="android:textSize">@dimen/text_size.x_small</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+    </style>
+
+    <!-- Layouts -->
+    <style name="Layout">
+        <item name="android:padding">@dimen/app.layout.padding</item>
+    </style>
 
 </resources>

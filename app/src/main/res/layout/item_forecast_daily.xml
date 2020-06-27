@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="@dimen/app.list_item.padding">
 
     <ImageView
         android:id="@+id/image_weather"
@@ -14,29 +14,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/weather.forecast.icon_desc" />
+        android:contentDescription="@string/forecast_item.image_desc" />
 
     <TextView
         android:id="@+id/text_date_desc"
+        style="@style/Text.Middle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="16dp"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_size.medium"
+        android:layout_marginStart="@dimen/forecast_item.margin_start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_weather"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Понедельник" />
+        tools:text="2020-06-27" />
 
     <TextView
         android:id="@+id/text_temp"
+        style="@style/Text.Middle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_size.medium"
+        android:layout_marginEnd="@dimen/forecast_item.margin_end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
