@@ -7,6 +7,9 @@
     <dimen name="icon_size.middle">50dp</dimen>
     <dimen name="icon_size.small">30dp</dimen>
 
+    <dimen name="card_size.current.middle">100dp</dimen>
+    <dimen name="card_corner.current">8dp</dimen>
+
     <dimen name="text_size.x_small">12sp</dimen>
     <dimen name="text_size.small">14sp</dimen>
     <dimen name="text_size.middle">18sp</dimen>

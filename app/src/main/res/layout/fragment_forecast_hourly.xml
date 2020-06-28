@@ -5,8 +5,8 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_forecast_hourly"
+        android:id="@+id/list_forecast_hourly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/item_forecast_hourly" />
+        tools:listitem="@layout/item_weather_forecast_hourly" />
 </ScrollView>

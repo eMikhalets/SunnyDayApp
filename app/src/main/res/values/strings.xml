@@ -15,104 +15,67 @@
     <string name="weather.text.wind">%d км/ч</string>
     <string name="weather.text.details">Подробнее</string>
     <string name="weather.text.forecast_16_days">Прогноз на 16 дней</string>
+    <string name="weather.text.forecast_hourly">Прогноз по часам</string>
     <string name="weather.text.rights">Приложение использует данные weatherbit.io</string>
 
-    <!-- WEATHER FORECAST DAILY ITEM -->
+    <!-- WEATHER FORECAST ITEM LAYOUT -->
     <string name="forecast_item.image_desc">Иконка погоды</string>
     <string name="forecast_item.text.date">%s</string>
     <string name="forecast_item.text.temp">%d° / %d°</string>
 
-    <!-- WEATHER FORECAST HOURLY ITEM -->
-    <string name="forecast_hourly.text.time">%.2f °C</string>
-    <string name="forecast_hourly.image.desc">Иконка погоды</string>
-    <string name="forecast_hourly.text.temp_max">%.2f °C</string>
-    <string name="forecast_hourly.text.temp_min">%.2f °C</string>
-    <string name="forecast_hourly.text.desc">%s</string>
-    <string name="forecast_hourly.image.pressure">Иконка давления</string>
-    <string name="forecast_hourly.text.pressure">%.2f кПа</string>
-    <string name="forecast_hourly.image.wind">Иконка ветра</string>
-    <string name="forecast_hourly.text.wind_speed">%.2f км/ч</string>
-    <string name="forecast_hourly.text.wind_dir">%s</string>
+    <!-- FORECAST DAILY ITEM LAYOUT -->
+    <string name="forecast_daily.image_desc">Иконка погоды</string>
+    <string name="forecast_daily.text.date">%s</string>
+    <string name="forecast_daily.text.temp">%d° / %d°</string>
 
-    <!-- WEATHER FORECAST -->
-    <string name="forecast.text.temp">%.2f °С</string>
-    <string name="forecast.text.desc">%s</string>
-    <string name="forecast.image.desc">Иконка погоды</string>
-    <string name="forecast.image.sunrise">Иконка рассвета</string>
-    <string name="forecast.text.sunrise">%s</string>
-    <string name="forecast.text.sunrise_desc">рассвет</string>
-    <string name="forecast.image.sunset">Иконка заката</string>
-    <string name="forecast.text.sunset">%s</string>
-    <string name="forecast.text.sunset_desc">закат</string>
-    <string name="forecast.image.pressure">Иконка давления</string>
-    <string name="forecast.text.pressure">%.2f кПа</string>
-    <string name="forecast.text.pressure_desc">давление</string>
-    <string name="forecast.image.wind_speed">Иконка скорости ветра</string>
-    <string name="forecast.text.wind_speed">%.2f км/ч</string>
-    <string name="forecast.text.wind_speed_desc">скорость ветра</string>
-    <string name="forecast.image.wind_dir">Иконка направления ветра</string>
-    <string name="forecast.text.wind_dir">%s</string>
-    <string name="forecast.text.wind_dir_desc">направление ветра</string>
-    <string name="forecast.image.feelslike">Иконка температуры</string>
-    <string name="forecast.text.feelslike">%.2f °С</string>
-    <string name="forecast.text.feelslike_desc">чувствуется как</string>
-    <string name="forecast.image.humidity">Иконка влажности</string>
-    <string name="forecast.text.humidity">%d %%</string>
-    <string name="forecast.text.humidity_desc">влажность</string>
-    <string name="forecast.image.clouds">Иконка облачности</string>
-    <string name="forecast.text.clouds">%d %%</string>
-    <string name="forecast.text.clouds_desc">облачность</string>
-    <string name="forecast.image.visibility">Иконка видимости</string>
-    <string name="forecast.text.visibility">%d км</string>
-    <string name="forecast.text.visibility_desc">видимость</string>
-    <string name="forecast.image.precip">Иконка осадков</string>
-    <string name="forecast.text.precip">%d мм/ч</string>
-    <string name="forecast.text.precip_desc">осадки</string>
-    <string name="forecast.image.snowfall">Иконка снегопада</string>
-    <string name="forecast.text.snowfall">%d мм/ч</string>
-    <string name="forecast.text.snowfall_desc">снегопад</string>
-    <string name="forecast.image.uv">Иконка индекса uv</string>
-    <string name="forecast.text.uv">%.2f</string>
-    <string name="forecast.text.uv_desc">индекс UV</string>
+    <!-- FORECAST HOURLY ITEM LAYOUT -->
+    <string name="forecast_hourly.image_desc">Иконка погоды</string>
+    <string name="forecast_hourly.text.date">%s</string>
+    <string name="forecast_hourly.text.temp">%d° / %d°</string>
 
-    <!-- WEATHER CURRENT -->
+    <!-- WEATHER CURRENT LAYOUT -->
     <string name="current.text.temp">%.2f °С</string>
     <string name="current.text.desc">%s</string>
+    <string name="current.text.forecast_hourly"><u>Почасовой\nпрогноз</u></string>
     <string name="current.image.desc">Иконка погоды</string>
     <string name="current.image.sunrise">Иконка рассвета</string>
     <string name="current.text.sunrise">%s</string>
-    <string name="current.text.sunrise_desc">рассвет</string>
+    <string name="current.text.sunrise_desc">Рассвет</string>
     <string name="current.image.sunset">Иконка заката</string>
     <string name="current.text.sunset">%s</string>
-    <string name="current.text.sunset_desc">закат</string>
+    <string name="current.text.sunset_desc">Закат</string>
     <string name="current.image.pressure">Иконка давления</string>
     <string name="current.text.pressure">%.2f кПа</string>
-    <string name="current.text.pressure_desc">давление</string>
+    <string name="current.text.pressure_desc">Давление</string>
     <string name="current.image.wind_speed">Иконка скорости ветра</string>
     <string name="current.text.wind_speed">%.2f км/ч</string>
-    <string name="current.text.wind_speed_desc">скорость ветра</string>
+    <string name="current.text.wind_speed_desc">Ветер</string>
     <string name="current.image.wind_dir">Иконка направления ветра</string>
     <string name="current.text.wind_dir">%s</string>
-    <string name="current.text.wind_dir_desc">направление ветра</string>
+    <string name="current.text.wind_dir_desc">Направление</string>
     <string name="current.image.feelslike">Иконка температуры</string>
     <string name="current.text.feelslike">%.2f °С</string>
-    <string name="current.text.feelslike_desc">чувствуется как</string>
+    <string name="current.text.feelslike_desc">Ощущается</string>
     <string name="current.image.humidity">Иконка влажности</string>
     <string name="current.text.humidity">%d %%</string>
-    <string name="current.text.humidity_desc">влажность</string>
+    <string name="current.text.humidity_desc">Влажность</string>
     <string name="current.image.clouds">Иконка облачности</string>
     <string name="current.text.clouds">%d %%</string>
-    <string name="current.text.clouds_desc">облачность</string>
+    <string name="current.text.clouds_desc">Облачность</string>
     <string name="current.image.visibility">Иконка видимости</string>
     <string name="current.text.visibility">%d км</string>
-    <string name="current.text.visibility_desc">видимость</string>
+    <string name="current.text.visibility_desc">Видимость</string>
     <string name="current.image.precip">Иконка осадков</string>
     <string name="current.text.precip">%d мм/ч</string>
-    <string name="current.text.precip_desc">осадки</string>
+    <string name="current.text.precip_desc">Осадки</string>
     <string name="current.image.snowfall">Иконка снегопада</string>
     <string name="current.text.snowfall">%d мм/ч</string>
-    <string name="current.text.snowfall_desc">снегопад</string>
-    <string name="current.image.uv">Иконка индекса uv</string>
+    <string name="current.text.snowfall_desc">Снегопад</string>
+    <string name="current.text.uv_icon">UV</string>
     <string name="current.text.uv">%.2f</string>
-    <string name="current.text.uv_desc">индекс UV</string>
+    <string name="current.text.uv_desc">Индекс UV</string>
+
+    <!-- CITY LIST LAYOUT -->
+    <string name="city_list.hint.city">Город</string>
+    <string name="city_list.btn.search">Поиск</string>
 </resources>

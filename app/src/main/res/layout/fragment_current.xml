@@ -13,15 +13,41 @@
         android:background="#fff">
 
         <TextView
+            android:id="@+id/text_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:fontFamily="@font/roboto_light"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/text_day_of_week"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="12 Янв 2020" />
+
+        <TextView
+            android:id="@+id/text_day_of_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_light"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/text_date"
+            app:layout_constraintStart_toStartOf="@+id/text_date"
+            app:layout_constraintTop_toBottomOf="@+id/text_date"
+            tools:text="Вторник" />
+
+        <TextView
             android:id="@+id/text_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
             android:fontFamily="@font/roboto_black"
             android:textColor="@android:color/black"
             android:textSize="40sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/text_desc"
+            app:layout_constraintEnd_toStartOf="@+id/image_weather_icon"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="30 °С" />
 
@@ -29,11 +55,11 @@
             android:id="@+id/text_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:fontFamily="@font/roboto_light"
             android:textColor="@android:color/black"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/text_temp"
             app:layout_constraintStart_toStartOf="@+id/text_temp"
             app:layout_constraintTop_toBottomOf="@+id/text_temp"
             tools:text="Солнечно" />
@@ -42,7 +68,7 @@
             android:id="@+id/image_weather_icon"
             android:layout_width="@dimen/icon_size.middle"
             android:layout_height="@dimen/icon_size.middle"
-            android:layout_marginEnd="32dp"
+            android:layout_margin="32dp"
             android:contentDescription="@string/current.image.desc"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,372 +79,470 @@
     <View
         android:id="@+id/view_divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/black" />
+        android:layout_height="2dp"
+        android:background="#70000000" />
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_full_data"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#eee">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_full_data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#eee">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_sunrise"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintBottom_toTopOf="@+id/card_wind_speed"
+            app:layout_constraintEnd_toStartOf="@+id/card_sunset"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/image_sunrise"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginStart="@dimen/current.details_margin"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.sunrise"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_sunrise"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/image_sunrise"
-                app:layout_constraintStart_toEndOf="@+id/image_sunrise"
-                app:layout_constraintTop_toTopOf="@+id/image_sunrise"
-                tools:text="00:47" />
+                <ImageView
+                    android:id="@+id/image_sunrise"
+                    android:layout_width="@dimen/icon_size.small"
+                    android:layout_height="@dimen/icon_size.small"
+                    android:contentDescription="@string/current.image.sunrise"
+                    tools:srcCompat="@drawable/ic_sunrise" />
 
-            <TextView
-                android:id="@+id/text_sunrise_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/current.details_margin"
-                android:text="@string/current.text.sunrise_desc"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/text_sunrise" />
+                <TextView
+                    android:id="@+id/text_sunrise_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.sunrise_desc" />
 
-            <ImageView
-                android:id="@+id/image_sunset"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.sunset"
-                app:layout_constraintStart_toStartOf="@+id/image_sunrise"
-                app:layout_constraintTop_toBottomOf="@+id/image_sunrise"
-                tools:srcCompat="@tools:sample/avatars" />
+                <TextView
+                    android:id="@+id/text_sunrise"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="00:47" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/text_sunset"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/image_sunset"
-                app:layout_constraintStart_toStartOf="@+id/text_sunrise"
-                app:layout_constraintTop_toTopOf="@+id/image_sunset"
-                tools:text="18:47" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_sunset"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintEnd_toStartOf="@+id/card_pressure"
+            app:layout_constraintStart_toEndOf="@+id/card_sunrise"
+            app:layout_constraintTop_toTopOf="@+id/card_sunrise">
 
-            <TextView
-                android:id="@+id/text_sunset_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/current.text.sunset_desc"
-                app:layout_constraintEnd_toEndOf="@+id/text_sunrise_desc"
-                app:layout_constraintTop_toTopOf="@+id/text_sunset" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/image_pressure"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.pressure"
-                app:layout_constraintStart_toStartOf="@+id/image_sunset"
-                app:layout_constraintTop_toBottomOf="@+id/image_sunset"
-                tools:srcCompat="@tools:sample/avatars" />
+                <ImageView
+                    android:id="@+id/image_sunset"
+                    android:layout_width="@dimen/icon_size.small"
+                    android:layout_height="@dimen/icon_size.small"
+                    android:contentDescription="@string/current.image.sunset"
+                    tools:srcCompat="@drawable/ic_sunset" />
 
-            <TextView
-                android:id="@+id/text_pressure"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/image_pressure"
-                app:layout_constraintStart_toStartOf="@+id/text_sunset"
-                app:layout_constraintTop_toTopOf="@+id/image_pressure"
-                tools:text="1013 кПа" />
+                <TextView
+                    android:id="@+id/text_sunset_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.sunset_desc" />
 
-            <TextView
-                android:id="@+id/text_pressure_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/current.text.pressure_desc"
-                app:layout_constraintEnd_toEndOf="@+id/text_sunset_desc"
-                app:layout_constraintTop_toTopOf="@+id/text_pressure" />
+                <TextView
+                    android:id="@+id/text_sunset"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="18:47" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/image_wind_speed"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.wind_speed"
-                app:layout_constraintStart_toStartOf="@+id/image_pressure"
-                app:layout_constraintTop_toBottomOf="@+id/image_pressure"
-                tools:srcCompat="@tools:sample/avatars" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_pressure"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/card_sunset"
+            app:layout_constraintTop_toTopOf="@+id/card_sunrise">
 
-            <TextView
-                android:id="@+id/text_wind_speed"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/image_wind_speed"
-                app:layout_constraintStart_toStartOf="@+id/text_pressure"
-                app:layout_constraintTop_toTopOf="@+id/image_wind_speed"
-                tools:text="12 км/ч" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_wind_speed_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/current.text.wind_speed_desc"
-                app:layout_constraintEnd_toEndOf="@+id/text_pressure_desc"
-                app:layout_constraintTop_toTopOf="@+id/text_wind_speed" />
+                <ImageView
+                    android:id="@+id/image_pressure"
+                    android:layout_width="@dimen/icon_size.small"
+                    android:layout_height="@dimen/icon_size.small"
+                    android:contentDescription="@string/current.image.pressure"
+                    tools:srcCompat="@drawable/ic_pressure" />
 
-            <ImageView
-                android:id="@+id/image_wind_dir"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.wind_dir"
-                app:layout_constraintStart_toStartOf="@+id/image_wind_speed"
-                app:layout_constraintTop_toBottomOf="@+id/image_wind_speed"
-                tools:srcCompat="@tools:sample/avatars" />
+                <TextView
+                    android:id="@+id/text_pressure_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.pressure_desc" />
 
-            <TextView
-                android:id="@+id/text_wind_dir"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/image_wind_dir"
-                app:layout_constraintStart_toStartOf="@+id/text_wind_speed"
-                app:layout_constraintTop_toTopOf="@+id/image_wind_dir"
-                tools:text="Северо-запад" />
+                <TextView
+                    android:id="@+id/text_pressure"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="1013 кПа" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/text_wind_dir_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/current.text.wind_dir_desc"
-                app:layout_constraintEnd_toEndOf="@+id/text_wind_speed_desc"
-                app:layout_constraintTop_toTopOf="@+id/text_wind_dir" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_wind_speed"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintBottom_toTopOf="@+id/card_humidity"
+            app:layout_constraintStart_toStartOf="@+id/card_sunrise"
+            app:layout_constraintTop_toBottomOf="@+id/card_sunrise">
 
-            <ImageView
-                android:id="@+id/image_feelslike"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.feelslike"
-                app:layout_constraintStart_toStartOf="@+id/image_wind_dir"
-                app:layout_constraintTop_toBottomOf="@+id/image_wind_dir"
-                tools:srcCompat="@tools:sample/avatars" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_feelslike"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/image_feelslike"
-                app:layout_constraintStart_toStartOf="@+id/text_wind_dir"
-                app:layout_constraintTop_toTopOf="@+id/image_feelslike"
-                tools:text="40 °С" />
+                <ImageView
+                    android:id="@+id/image_wind_speed"
+                    android:layout_width="@dimen/icon_size.small"
+                    android:layout_height="@dimen/icon_size.small"
+                    android:contentDescription="@string/current.image.wind_speed"
+                    tools:srcCompat="@drawable/ic_wind" />
 
-            <TextView
-                android:id="@+id/text_feelslike_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/current.text.feelslike_desc"
-                app:layout_constraintEnd_toEndOf="@+id/text_wind_dir_desc"
-                app:layout_constraintTop_toTopOf="@+id/text_feelslike" />
+                <TextView
+                    android:id="@+id/text_wind_speed_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.wind_speed_desc" />
 
-            <ImageView
-                android:id="@+id/image_humidity"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.humidity"
-                app:layout_constraintStart_toStartOf="@+id/image_feelslike"
-                app:layout_constraintTop_toBottomOf="@+id/image_feelslike"
-                tools:srcCompat="@tools:sample/avatars" />
+                <TextView
+                    android:id="@+id/text_wind_speed"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="12 км/ч" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/text_humidity"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/image_humidity"
-                app:layout_constraintStart_toStartOf="@+id/text_feelslike"
-                app:layout_constraintTop_toTopOf="@+id/image_humidity"
-                tools:text="50 %" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_wind_dir"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintStart_toStartOf="@+id/card_sunset"
+            app:layout_constraintTop_toTopOf="@+id/card_wind_speed">
 
-            <TextView
-                android:id="@+id/text_humidity_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/current.text.humidity_desc"
-                app:layout_constraintEnd_toEndOf="@+id/text_feelslike_desc"
-                app:layout_constraintTop_toTopOf="@+id/text_humidity" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/image_clouds"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.sunset"
-                app:layout_constraintStart_toStartOf="@+id/image_humidity"
-                app:layout_constraintTop_toBottomOf="@+id/image_humidity"
-                tools:srcCompat="@tools:sample/avatars" />
+                <ImageView
+                    android:id="@+id/image_wind_dir"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="@dimen/icon_size.small"
+                    android:layout_height="@dimen/icon_size.small"
+                    android:contentDescription="@string/current.image.wind_dir"
+                    tools:srcCompat="@drawable/ic_wind_dir" />
 
-            <TextView
-                android:id="@+id/text_clouds"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/image_clouds"
-                app:layout_constraintStart_toStartOf="@+id/text_humidity"
-                app:layout_constraintTop_toTopOf="@+id/image_clouds"
-                tools:text="50 %" />
+                <TextView
+                    android:id="@+id/text_wind_dir_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.wind_dir_desc" />
 
-            <TextView
-                android:id="@+id/text_clouds_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/current.text.pressure_desc"
-                app:layout_constraintEnd_toEndOf="@+id/text_humidity_desc"
-                app:layout_constraintTop_toTopOf="@+id/text_clouds" />
+                <TextView
+                    android:id="@+id/text_wind_dir"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="СЗ" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/image_visibility"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.visibility"
-                app:layout_constraintStart_toStartOf="@+id/image_clouds"
-                app:layout_constraintTop_toBottomOf="@+id/image_clouds"
-                tools:srcCompat="@tools:sample/avatars" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_feelslike"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintStart_toStartOf="@+id/card_pressure"
+            app:layout_constraintTop_toTopOf="@+id/card_wind_dir">
 
-            <TextView
-                android:id="@+id/text_visibility"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/image_visibility"
-                app:layout_constraintStart_toStartOf="@+id/text_clouds"
-                app:layout_constraintTop_toTopOf="@+id/image_visibility"
-                tools:text="5 км" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_visibility_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/current.text.visibility_desc"
-                app:layout_constraintEnd_toEndOf="@+id/text_clouds_desc"
-                app:layout_constraintTop_toTopOf="@+id/text_visibility" />
+                <ImageView
+                    android:id="@+id/image_feelslike"
+                    android:layout_width="@dimen/icon_size.small"
+                    android:layout_height="@dimen/icon_size.small"
+                    android:contentDescription="@string/current.image.feelslike"
+                    tools:srcCompat="@drawable/ic_temp" />
 
-            <ImageView
-                android:id="@+id/image_precip"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.precip"
-                app:layout_constraintStart_toStartOf="@+id/image_visibility"
-                app:layout_constraintTop_toBottomOf="@+id/image_visibility"
-                tools:srcCompat="@tools:sample/avatars" />
+                <TextView
+                    android:id="@+id/text_feelslike_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.feelslike_desc" />
 
-            <TextView
-                android:id="@+id/text_precip"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/image_precip"
-                app:layout_constraintStart_toStartOf="@+id/text_visibility"
-                app:layout_constraintTop_toTopOf="@+id/image_precip"
-                tools:text="0 мм/ч" />
+                <TextView
+                    android:id="@+id/text_feelslike"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="40 °С" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/text_precip_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/current.text.precip_desc"
-                app:layout_constraintEnd_toEndOf="@+id/text_visibility_desc"
-                app:layout_constraintTop_toTopOf="@+id/text_precip" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_humidity"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintBottom_toTopOf="@+id/card_precip"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@+id/card_wind_speed"
+            app:layout_constraintTop_toBottomOf="@+id/card_wind_speed">
 
-            <ImageView
-                android:id="@+id/image_snowfall"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.snowfall"
-                app:layout_constraintStart_toStartOf="@+id/image_precip"
-                app:layout_constraintTop_toBottomOf="@+id/image_precip"
-                tools:srcCompat="@tools:sample/avatars" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_snowfall"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/image_snowfall"
-                app:layout_constraintStart_toStartOf="@+id/text_precip"
-                app:layout_constraintTop_toTopOf="@+id/image_snowfall"
-                tools:text="0 мм/ч" />
+                <ImageView
+                    android:id="@+id/image_humidity"
+                    android:layout_width="@dimen/icon_size.small"
+                    android:layout_height="@dimen/icon_size.small"
+                    android:contentDescription="@string/current.image.humidity"
+                    tools:srcCompat="@drawable/ic_humidity" />
 
-            <TextView
-                android:id="@+id/text_snowfall_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/current.text.snowfall_desc"
-                app:layout_constraintEnd_toEndOf="@+id/text_precip_desc"
-                app:layout_constraintTop_toTopOf="@+id/text_snowfall" />
+                <TextView
+                    android:id="@+id/text_humidity_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.humidity_desc" />
 
-            <ImageView
-                android:id="@+id/image_uv"
-                android:layout_width="@dimen/icon_size.small"
-                android:layout_height="@dimen/icon_size.small"
-                android:layout_marginTop="@dimen/current.details_margin"
-                android:layout_marginBottom="@dimen/current.details_margin"
-                android:contentDescription="@string/current.image.uv"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/image_snowfall"
-                app:layout_constraintTop_toBottomOf="@+id/image_snowfall"
-                tools:srcCompat="@tools:sample/avatars" />
+                <TextView
+                    android:id="@+id/text_humidity"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="50 %" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/text_uv"
-                style="@style/TextCurrentDetailsValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/image_uv"
-                app:layout_constraintStart_toStartOf="@+id/text_snowfall"
-                app:layout_constraintTop_toTopOf="@+id/image_uv"
-                tools:text="2.4564" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_clouds"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintStart_toStartOf="@+id/card_wind_dir"
+            app:layout_constraintTop_toTopOf="@+id/card_humidity">
 
-            <TextView
-                android:id="@+id/text_uv_desc"
-                style="@style/TextCurrentDetailsDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/current.text.uv_desc"
-                app:layout_constraintEnd_toEndOf="@+id/text_snowfall_desc"
-                app:layout_constraintTop_toTopOf="@+id/text_uv" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_clouds"
+                    android:layout_width="@dimen/icon_size.small"
+                    android:layout_height="@dimen/icon_size.small"
+                    android:contentDescription="@string/current.image.clouds"
+                    tools:srcCompat="@drawable/ic_cloud" />
+
+                <TextView
+                    android:id="@+id/text_clouds_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.clouds_desc" />
+
+                <TextView
+                    android:id="@+id/text_clouds"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="50 %" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_visibility"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintStart_toStartOf="@+id/card_feelslike"
+            app:layout_constraintTop_toTopOf="@+id/card_clouds">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_visibility"
+                    android:layout_width="@dimen/icon_size.small"
+                    android:layout_height="@dimen/icon_size.small"
+                    android:contentDescription="@string/current.image.visibility"
+                    tools:srcCompat="@drawable/ic_visibility" />
+
+                <TextView
+                    android:id="@+id/text_visibility_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.visibility_desc" />
+
+                <TextView
+                    android:id="@+id/text_visibility"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="5 км" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_precip"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@+id/card_humidity"
+            app:layout_constraintTop_toBottomOf="@+id/card_humidity">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_precip"
+                    android:layout_width="@dimen/icon_size.small"
+                    android:layout_height="@dimen/icon_size.small"
+                    android:contentDescription="@string/current.image.precip"
+                    tools:srcCompat="@drawable/ic_precip" />
+
+                <TextView
+                    android:id="@+id/text_precip_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.precip_desc" />
+
+                <TextView
+                    android:id="@+id/text_precip"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="0 мм/ч" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_snowfall"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintStart_toStartOf="@+id/card_clouds"
+            app:layout_constraintTop_toTopOf="@+id/card_precip">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_snowfall"
+                    android:layout_width="@dimen/icon_size.small"
+                    android:layout_height="@dimen/icon_size.small"
+                    android:contentDescription="@string/current.image.snowfall"
+                    tools:srcCompat="@drawable/ic_snowfall" />
+
+                <TextView
+                    android:id="@+id/text_snowfall_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.snowfall_desc" />
+
+                <TextView
+                    android:id="@+id/text_snowfall"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="0 мм/ч" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_uv"
+            style="@style/CardCurrentDetails"
+            android:layout_width="@dimen/card_size.current.middle"
+            android:layout_height="@dimen/card_size.current.middle"
+            app:layout_constraintStart_toStartOf="@+id/card_visibility"
+            app:layout_constraintTop_toTopOf="@+id/card_snowfall">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_uv_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:text="@string/current.text.uv_icon"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/text_uv_desc"
+                    style="@style/TextCurrentDetailsDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current.text.uv_desc" />
+
+                <TextView
+                    android:id="@+id/text_uv"
+                    style="@style/TextCurrentDetailsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="2.4564" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
