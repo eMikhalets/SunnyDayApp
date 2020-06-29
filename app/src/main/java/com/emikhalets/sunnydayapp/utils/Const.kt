@@ -1,8 +1,5 @@
 package com.emikhalets.sunnydayapp.utils
 
-import androidx.viewbinding.BuildConfig
-import com.emikhalets.sunnydayapp.BuildConfig.API_KEY
-
 /**
  * Constants used throughout the app
  */

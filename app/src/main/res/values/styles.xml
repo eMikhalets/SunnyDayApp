@@ -6,68 +6,91 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- TextViews -->
-    <style name="Text">
+    <!-- List items style -->
+    <style name="ListItemTextView">
+        <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
-    <!-- CURRENT -->
-    <style name="CardCurrentDetails">
+    <!-- Forecast list items style -->
+    <style name="ForecastListItemTextViewMain">
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ForecastListItemTextViewTemp">
+        <item name="android:fontFamily">@font/roboto_black</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="ForecastListItemTextViewInfo">
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginStart">8dp</item>
+    </style>
+
+    <!-- Weather -->
+    <style name="WeatherCard">
         <item name="cardBackgroundColor">#fff</item>
         <item name="cardCornerRadius">8dp</item>
     </style>
 
-    <style name="TextCurrentDetailsValue">
+    <style name="WeatherTextViewMain">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="WeatherTextViewTemp">
+        <item name="android:fontFamily">@font/roboto_black</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">70sp</item>
+    </style>
+
+    <style name="WeatherTextViewSecondary">
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Current -->
+    <style name="CurrentCard">
+        <item name="cardBackgroundColor">#fff</item>
+        <item name="cardCornerRadius">8dp</item>
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+    </style>
+
+    <style name="CurrentTextViewMain">
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="CurrentTextViewTemp">
+        <item name="android:fontFamily">@font/roboto_black</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="CurrentTextViewValue">
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="TextCurrentDetailsDesc">
+    <style name="CurrentTextViewDesc">
         <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textSize">14sp</item>
         <item name="android:gravity">center</item>
     </style>
 
-    <!-- WEATHER -->
-    <style name="CardWeather">
-        <item name="cardBackgroundColor">#fff</item>
-        <item name="cardCornerRadius">8dp</item>
-    </style>
-
-    <style name="TextBold">
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:fontFamily">@font/roboto_black</item>
-    </style>
-
-    <style name="Text.ExtraLarge" parent="Text">
-        <item name="android:textSize">@dimen/text_size.xx_large</item>
-        <item name="android:fontFamily">@font/roboto_black</item>
-    </style>
-
-    <style name="Text.Large" parent="Text">
-        <item name="android:textSize">@dimen/text_size.large</item>
-        <item name="android:fontFamily">@font/roboto_light</item>
-    </style>
-
-    <style name="Text.Middle" parent="Text">
-        <item name="android:textSize">@dimen/text_size.middle</item>
-        <item name="android:fontFamily">@font/roboto_light</item>
-    </style>
-
-    <style name="Text.Small" parent="Text">
-        <item name="android:textSize">@dimen/text_size.small</item>
-        <item name="android:fontFamily">@font/roboto_light</item>
-    </style>
-
-    <style name="Text.ExtraSmall" parent="Text">
-        <item name="android:textSize">@dimen/text_size.x_small</item>
-        <item name="android:fontFamily">@font/roboto_light</item>
-    </style>
-
-    <!-- Layouts -->
-    <style name="Layout">
-        <item name="android:padding">@dimen/app.layout.padding</item>
+    <style name="CurrentImageDesc">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
     </style>
 
 </resources>

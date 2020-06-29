@@ -7,30 +7,28 @@
     android:scrollbars="none">
 
     <LinearLayout
-        style="@style/Layout"
         android:layout_width="match_parent"
         android:background="#eee"
         android:orientation="vertical"
-        android:padding="8dp"
+        android:padding="@dimen/layout.padding"
         android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_weather"
-            style="@style/CardWeather"
+            style="@style/WeatherCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="8dp">
+                android:padding="@dimen/layout.padding">
 
                 <TextView
                     android:id="@+id/text_city"
-                    style="@style/Text.Large"
+                    style="@style/WeatherTextViewMain"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/weather.top_indent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -38,7 +36,7 @@
 
                 <TextView
                     android:id="@+id/text_temp"
-                    style="@style/Text.ExtraLarge"
+                    style="@style/WeatherTextViewTemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +46,7 @@
 
                 <TextView
                     android:id="@+id/text_temp_units"
-                    style="@style/Text.ExtraLarge"
+                    style="@style/WeatherTextViewTemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/weather.text.temp_units"
@@ -58,9 +56,9 @@
 
                 <ImageView
                     android:id="@+id/image_weather_icon"
-                    android:layout_width="@dimen/icon_size.middle"
-                    android:layout_height="@dimen/icon_size.middle"
-                    android:contentDescription="@string/weather.image.desc"
+                    android:layout_width="@dimen/icon_size.50"
+                    android:layout_height="@dimen/icon_size.50"
+                    android:contentDescription="@string/image.description"
                     app:layout_constraintEnd_toStartOf="@+id/text_weather_desc"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
@@ -69,10 +67,10 @@
 
                 <TextView
                     android:id="@+id/text_weather_desc"
-                    style="@style/Text.Large"
+                    style="@style/WeatherTextViewMain"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/weather.margin_start"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintBottom_toBottomOf="@+id/image_weather_icon"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/image_weather_icon"
@@ -81,10 +79,10 @@
 
                 <ImageView
                     android:id="@+id/image_pressure"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:layout_marginTop="@dimen/weather.margin_top"
-                    android:contentDescription="@string/weather.image.humidity"
+                    android:layout_width="@dimen/icon_size.30"
+                    android:layout_height="@dimen/icon_size.30"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/image.humidity"
                     app:layout_constraintEnd_toStartOf="@+id/text_pressure"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
@@ -93,10 +91,10 @@
 
                 <TextView
                     android:id="@+id/text_pressure"
-                    style="@style/Text.Small"
+                    style="@style/WeatherTextViewSecondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/weather.margin_start"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintBottom_toBottomOf="@+id/image_pressure"
                     app:layout_constraintEnd_toStartOf="@+id/image_humidity"
                     app:layout_constraintStart_toEndOf="@+id/image_pressure"
@@ -105,10 +103,10 @@
 
                 <ImageView
                     android:id="@+id/image_humidity"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:layout_marginStart="@dimen/weather.details_margin_start"
-                    android:contentDescription="@string/weather.image.pressure"
+                    android:layout_width="@dimen/icon_size.30"
+                    android:layout_height="@dimen/icon_size.30"
+                    android:layout_marginStart="24dp"
+                    android:contentDescription="@string/image.pressure"
                     app:layout_constraintBottom_toBottomOf="@+id/image_pressure"
                     app:layout_constraintEnd_toStartOf="@+id/text_humidity"
                     app:layout_constraintStart_toEndOf="@+id/text_pressure"
@@ -116,10 +114,10 @@
 
                 <TextView
                     android:id="@+id/text_humidity"
-                    style="@style/Text.Small"
+                    style="@style/WeatherTextViewSecondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/weather.margin_start"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintBottom_toBottomOf="@+id/text_pressure"
                     app:layout_constraintEnd_toStartOf="@+id/image_wind"
                     app:layout_constraintStart_toEndOf="@+id/image_humidity"
@@ -127,10 +125,10 @@
 
                 <ImageView
                     android:id="@+id/image_wind"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:layout_marginStart="@dimen/weather.details_margin_start"
-                    android:contentDescription="@string/weather.image.wind"
+                    android:layout_width="@dimen/icon_size.30"
+                    android:layout_height="@dimen/icon_size.30"
+                    android:layout_marginStart="24dp"
+                    android:contentDescription="@string/image.wind_speed"
                     app:layout_constraintBottom_toBottomOf="@+id/image_humidity"
                     app:layout_constraintEnd_toStartOf="@+id/text_wind"
                     app:layout_constraintStart_toEndOf="@+id/text_humidity"
@@ -138,10 +136,10 @@
 
                 <TextView
                     android:id="@+id/text_wind"
-                    style="@style/Text.Small"
+                    style="@style/WeatherTextViewSecondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/weather.margin_start"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintBottom_toBottomOf="@+id/text_humidity"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/image_wind"
@@ -149,10 +147,10 @@
 
                 <TextView
                     android:id="@+id/text_details"
-                    style="@style/Text.Small"
+                    style="@style/WeatherTextViewSecondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/weather.margin_top"
+                    android:layout_marginTop="8dp"
                     android:text="@string/weather.text.details"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/image_wind" />
@@ -161,7 +159,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_forecast_daily"
-            style="@style/CardWeather"
+            style="@style/WeatherCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp">
@@ -170,11 +168,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="@dimen/layout.padding">
 
                 <TextView
                     android:id="@+id/text_forecast_daily_label"
-                    style="@style/Text.Small"
+                    style="@style/WeatherTextViewSecondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -193,7 +191,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_forecast_hourly"
-            style="@style/CardWeather"
+            style="@style/WeatherCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp">
@@ -202,11 +200,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="@dimen/layout.padding">
 
                 <TextView
                     android:id="@+id/text_forecast_hourly_label"
-                    style="@style/Text.Small"
+                    style="@style/WeatherTextViewSecondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -224,18 +222,18 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_rights"
-            style="@style/CardWeather"
+            style="@style/WeatherCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp">
 
             <TextView
                 android:id="@+id/text_rights"
-                style="@style/Text.Small"
+                style="@style/WeatherTextViewSecondary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="@dimen/layout.padding"
                 android:text="@string/weather.text.rights"
                 app:layout_constraintTop_toBottomOf="@+id/view_divider_bottom" />
         </androidx.cardview.widget.CardView>

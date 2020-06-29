@@ -10,16 +10,15 @@
         android:id="@+id/layout_short_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/layout.padding"
         android:background="#fff">
 
         <TextView
             android:id="@+id/text_date"
+            style="@style/CurrentTextViewMain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:fontFamily="@font/roboto_light"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:layout_marginStart="24dp"
             app:layout_constraintBottom_toTopOf="@+id/text_day_of_week"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,11 +26,9 @@
 
         <TextView
             android:id="@+id/text_day_of_week"
+            style="@style/CurrentTextViewMain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_light"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/text_date"
             app:layout_constraintStart_toStartOf="@+id/text_date"
@@ -40,12 +37,10 @@
 
         <TextView
             android:id="@+id/text_temp"
+            style="@style/CurrentTextViewTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
-            android:fontFamily="@font/roboto_black"
-            android:textColor="@android:color/black"
-            android:textSize="40sp"
             app:layout_constraintBottom_toTopOf="@+id/text_desc"
             app:layout_constraintEnd_toStartOf="@+id/image_weather_icon"
             app:layout_constraintTop_toTopOf="parent"
@@ -53,11 +48,9 @@
 
         <TextView
             android:id="@+id/text_desc"
+            style="@style/CurrentTextViewMain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_light"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/text_temp"
             app:layout_constraintStart_toStartOf="@+id/text_temp"
@@ -66,10 +59,10 @@
 
         <ImageView
             android:id="@+id/image_weather_icon"
-            android:layout_width="@dimen/icon_size.middle"
-            android:layout_height="@dimen/icon_size.middle"
-            android:layout_margin="32dp"
-            android:contentDescription="@string/current.image.desc"
+            android:layout_width="@dimen/icon_size.70"
+            android:layout_height="@dimen/icon_size.70"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/image.description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -90,9 +83,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_sunrise"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintBottom_toTopOf="@+id/card_wind_speed"
             app:layout_constraintEnd_toStartOf="@+id/card_sunset"
             app:layout_constraintHorizontal_chainStyle="spread"
@@ -107,21 +98,20 @@
 
                 <ImageView
                     android:id="@+id/image_sunrise"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:contentDescription="@string/current.image.sunrise"
+                    style="@style/CurrentImageDesc"
+                    android:contentDescription="@string/image.sunrise"
                     tools:srcCompat="@drawable/ic_sunrise" />
 
                 <TextView
                     android:id="@+id/text_sunrise_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.sunrise_desc" />
 
                 <TextView
                     android:id="@+id/text_sunrise"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="00:47" />
@@ -130,9 +120,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_sunset"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintEnd_toStartOf="@+id/card_pressure"
             app:layout_constraintStart_toEndOf="@+id/card_sunrise"
             app:layout_constraintTop_toTopOf="@+id/card_sunrise">
@@ -145,21 +133,20 @@
 
                 <ImageView
                     android:id="@+id/image_sunset"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:contentDescription="@string/current.image.sunset"
+                    style="@style/CurrentImageDesc"
+                    android:contentDescription="@string/image.sunset"
                     tools:srcCompat="@drawable/ic_sunset" />
 
                 <TextView
                     android:id="@+id/text_sunset_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.sunset_desc" />
 
                 <TextView
                     android:id="@+id/text_sunset"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="18:47" />
@@ -168,9 +155,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_pressure"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/card_sunset"
             app:layout_constraintTop_toTopOf="@+id/card_sunrise">
@@ -183,21 +168,20 @@
 
                 <ImageView
                     android:id="@+id/image_pressure"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:contentDescription="@string/current.image.pressure"
+                    style="@style/CurrentImageDesc"
+                    android:contentDescription="@string/image.pressure"
                     tools:srcCompat="@drawable/ic_pressure" />
 
                 <TextView
                     android:id="@+id/text_pressure_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.pressure_desc" />
 
                 <TextView
                     android:id="@+id/text_pressure"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="1013 кПа" />
@@ -206,9 +190,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_wind_speed"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintBottom_toTopOf="@+id/card_humidity"
             app:layout_constraintStart_toStartOf="@+id/card_sunrise"
             app:layout_constraintTop_toBottomOf="@+id/card_sunrise">
@@ -221,21 +203,20 @@
 
                 <ImageView
                     android:id="@+id/image_wind_speed"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:contentDescription="@string/current.image.wind_speed"
+                    style="@style/CurrentImageDesc"
+                    android:contentDescription="@string/image.wind_speed"
                     tools:srcCompat="@drawable/ic_wind" />
 
                 <TextView
                     android:id="@+id/text_wind_speed_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.wind_speed_desc" />
 
                 <TextView
                     android:id="@+id/text_wind_speed"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="12 км/ч" />
@@ -244,9 +225,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_wind_dir"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintStart_toStartOf="@+id/card_sunset"
             app:layout_constraintTop_toTopOf="@+id/card_wind_speed">
 
@@ -258,22 +237,20 @@
 
                 <ImageView
                     android:id="@+id/image_wind_dir"
-                    style="@style/TextCurrentDetailsValue"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:contentDescription="@string/current.image.wind_dir"
+                    style="@style/CurrentImageDesc"
+                    android:contentDescription="@string/image.wind_dir"
                     tools:srcCompat="@drawable/ic_wind_dir" />
 
                 <TextView
                     android:id="@+id/text_wind_dir_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.wind_dir_desc" />
 
                 <TextView
                     android:id="@+id/text_wind_dir"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="СЗ" />
@@ -282,9 +259,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_feelslike"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintStart_toStartOf="@+id/card_pressure"
             app:layout_constraintTop_toTopOf="@+id/card_wind_dir">
 
@@ -296,21 +271,20 @@
 
                 <ImageView
                     android:id="@+id/image_feelslike"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:contentDescription="@string/current.image.feelslike"
+                    style="@style/CurrentImageDesc"
+                    android:contentDescription="@string/image.feelslike"
                     tools:srcCompat="@drawable/ic_temp" />
 
                 <TextView
                     android:id="@+id/text_feelslike_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.feelslike_desc" />
 
                 <TextView
                     android:id="@+id/text_feelslike"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="40 °С" />
@@ -319,9 +293,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_humidity"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintBottom_toTopOf="@+id/card_precip"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="@+id/card_wind_speed"
@@ -335,21 +307,20 @@
 
                 <ImageView
                     android:id="@+id/image_humidity"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:contentDescription="@string/current.image.humidity"
+                    style="@style/CurrentImageDesc"
+                    android:contentDescription="@string/image.humidity"
                     tools:srcCompat="@drawable/ic_humidity" />
 
                 <TextView
                     android:id="@+id/text_humidity_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.humidity_desc" />
 
                 <TextView
                     android:id="@+id/text_humidity"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="50 %" />
@@ -358,9 +329,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_clouds"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintStart_toStartOf="@+id/card_wind_dir"
             app:layout_constraintTop_toTopOf="@+id/card_humidity">
 
@@ -372,21 +341,20 @@
 
                 <ImageView
                     android:id="@+id/image_clouds"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:contentDescription="@string/current.image.clouds"
+                    style="@style/CurrentImageDesc"
+                    android:contentDescription="@string/image.clouds"
                     tools:srcCompat="@drawable/ic_cloud" />
 
                 <TextView
                     android:id="@+id/text_clouds_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.clouds_desc" />
 
                 <TextView
                     android:id="@+id/text_clouds"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="50 %" />
@@ -395,9 +363,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_visibility"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintStart_toStartOf="@+id/card_feelslike"
             app:layout_constraintTop_toTopOf="@+id/card_clouds">
 
@@ -409,21 +375,20 @@
 
                 <ImageView
                     android:id="@+id/image_visibility"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:contentDescription="@string/current.image.visibility"
+                    style="@style/CurrentImageDesc"
+                    android:contentDescription="@string/image.visibility"
                     tools:srcCompat="@drawable/ic_visibility" />
 
                 <TextView
                     android:id="@+id/text_visibility_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.visibility_desc" />
 
                 <TextView
                     android:id="@+id/text_visibility"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="5 км" />
@@ -432,9 +397,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_precip"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="@+id/card_humidity"
@@ -448,21 +411,20 @@
 
                 <ImageView
                     android:id="@+id/image_precip"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:contentDescription="@string/current.image.precip"
+                    style="@style/CurrentImageDesc"
+                    android:contentDescription="@string/image.precip"
                     tools:srcCompat="@drawable/ic_precip" />
 
                 <TextView
                     android:id="@+id/text_precip_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.precip_desc" />
 
                 <TextView
                     android:id="@+id/text_precip"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="0 мм/ч" />
@@ -471,9 +433,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_snowfall"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintStart_toStartOf="@+id/card_clouds"
             app:layout_constraintTop_toTopOf="@+id/card_precip">
 
@@ -485,21 +445,20 @@
 
                 <ImageView
                     android:id="@+id/image_snowfall"
-                    android:layout_width="@dimen/icon_size.small"
-                    android:layout_height="@dimen/icon_size.small"
-                    android:contentDescription="@string/current.image.snowfall"
+                    style="@style/CurrentImageDesc"
+                    android:contentDescription="@string/image.snowfall"
                     tools:srcCompat="@drawable/ic_snowfall" />
 
                 <TextView
                     android:id="@+id/text_snowfall_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.snowfall_desc" />
 
                 <TextView
                     android:id="@+id/text_snowfall"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="0 мм/ч" />
@@ -508,9 +467,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_uv"
-            style="@style/CardCurrentDetails"
-            android:layout_width="@dimen/card_size.current.middle"
-            android:layout_height="@dimen/card_size.current.middle"
+            style="@style/CurrentCard"
             app:layout_constraintStart_toStartOf="@+id/card_visibility"
             app:layout_constraintTop_toTopOf="@+id/card_snowfall">
 
@@ -531,14 +488,14 @@
 
                 <TextView
                     android:id="@+id/text_uv_desc"
-                    style="@style/TextCurrentDetailsDesc"
+                    style="@style/CurrentTextViewDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/current.text.uv_desc" />
 
                 <TextView
                     android:id="@+id/text_uv"
-                    style="@style/TextCurrentDetailsValue"
+                    style="@style/CurrentTextViewValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="2.4564" />

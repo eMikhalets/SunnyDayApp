@@ -1,32 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="app.layout.padding">8dp</dimen>
-    <dimen name="app.list_item.padding">16dp</dimen>
+    <dimen name="layout.padding">8dp</dimen>
+    <dimen name="item_list.padding">16dp</dimen>
 
-    <dimen name="icon_size.large">70dp</dimen>
-    <dimen name="icon_size.middle">50dp</dimen>
-    <dimen name="icon_size.small">30dp</dimen>
-
-    <dimen name="card_size.current.middle">100dp</dimen>
-    <dimen name="card_corner.current">8dp</dimen>
-
-    <dimen name="text_size.x_small">12sp</dimen>
-    <dimen name="text_size.small">14sp</dimen>
-    <dimen name="text_size.middle">18sp</dimen>
-    <dimen name="text_size.large">24sp</dimen>
-    <dimen name="text_size.x_large">40sp</dimen>
-    <dimen name="text_size.xx_large">72sp</dimen>
-
-    <!-- Weather layout -->
-    <dimen name="weather.top_indent">16dp</dimen>
-    <dimen name="weather.margin_start">8dp</dimen>
-    <dimen name="weather.margin_top">16dp</dimen>
-    <dimen name="weather.details_margin_start">24dp</dimen>
-    <!-- Weather forecast list item -->
-    <dimen name="forecast_item.margin_start">16dp</dimen>
-    <dimen name="forecast_item.margin_end">16dp</dimen>
-
-    <dimen name="current.details_margin">32dp</dimen>
-    <dimen name="current.value_text_size">14sp</dimen>
-    <dimen name="current.desc_text_size">14sp</dimen>
+    <dimen name="icon_size.20">20dp</dimen>
+    <dimen name="icon_size.30">30dp</dimen>
+    <dimen name="icon_size.50">50dp</dimen>
+    <dimen name="icon_size.70">70dp</dimen>
 </resources>

@@ -10,4 +10,38 @@
         android:name="com.emikhalets.sunnydayapp.ViewPagerFragment"
         android:label="ViewPagerFragment"
         tools:layout="@layout/fragment_pager" />
+
+    <fragment
+        android:id="@+id/weatherFragment"
+        android:name="com.emikhalets.sunnydayapp.WeatherFragment"
+        android:label="WeatherFragment"
+        tools:layout="@layout/fragment_weather" >
+        <action
+            android:id="@+id/action_weatherFragment_to_currentFragment"
+            app:destination="@id/currentFragment" />
+        <action
+            android:id="@+id/action_weatherFragment_to_forecastDailyFragment"
+            app:destination="@id/forecastDailyFragment" />
+        <action
+            android:id="@+id/action_weatherFragment_to_forecastHourlyFragment"
+            app:destination="@id/forecastHourlyFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/currentFragment"
+        android:name="com.emikhalets.sunnydayapp.CurrentFragment"
+        android:label="CurrentFragment"
+        tools:layout="@layout/fragment_current" />
+
+    <fragment
+        android:id="@+id/forecastDailyFragment"
+        android:name="com.emikhalets.sunnydayapp.ForecastDailyFragment"
+        android:label="ForecastDailyFragment"
+        tools:layout="@layout/fragment_forecast_daily" />
+
+    <fragment
+        android:id="@+id/forecastHourlyFragment"
+        android:name="com.emikhalets.sunnydayapp.ForecastHourlyFragment"
+        android:label="ForecastHourlyFragment"
+        tools:layout="@layout/fragment_forecast_hourly" />
 </navigation>

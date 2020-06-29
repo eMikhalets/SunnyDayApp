@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/item_list.padding">
+
+    <TextView
+        android:id="@+id/text_date"
+        style="@style/ForecastListItemTextViewMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="12 Янв" />
+
+    <ImageView
+        android:id="@+id/image_weather"
+        android:layout_width="@dimen/icon_size.50"
+        android:layout_height="@dimen/icon_size.50"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/image.description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text_date"
+        app:layout_constraintStart_toStartOf="@+id/text_date"
+        app:layout_constraintTop_toBottomOf="@+id/text_date"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/text_desc"
+        style="@style/ForecastListItemTextViewMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        app:layout_constraintStart_toEndOf="@+id/text_date"
+        app:layout_constraintTop_toTopOf="@+id/text_date"
+        tools:text="Солнечно" />
+
+    <TextView
+        android:id="@+id/text_temp"
+        style="@style/ForecastListItemTextViewTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text_desc"
+        app:layout_constraintStart_toStartOf="@+id/text_desc"
+        app:layout_constraintTop_toBottomOf="@+id/text_desc"
+        tools:text="30 °С\n15 °С" />
+
+    <TextView
+        android:id="@+id/text_feelslike_label"
+        style="@style/ForecastListItemTextViewMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_desc"
+        app:layout_constraintTop_toTopOf="@+id/text_desc"
+        tools:text="Ощущается как 20 °С" />
+
+    <ImageView
+        android:id="@+id/image_pressure"
+        android:layout_width="@dimen/icon_size.20"
+        android:layout_height="@dimen/icon_size.20"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/image.pressure"
+        app:layout_constraintStart_toStartOf="@+id/text_feelslike_label"
+        app:layout_constraintTop_toBottomOf="@+id/text_feelslike_label"
+        tools:srcCompat="@drawable/ic_pressure" />
+
+    <TextView
+        android:id="@+id/text_pressure"
+        style="@style/ForecastListItemTextViewInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/image_pressure"
+        app:layout_constraintStart_toEndOf="@+id/image_pressure"
+        app:layout_constraintTop_toTopOf="@+id/image_pressure"
+        tools:text="1000 кПа" />
+
+    <ImageView
+        android:id="@+id/image_humidity"
+        android:layout_width="@dimen/icon_size.20"
+        android:layout_height="@dimen/icon_size.20"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/image.humidity"
+        app:layout_constraintStart_toEndOf="@+id/text_pressure"
+        app:layout_constraintTop_toTopOf="@+id/image_pressure"
+        tools:srcCompat="@drawable/ic_humidity" />
+
+    <TextView
+        android:id="@+id/text_humidity"
+        style="@style/ForecastListItemTextViewInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/image_humidity"
+        app:layout_constraintTop_toTopOf="@+id/text_pressure"
+        tools:text="60 %" />
+
+    <ImageView
+        android:id="@+id/image_wind"
+        android:layout_width="@dimen/icon_size.20"
+        android:layout_height="@dimen/icon_size.20"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/image.wind_speed"
+        app:layout_constraintStart_toStartOf="@+id/image_pressure"
+        app:layout_constraintTop_toBottomOf="@+id/image_pressure"
+        tools:srcCompat="@drawable/ic_wind" />
+
+    <TextView
+        android:id="@+id/text_wind"
+        style="@style/ForecastListItemTextViewInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/image_wind"
+        app:layout_constraintStart_toEndOf="@+id/image_pressure"
+        app:layout_constraintTop_toTopOf="@+id/image_wind"
+        tools:text="13 км/ч" />
+
+    <ImageView
+        android:id="@+id/image_wind_dir"
+        android:layout_width="@dimen/icon_size.20"
+        android:layout_height="@dimen/icon_size.20"
+        android:contentDescription="@string/image.wind_dir"
+        app:layout_constraintStart_toStartOf="@+id/image_humidity"
+        app:layout_constraintTop_toTopOf="@+id/image_wind"
+        tools:srcCompat="@drawable/ic_wind_dir" />
+
+    <TextView
+        android:id="@+id/text_wind_dir"
+        style="@style/ForecastListItemTextViewInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/image_wind_dir"
+        app:layout_constraintTop_toTopOf="@+id/text_wind"
+        tools:text="СВ" />
+</androidx.constraintlayout.widget.ConstraintLayout>

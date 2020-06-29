@@ -3,14 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="@dimen/item_list.padding">
 
     <TextView
         android:id="@+id/text_city"
+        style="@style/ListItemTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
         tools:text="Москва, Россия" />
 </FrameLayout>
