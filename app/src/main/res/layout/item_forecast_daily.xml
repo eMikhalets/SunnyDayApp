@@ -51,14 +51,14 @@
         tools:text="30 °С\n15 °С" />
 
     <TextView
-        android:id="@+id/text_feelslike_label"
+        android:id="@+id/text_feelslike"
         style="@style/ForecastListItemTextViewMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/text_desc"
         app:layout_constraintTop_toTopOf="@+id/text_desc"
-        tools:text="Ощущается как 20 °С" />
+        tools:text="Ощущается как 20°С / 20°С" />
 
     <ImageView
         android:id="@+id/image_pressure"
@@ -66,8 +66,8 @@
         android:layout_height="@dimen/icon_size.20"
         android:layout_marginTop="8dp"
         android:contentDescription="@string/image.pressure"
-        app:layout_constraintStart_toStartOf="@+id/text_feelslike_label"
-        app:layout_constraintTop_toBottomOf="@+id/text_feelslike_label"
+        app:layout_constraintStart_toStartOf="@+id/text_feelslike"
+        app:layout_constraintTop_toBottomOf="@+id/text_feelslike"
         tools:srcCompat="@drawable/ic_pressure" />
 
     <TextView

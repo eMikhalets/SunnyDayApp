@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/item_list.padding">
+    android:paddingStart="8dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="8dp">
 
     <TextView
         android:id="@+id/text_time"
@@ -21,10 +23,10 @@
         android:id="@+id/image_weather"
         android:layout_width="@dimen/icon_size.50"
         android:layout_height="@dimen/icon_size.50"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:contentDescription="@string/image.description"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/text_temp"
+        app:layout_constraintStart_toEndOf="@+id/text_time"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -33,9 +35,9 @@
         style="@style/ListItemTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_weather"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="30° / 15°" />
+        tools:text="30°" />
 </androidx.constraintlayout.widget.ConstraintLayout>

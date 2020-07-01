@@ -4,14 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#eee"
     android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:background="#eee"
-        android:orientation="vertical"
-        android:padding="@dimen/layout.padding"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/AppToolBar" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_weather"
@@ -59,14 +62,13 @@
                     android:layout_width="@dimen/icon_size.50"
                     android:layout_height="@dimen/icon_size.50"
                     android:contentDescription="@string/image.description"
-                    app:layout_constraintEnd_toStartOf="@+id/text_weather_desc"
+                    app:layout_constraintEnd_toStartOf="@+id/text_desc"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/text_temp"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    app:layout_constraintTop_toBottomOf="@+id/text_temp" />
 
                 <TextView
-                    android:id="@+id/text_weather_desc"
+                    android:id="@+id/text_desc"
                     style="@style/WeatherTextViewMain"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -87,7 +89,7 @@
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/image_weather_icon"
-                    tools:srcCompat="@drawable/ic_pressure" />
+                    android:src="@drawable/ic_pressure" />
 
                 <TextView
                     android:id="@+id/text_pressure"
@@ -110,7 +112,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/image_pressure"
                     app:layout_constraintEnd_toStartOf="@+id/text_humidity"
                     app:layout_constraintStart_toEndOf="@+id/text_pressure"
-                    tools:srcCompat="@drawable/ic_humidity" />
+                    android:src="@drawable/ic_humidity" />
 
                 <TextView
                     android:id="@+id/text_humidity"
@@ -132,7 +134,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/image_humidity"
                     app:layout_constraintEnd_toStartOf="@+id/text_wind"
                     app:layout_constraintStart_toEndOf="@+id/text_humidity"
-                    tools:srcCompat="@drawable/ic_wind" />
+                    android:src="@drawable/ic_wind" />
 
                 <TextView
                     android:id="@+id/text_wind"
@@ -161,8 +163,7 @@
             android:id="@+id/card_forecast_daily"
             style="@style/WeatherCard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -184,7 +185,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     tools:itemCount="3"
-                    tools:layout_editor_absoluteX="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_weather_forecast_daily" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -193,8 +194,7 @@
             android:id="@+id/card_forecast_hourly"
             style="@style/WeatherCard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -215,6 +215,7 @@
                     android:id="@+id/list_weather_forecast_hourly"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_weather_forecast_hourly" />
             </LinearLayout>
@@ -225,7 +226,7 @@
             style="@style/WeatherCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:id="@+id/text_rights"

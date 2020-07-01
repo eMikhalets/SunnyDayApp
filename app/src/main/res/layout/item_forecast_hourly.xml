@@ -7,13 +7,13 @@
     android:padding="@dimen/item_list.padding">
 
     <TextView
-        android:id="@+id/text_date"
+        android:id="@+id/text_time"
         style="@style/ForecastListItemTextViewMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="12 Янв" />
+        tools:text="18:00" />
 
     <ImageView
         android:id="@+id/image_weather"
@@ -22,9 +22,9 @@
         android:layout_marginTop="8dp"
         android:contentDescription="@string/image.description"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/text_date"
-        app:layout_constraintStart_toStartOf="@+id/text_date"
-        app:layout_constraintTop_toBottomOf="@+id/text_date"
+        app:layout_constraintEnd_toEndOf="@+id/text_time"
+        app:layout_constraintStart_toStartOf="@+id/text_time"
+        app:layout_constraintTop_toBottomOf="@+id/text_time"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -33,8 +33,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        app:layout_constraintStart_toEndOf="@+id/text_date"
-        app:layout_constraintTop_toTopOf="@+id/text_date"
+        app:layout_constraintStart_toEndOf="@+id/text_time"
+        app:layout_constraintTop_toTopOf="@+id/text_time"
         tools:text="Солнечно" />
 
     <TextView
@@ -50,7 +50,7 @@
         tools:text="30 °С" />
 
     <TextView
-        android:id="@+id/text_feelslike_label"
+        android:id="@+id/text_feelslike"
         style="@style/ForecastListItemTextViewMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,8 +65,8 @@
         android:layout_height="@dimen/icon_size.20"
         android:layout_marginTop="8dp"
         android:contentDescription="@string/image.pressure"
-        app:layout_constraintStart_toStartOf="@+id/text_feelslike_label"
-        app:layout_constraintTop_toBottomOf="@+id/text_feelslike_label"
+        app:layout_constraintStart_toStartOf="@+id/text_feelslike"
+        app:layout_constraintTop_toBottomOf="@+id/text_feelslike"
         tools:srcCompat="@drawable/ic_pressure" />
 
     <TextView

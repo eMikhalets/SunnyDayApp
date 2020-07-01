@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.emikhalets.sunnydayapp.databinding.FragmentWeatherBinding
 
-class ForecastDailyFragment : Fragment() {
+class DailyFragment : Fragment() {
 
     private var _binding: FragmentWeatherBinding? = null
     private val binding get() = _binding!!

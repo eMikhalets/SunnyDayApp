@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.emikhalets.sunnydayapp.databinding.FragmentWeatherBinding
+import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 
-class ForecastHourlyFragment : Fragment() {
+class CityListFragment : Fragment() {
 
-    private var _binding: FragmentWeatherBinding? = null
+    private var _binding: FragmentCityListBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,7 +17,7 @@ class ForecastHourlyFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentWeatherBinding.inflate(inflater, container, false)
+        _binding = FragmentCityListBinding.inflate(inflater, container, false)
         return binding.root
     }
 

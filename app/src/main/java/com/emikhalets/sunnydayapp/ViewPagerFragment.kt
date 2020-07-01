@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
+import com.emikhalets.sunnydayapp.utils.PAGES_NUM
+import timber.log.Timber
 
-public class ViewPagerFragment : Fragment() {
+class ViewPagerFragment : Fragment() {
 
     private var _binding: FragmentPagerBinding? = null
     private val binding get() = _binding!!
@@ -24,6 +26,8 @@ public class ViewPagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val adapter = PagerAdapter(this)
+        binding.viewPager.adapter = adapter
     }
 
     override fun onDestroy() {
@@ -33,12 +37,8 @@ public class ViewPagerFragment : Fragment() {
 
     private inner class PagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
-        override fun createFragment(position: Int): Fragment {
-            TODO("return fragment by position in DB")
-        }
+        override fun createFragment(position: Int): Fragment = WeatherFragment()
 
-        override fun getItemCount(): Int {
-            TODO("return count of DB rows")
-        }
+        override fun getItemCount(): Int = PAGES_NUM
     }
 }
