@@ -5,18 +5,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.AppRepository
+import com.emikhalets.sunnydayapp.data.City
 import com.emikhalets.sunnydayapp.network.pojo.ResponseCurrent
-import com.emikhalets.sunnydayapp.network.pojo.ResponseDaily
-import com.emikhalets.sunnydayapp.network.pojo.ResponseHourly
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class WeatherViewModel(application: Application) : AndroidViewModel(application) {
+class CityListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = AppRepository(application)
     val currentWeather = MutableLiveData<ResponseCurrent>()
-    val forecastDaily = MutableLiveData<ResponseDaily>()
-    val forecastHourly = MutableLiveData<ResponseHourly>()
+    val cities = MutableLiveData<List<City>>()
 
     fun requestCurrent(cityName: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -24,15 +22,24 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun requestForecastDaily(cityName: String) {
+    fun getAllCities() {
         viewModelScope.launch(Dispatchers.IO) {
-            forecastDaily.postValue(repository.requestForecastDaily(cityName))
+            cities.postValue(repository.getAllCities())
         }
     }
 
-    fun requestForecastHourly(cityName: String) {
+    fun insertCity(cityName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            forecastHourly.postValue(repository.requestForecastHourly(cityName))
+            val city = City(name = cityName)
+            repository.insertCity(city)
+            getAllCities()
+        }
+    }
+
+    fun deleteAll() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAll()
+            getAllCities()
         }
     }
 

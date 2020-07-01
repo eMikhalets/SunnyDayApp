@@ -5,9 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.data.City
 import com.emikhalets.sunnydayapp.databinding.ItemCityBinding
+import com.emikhalets.sunnydayapp.network.pojo.DataDaily
 
-class CitiesAdapter(private val citiesList: List<City>) :
+class CitiesAdapter(private var citiesList: List<City>) :
     RecyclerView.Adapter<CitiesAdapter.ViewHolder>() {
+
+    fun setList(list: List<City>) {
+        citiesList = list
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

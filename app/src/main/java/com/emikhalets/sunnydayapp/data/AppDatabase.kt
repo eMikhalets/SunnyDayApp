@@ -11,23 +11,21 @@ public abstract class AppDatabase : RoomDatabase() {
     abstract fun citiesDao(): CitiesDao
 
     companion object {
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
+        var INSTANCE: AppDatabase? = null
 
-        fun get(context: Context): AppDatabase {
-            val tempInstance = INSTANCE
-            if (tempInstance != null) {
-                return tempInstance
+        fun get(context: Context): AppDatabase? {
+            if (INSTANCE == null) {
+                synchronized(this) {
+                    INSTANCE = Room.databaseBuilder(
+                        context.applicationContext, AppDatabase::class.java, "weather.db"
+                    ).build()
+                }
             }
-            synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    "weather.db"
-                ).build()
-                INSTANCE = instance
-                return instance
-            }
+            return INSTANCE
+        }
+
+        fun destroy() {
+            INSTANCE = null
         }
     }
 }

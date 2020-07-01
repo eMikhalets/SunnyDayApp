@@ -5,11 +5,14 @@ import androidx.room.*
 @Dao
 interface CitiesDao {
 
-    @Query("SELECT * from cities")
-    fun getAllCities(): List<City>
+    @Query("SELECT * FROM cities")
+    suspend fun getAllCities(): List<City>
 
-    @Query("SELECT * from cities WHERE id = :id")
-    fun getCityById(id: Int): City
+    @Query("SELECT * FROM cities WHERE id = :id")
+    suspend fun getCityById(id: Int): City
+
+    @Query("DELETE FROM cities")
+    suspend fun deleteAll()
 
     @Insert
     suspend fun insert(city: City)

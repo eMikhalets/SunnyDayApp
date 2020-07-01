@@ -11,16 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.emikhalets.sunnydayapp.adapters.WeatherDailyAdapter
 import com.emikhalets.sunnydayapp.adapters.WeatherHourlyAdapter
+import com.emikhalets.sunnydayapp.data.City
 import com.emikhalets.sunnydayapp.databinding.FragmentWeatherBinding
 import com.emikhalets.sunnydayapp.network.pojo.DataCurrent
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.emikhalets.sunnydayapp.viewmodels.WeatherViewModel
-import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import timber.log.Timber
-import java.lang.Exception
 
-class WeatherFragment : Fragment() {
+class WeatherFragment() : Fragment() {
 
     private var _binding: FragmentWeatherBinding? = null
     private val binding get() = _binding!!
@@ -40,6 +38,7 @@ class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
         setToolbar()
         weatherDetailsListener()
@@ -49,11 +48,9 @@ class WeatherFragment : Fragment() {
         viewModel.currentWeather.observe(viewLifecycleOwner, Observer {
             setCurrentWeather(it.data.first())
         })
-
         viewModel.forecastDaily.observe(viewLifecycleOwner, Observer {
             dailyAdapter.setList(it.data)
         })
-
         viewModel.forecastHourly.observe(viewLifecycleOwner, Observer {
             hourlyAdapter.setList(it.data)
         })
