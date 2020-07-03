@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">SunnyDayApp</string>
 
+    <string name="tab_title.city_list">Список</string>
+    <string name="tab_title.current">Погода</string>
+    <string name="tab_title.forecast">Прогноз</string>
+
+    <string name="toolbar.subtitle">Город</string>
+
     <!-- IMAGE DESCRIPTION -->
     <string name="image.description">Иконка погоды</string>
     <string name="image.pressure">Иконка давления</string>
@@ -14,6 +20,9 @@
     <string name="image.clouds">Иконка облачности</string>
     <string name="image.precip">Иконка осадков</string>
     <string name="image.snowfall">Иконка снегопада</string>
+
+    <!-- VIEW PAGER LAYOUT -->
+    <string name="pager.text.error_location">Ошибка при определении местоположения</string>
 
     <!-- WEATHER LAYOUT -->
     <string name="weather.text.temp">%d</string>
@@ -47,32 +56,32 @@
     <string name="forecast_hourly.text.wind">%.2f км/ч</string>
 
     <!-- WEATHER CURRENT LAYOUT -->
-    <string name="current.text.temp">%.2f °С</string>
-    <string name="current.text.forecast_hourly"><u>Почасовой\nпрогноз</u></string>
     <string name="current.text.sunrise_desc">Рассвет</string>
     <string name="current.text.sunset_desc">Закат</string>
-    <string name="current.text.pressure">%.2f кПа</string>
     <string name="current.text.pressure_desc">Давление</string>
-    <string name="current.text.wind_speed">%.2f км/ч</string>
     <string name="current.text.wind_speed_desc">Ветер</string>
     <string name="current.text.wind_dir_desc">Направление</string>
-    <string name="current.text.feelslike">%.2f °С</string>
     <string name="current.text.feelslike_desc">Ощущается</string>
-    <string name="current.text.humidity">%d %%</string>
     <string name="current.text.humidity_desc">Влажность</string>
-    <string name="current.text.clouds">%d %%</string>
     <string name="current.text.clouds_desc">Облачность</string>
-    <string name="current.text.visibility">%d км</string>
     <string name="current.text.visibility_desc">Видимость</string>
-    <string name="current.text.precip">%d мм/ч</string>
     <string name="current.text.precip_desc">Осадки</string>
-    <string name="current.text.snowfall">%d мм/ч</string>
     <string name="current.text.snowfall_desc">Снегопад</string>
     <string name="current.text.uv_icon">UV</string>
-    <string name="current.text.uv">%.2f</string>
     <string name="current.text.uv_desc">Индекс UV</string>
+    <string name="current.text.temp">%d °С</string>
+    <string name="current.text.pressure">%.2f кПа</string>
+    <string name="current.text.wind_speed">%.2f км/ч</string>
+    <string name="current.text.feelslike">%d °С</string>
+    <string name="current.text.humidity">%d %%</string>
+    <string name="current.text.clouds">%d %%</string>
+    <string name="current.text.visibility">%.2f км</string>
+    <string name="current.text.precip">%.2f мм/ч</string>
+    <string name="current.text.snowfall">%d мм/ч</string>
+    <string name="current.text.uv">%.2f</string>
 
     <!-- CITY LIST LAYOUT -->
     <string name="city_list.hint.city">Город</string>
     <string name="city_list.btn.search">Поиск</string>
+    <string name="menu.view_pager.search">Search</string>
 </resources>

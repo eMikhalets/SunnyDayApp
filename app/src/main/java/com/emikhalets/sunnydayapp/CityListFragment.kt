@@ -32,8 +32,6 @@ class CityListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CityListViewModel::class.java)
         viewModel.cities.observe(viewLifecycleOwner, Observer { citiesAdapter.setList(it) })
-        binding.btnSearch.setOnClickListener { searchBtnClick() }
-        binding.fabAddCity.setOnClickListener { viewModel.deleteAll()}
         binding.listCities.adapter = citiesAdapter
         viewModel.getAllCities()
     }
@@ -41,10 +39,5 @@ class CityListFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-    }
-
-    private fun searchBtnClick() {
-        val cityName = binding.etCity.text.toString().trim()
-        if (cityName.isNotEmpty()) viewModel.insertCity(cityName)
     }
 }

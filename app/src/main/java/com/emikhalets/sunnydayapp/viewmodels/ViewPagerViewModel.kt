@@ -20,6 +20,21 @@ class ViewPagerViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    fun insertCity(cityName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val city = City(name = cityName)
+            repository.insertCity(city)
+            getAllCities()
+        }
+    }
+
+    fun deleteAll() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAll()
+            getAllCities()
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
     }

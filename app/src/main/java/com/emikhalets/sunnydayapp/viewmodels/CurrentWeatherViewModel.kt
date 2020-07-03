@@ -11,22 +11,15 @@ import com.emikhalets.sunnydayapp.network.pojo.ResponseHourly
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class WeatherViewModel(application: Application) : AndroidViewModel(application) {
+class CurrentWeatherViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = AppRepository(application)
     val currentWeather = MutableLiveData<ResponseCurrent>()
-    val forecastDaily = MutableLiveData<ResponseDaily>()
     val forecastHourly = MutableLiveData<ResponseHourly>()
 
     fun requestCurrent(cityName: String) {
         viewModelScope.launch(Dispatchers.IO) {
             currentWeather.postValue(repository.requestCurrent(cityName))
-        }
-    }
-
-    fun requestForecastDaily(cityName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            forecastDaily.postValue(repository.requestForecastDaily(cityName))
         }
     }
 

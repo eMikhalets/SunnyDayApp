@@ -12,45 +12,20 @@
         tools:layout="@layout/fragment_pager" />
 
     <fragment
-        android:id="@+id/weatherFragment"
-        android:name="com.emikhalets.sunnydayapp.WeatherFragment"
-        android:label="WeatherFragment"
-        tools:layout="@layout/fragment_weather">
-        <action
-            android:id="@+id/action_weatherFragment_to_currentFragment"
-            app:destination="@id/currentFragment" />
-        <action
-            android:id="@+id/action_weatherFragment_to_forecastDailyFragment"
-            app:destination="@id/forecastDailyFragment" />
-        <action
-            android:id="@+id/action_weatherFragment_to_forecastHourlyFragment"
-            app:destination="@id/forecastHourlyFragment" />
-        <action
-            android:id="@+id/action_weatherFragment_to_cityListFragment"
-            app:destination="@id/cityListFragment" />
-    </fragment>
+        android:id="@+id/cityListFragment"
+        android:name="com.emikhalets.sunnydayapp.CityListFragment"
+        android:label="CityListFragment"
+        tools:layout="@layout/fragment_city_list" />
 
     <fragment
         android:id="@+id/currentFragment"
-        android:name="com.emikhalets.sunnydayapp.CurrentFragment"
+        android:name="com.emikhalets.sunnydayapp.CurrentWeatherFragment"
         android:label="CurrentFragment"
         tools:layout="@layout/fragment_current" />
 
     <fragment
         android:id="@+id/forecastDailyFragment"
-        android:name="com.emikhalets.sunnydayapp.DailyFragment"
+        android:name="com.emikhalets.sunnydayapp.ForecastDailyFragment"
         android:label="ForecastDailyFragment"
         tools:layout="@layout/fragment_forecast_daily" />
-
-    <fragment
-        android:id="@+id/forecastHourlyFragment"
-        android:name="com.emikhalets.sunnydayapp.HourlyFragment"
-        android:label="ForecastHourlyFragment"
-        tools:layout="@layout/fragment_forecast_hourly" />
-
-    <fragment
-        android:id="@+id/cityListFragment"
-        android:name="com.emikhalets.sunnydayapp.CityListFragment"
-        android:label="CityListFragment"
-        tools:layout="@layout/fragment_city_list" />
 </navigation>
