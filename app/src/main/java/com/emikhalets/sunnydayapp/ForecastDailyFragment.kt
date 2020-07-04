@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.emikhalets.sunnydayapp.adapters.DailyAdapter
 import com.emikhalets.sunnydayapp.databinding.FragmentForecastDailyBinding
+import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
 import com.emikhalets.sunnydayapp.viewmodels.ForecastDailyViewModel
 
 class ForecastDailyFragment : Fragment() {
@@ -33,14 +34,33 @@ class ForecastDailyFragment : Fragment() {
         viewModelForecast = ViewModelProvider(this).get(ForecastDailyViewModel::class.java)
         adapter = DailyAdapter(ArrayList())
         binding.listForecastDaily.adapter = adapter
-        //viewModelForecast.requestForecastDaily("Москва")
+        CURRENT_QUERY.observe(viewLifecycleOwner, Observer {
+            viewModelForecast.requestForecastDaily(it)
+        })
         viewModelForecast.forecastDaily.observe(viewLifecycleOwner, Observer {
             adapter.setList(it.data)
         })
+        viewModelForecast.requestForecastDaily("Moscow")
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun showTextEmptyList() {
+        binding.textEmptyList.visibility = View.VISIBLE
+    }
+
+    private fun hideTextEmptyList() {
+        binding.textEmptyList.visibility = View.INVISIBLE
+    }
+
+    private fun showForecastList() {
+        binding.listForecastDaily.visibility = View.VISIBLE
+    }
+
+    private fun hideForecastList() {
+        binding.listForecastDaily.visibility = View.INVISIBLE
     }
 }

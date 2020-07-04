@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.adapters.CitiesAdapter
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
+import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
 import com.emikhalets.sunnydayapp.viewmodels.ViewPagerViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -57,7 +58,7 @@ class ViewPagerFragment : Fragment() {
 
     private fun setToolbar() {
         binding.toolbar.title = getString(R.string.app_name)
-        binding.toolbar.subtitle = getString(R.string.toolbar_subtitle)
+        //binding.toolbar.subtitle = getString(R.string.toolbar_subtitle)
         binding.toolbar.inflateMenu(R.menu.menu_view_pager)
         searchListener()
     }
@@ -68,6 +69,7 @@ class ViewPagerFragment : Fragment() {
         searchView.queryHint = "Search"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                CURRENT_QUERY.value = query
                 searchView.onActionViewCollapsed()
                 binding.toolbar.subtitle = query
                 searchView.setQuery("", false)

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SunnyDayApp</string>
 
+    <!-- TAB LAYOUT -->
     <string name="tab_title.city_list">Список</string>
     <string name="tab_title.current">Погода</string>
     <string name="tab_title.forecast">Прогноз</string>
@@ -23,37 +24,10 @@
 
     <!-- VIEW PAGER LAYOUT -->
     <string name="pager.text.error_location">Ошибка при определении местоположения</string>
+    <string name="menu.view_pager.search">Search</string>
 
-    <!-- WEATHER LAYOUT -->
-    <string name="weather.text.temp">%d</string>
-    <string name="weather.text.temp_units">°</string>
-    <string name="weather.text.pressure">%.2f кПа</string>
-    <string name="weather.text.humidity">%s %%</string>
-    <string name="weather.text.wind">%.2f км/ч</string>
-    <string name="weather.text.details">Подробнее</string>
-    <string name="weather.text.forecast_16_days">Прогноз на 16 дней</string>
-    <string name="weather.text.forecast_hourly">Прогноз по часам</string>
-    <string name="weather.text.rights">Приложение использует данные weatherbit.io</string>
-
-    <!-- WEATHER FORECAST DAILY ITEM LAYOUT -->
-    <string name="weather_forecast_daily.text.temp">%.2f° / %.2f°</string>
-
-    <!-- WEATHER FORECAST HOURLY ITEM LAYOUT -->
-    <string name="weather_forecast_hourly.text.temp">%.2f°</string>
-
-    <!-- FORECAST DAILY ITEM LAYOUT -->
-    <string name="forecast_daily.text.temp">%.2f °С\n%.2f °С</string>
-    <string name="forecast_daily.text.feelslike">Ощущается как %.2f°СС</string>
-    <string name="forecast_daily.text.pressure">%.2f кПа</string>
-    <string name="forecast_daily.text.humidity">%d %%</string>
-    <string name="forecast_daily.text.wind">%.2f км/ч</string>
-
-    <!-- FORECAST HOURLY ITEM LAYOUT -->
-    <string name="forecast_hourly.text.temp">%.2f °С</string>
-    <string name="forecast_hourly.text.feelslike">Ощущается как %d °С</string>
-    <string name="forecast_hourly.text.pressure">%.2f кПа</string>
-    <string name="forecast_hourly.text.humidity">%d %%</string>
-    <string name="forecast_hourly.text.wind">%.2f км/ч</string>
+    <!-- CITY LIST LAYOUT -->
+    <string name="city_list.text.empty_list">Список городов пуст\n\nДобавьте новый город во вкладке погоды</string>
 
     <!-- WEATHER CURRENT LAYOUT -->
     <string name="current.text.sunrise_desc">Рассвет</string>
@@ -80,8 +54,20 @@
     <string name="current.text.snowfall">%d мм/ч</string>
     <string name="current.text.uv">%.2f</string>
 
-    <!-- CITY LIST LAYOUT -->
-    <string name="city_list.hint.city">Город</string>
-    <string name="city_list.btn.search">Поиск</string>
-    <string name="menu.view_pager.search">Search</string>
+    <!-- FORECAST DAILY LAYOUT -->
+    <string name="forecast_daily.text.empty_list">Данные отсутствуют</string>
+
+    <!-- FORECAST DAILY ITEM LAYOUT -->
+    <string name="forecast_daily.text.temp">%d °С\n%d °С</string>
+    <string name="forecast_daily.text.feelslike">Ощущается как %d°С / %d°С</string>
+    <string name="forecast_daily.text.pressure">%.2f кПа</string>
+    <string name="forecast_daily.text.humidity">%d %%</string>
+    <string name="forecast_daily.text.wind">%.2f км/ч</string>
+
+    <!-- FORECAST HOURLY ITEM LAYOUT -->
+    <string name="forecast_hourly.text.temp">%.2f °С</string>
+    <string name="forecast_hourly.text.feelslike">Ощущается как %d °С</string>
+    <string name="forecast_hourly.text.pressure">%.2f кПа</string>
+    <string name="forecast_hourly.text.humidity">%d %%</string>
+    <string name="forecast_hourly.text.wind">%.2f км/ч</string>
 </resources>

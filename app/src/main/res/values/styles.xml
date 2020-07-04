@@ -15,6 +15,13 @@
         <item name="android:theme">?attr/actionBarTheme</item>
     </style>
 
+    <!-- City list style -->
+    <style name="CityListTextView">
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <!-- List items style -->
     <style name="ListItemTextView">
         <item name="android:fontFamily">@font/roboto_light</item>
@@ -41,37 +48,10 @@
         <item name="android:layout_marginStart">8dp</item>
     </style>
 
-    <!-- Weather -->
-    <style name="WeatherCard">
-        <item name="cardBackgroundColor">#fff</item>
-        <item name="cardCornerRadius">8dp</item>
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginStart">8dp</item>
-        <item name="android:layout_marginEnd">8dp</item>
-    </style>
-
-    <style name="WeatherTextViewMain">
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">24sp</item>
-    </style>
-
-    <style name="WeatherTextViewTemp">
-        <item name="android:fontFamily">@font/roboto_black</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">70sp</item>
-    </style>
-
-    <style name="WeatherTextViewSecondary">
-        <item name="android:fontFamily">@font/roboto_light</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
     <!-- Current -->
     <style name="CurrentCard">
         <item name="cardBackgroundColor">#fff</item>
-        <item name="cardCornerRadius">8dp</item>
+        <item name="cardCornerRadius">4dp</item>
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">100dp</item>
     </style>
@@ -101,8 +81,8 @@
     </style>
 
     <style name="CurrentImageDesc">
-        <item name="android:layout_width">30dp</item>
-        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
     </style>
 
 </resources>

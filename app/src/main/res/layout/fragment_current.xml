@@ -10,39 +10,44 @@
         android:id="@+id/layout_short_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/layout.padding"
-        android:background="#fff">
+        android:background="@drawable/bg_weather"
+        android:padding="@dimen/layout.padding">
+
+        <TextView
+            android:id="@+id/text_city_name"
+            style="@style/CurrentTextViewMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_black"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/text_date"
+            app:layout_constraintEnd_toStartOf="@+id/text_temp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Moscow" />
 
         <TextView
             android:id="@+id/text_date"
             style="@style/CurrentTextViewMain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            app:layout_constraintBottom_toTopOf="@+id/text_day_of_week"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="12 Янв 2020" />
-
-        <TextView
-            android:id="@+id/text_day_of_week"
-            style="@style/CurrentTextViewMain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/text_date"
-            app:layout_constraintStart_toStartOf="@+id/text_date"
-            app:layout_constraintTop_toBottomOf="@+id/text_date"
-            tools:text="Вторник" />
+            app:layout_constraintEnd_toEndOf="@+id/text_city_name"
+            app:layout_constraintStart_toStartOf="@+id/text_city_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_city_name"
+            tools:text="12 Янв 2020" />
 
         <TextView
             android:id="@+id/text_temp"
             style="@style/CurrentTextViewTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
+            android:layout_marginStart="24dp"
             app:layout_constraintBottom_toTopOf="@+id/text_desc"
             app:layout_constraintEnd_toStartOf="@+id/image_weather_icon"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/text_city_name"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="30 °С" />
 
@@ -51,29 +56,24 @@
             style="@style/CurrentTextViewMain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/text_temp"
             app:layout_constraintStart_toStartOf="@+id/text_temp"
             app:layout_constraintTop_toBottomOf="@+id/text_temp"
             tools:text="Солнечно" />
 
         <ImageView
             android:id="@+id/image_weather_icon"
-            android:layout_width="@dimen/icon_size.70"
-            android:layout_height="@dimen/icon_size.70"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_margin="16dp"
             android:contentDescription="@string/image.description"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/text_temp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/text_temp"
+            app:layout_constraintTop_toTopOf="@+id/text_temp"
             tools:srcCompat="@tools:sample/avatars" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <View
-        android:id="@+id/view_divider"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#70000000" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_full_data"
@@ -100,7 +100,7 @@
                     android:id="@+id/image_sunrise"
                     style="@style/CurrentImageDesc"
                     android:contentDescription="@string/image.sunrise"
-                    tools:srcCompat="@drawable/ic_sunrise" />
+                    android:src="@drawable/ic_sunrise" />
 
                 <TextView
                     android:id="@+id/text_sunrise_desc"
@@ -135,7 +135,7 @@
                     android:id="@+id/image_sunset"
                     style="@style/CurrentImageDesc"
                     android:contentDescription="@string/image.sunset"
-                    tools:srcCompat="@drawable/ic_sunset" />
+                    android:src="@drawable/ic_sunset" />
 
                 <TextView
                     android:id="@+id/text_sunset_desc"
@@ -170,7 +170,7 @@
                     android:id="@+id/image_pressure"
                     style="@style/CurrentImageDesc"
                     android:contentDescription="@string/image.pressure"
-                    tools:srcCompat="@drawable/ic_pressure" />
+                    android:src="@drawable/ic_pressure" />
 
                 <TextView
                     android:id="@+id/text_pressure_desc"
@@ -205,7 +205,7 @@
                     android:id="@+id/image_wind_speed"
                     style="@style/CurrentImageDesc"
                     android:contentDescription="@string/image.wind_speed"
-                    tools:srcCompat="@drawable/ic_wind" />
+                    android:src="@drawable/ic_wind" />
 
                 <TextView
                     android:id="@+id/text_wind_speed_desc"
@@ -239,7 +239,7 @@
                     android:id="@+id/image_wind_dir"
                     style="@style/CurrentImageDesc"
                     android:contentDescription="@string/image.wind_dir"
-                    tools:srcCompat="@drawable/ic_wind_dir" />
+                    android:src="@drawable/ic_wind_dir" />
 
                 <TextView
                     android:id="@+id/text_wind_dir_desc"
@@ -273,7 +273,7 @@
                     android:id="@+id/image_feelslike"
                     style="@style/CurrentImageDesc"
                     android:contentDescription="@string/image.feelslike"
-                    tools:srcCompat="@drawable/ic_temp" />
+                    android:src="@drawable/ic_temp" />
 
                 <TextView
                     android:id="@+id/text_feelslike_desc"
@@ -309,7 +309,7 @@
                     android:id="@+id/image_humidity"
                     style="@style/CurrentImageDesc"
                     android:contentDescription="@string/image.humidity"
-                    tools:srcCompat="@drawable/ic_humidity" />
+                    android:src="@drawable/ic_humidity" />
 
                 <TextView
                     android:id="@+id/text_humidity_desc"
@@ -343,7 +343,7 @@
                     android:id="@+id/image_clouds"
                     style="@style/CurrentImageDesc"
                     android:contentDescription="@string/image.clouds"
-                    tools:srcCompat="@drawable/ic_cloud" />
+                    android:src="@drawable/ic_cloud" />
 
                 <TextView
                     android:id="@+id/text_clouds_desc"
@@ -377,7 +377,7 @@
                     android:id="@+id/image_visibility"
                     style="@style/CurrentImageDesc"
                     android:contentDescription="@string/image.visibility"
-                    tools:srcCompat="@drawable/ic_visibility" />
+                    android:src="@drawable/ic_visibility" />
 
                 <TextView
                     android:id="@+id/text_visibility_desc"
@@ -413,7 +413,7 @@
                     android:id="@+id/image_precip"
                     style="@style/CurrentImageDesc"
                     android:contentDescription="@string/image.precip"
-                    tools:srcCompat="@drawable/ic_precip" />
+                    android:src="@drawable/ic_precip" />
 
                 <TextView
                     android:id="@+id/text_precip_desc"
@@ -447,7 +447,7 @@
                     android:id="@+id/image_snowfall"
                     style="@style/CurrentImageDesc"
                     android:contentDescription="@string/image.snowfall"
-                    tools:srcCompat="@drawable/ic_snowfall" />
+                    android:src="@drawable/ic_snowfall" />
 
                 <TextView
                     android:id="@+id/text_snowfall_desc"
@@ -484,7 +484,7 @@
                     android:fontFamily="@font/roboto"
                     android:text="@string/current.text.uv_icon"
                     android:textColor="@android:color/black"
-                    android:textSize="22sp" />
+                    android:textSize="30sp" />
 
                 <TextView
                     android:id="@+id/text_uv_desc"
