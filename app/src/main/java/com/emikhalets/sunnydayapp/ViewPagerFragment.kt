@@ -128,8 +128,9 @@ class ViewPagerFragment : Fragment() {
                 searchView.setQuery(null, false)
 
                 binding.toolbar.subtitle = name
-                CURRENT_QUERY.value = name.split(",")[0]
+                CURRENT_QUERY.value = name
                 searchAdapter.changeCursor(null)
+                viewModel.insertCity(name)
                 return true
             }
         })

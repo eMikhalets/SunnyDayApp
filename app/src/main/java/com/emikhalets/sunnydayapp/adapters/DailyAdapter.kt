@@ -55,7 +55,7 @@ class DailyAdapter(private var forecastList: List<DataDaily>) :
                 )
                 textHumidity.text = binding.root.context.getString(
                     R.string.forecast_daily_text_humidity,
-                    item.humidity
+                    item.humidity.toInt()
                 )
                 textWind.text = binding.root.context.getString(
                     R.string.forecast_daily_text_wind,

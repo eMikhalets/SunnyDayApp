@@ -17,5 +17,6 @@ const val SP_FILE_NAME = "sunny_day_app_sp"
 const val SP_FIRST_LAUNCH = "sp_first_launch"
 
 var CURRENT_QUERY = MutableLiveData<String>()
+var ADDED_CITY = MutableLiveData<String>()
 
 fun buildIconUrl(icon: String) = "https://www.weatherbit.io/static/img/icons/$icon.png"

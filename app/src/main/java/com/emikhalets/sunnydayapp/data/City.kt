@@ -14,5 +14,7 @@ data class City(
     @ColumnInfo(name = "country_full") val countryFull: String,
     @ColumnInfo(name = "lat") val lat: Double,
     @ColumnInfo(name = "lon") val lon: Double,
-    @ColumnInfo(name = "is_city_added") val isAdded: Boolean
-)
+    @ColumnInfo(name = "is_city_added") var isAdded: Boolean
+) {
+    fun getQuery() = "$cityName, $countryFull"
+}

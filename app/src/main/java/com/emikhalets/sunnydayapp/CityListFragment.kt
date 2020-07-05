@@ -10,15 +10,17 @@ import androidx.lifecycle.ViewModelProvider
 import com.emikhalets.sunnydayapp.adapters.CitiesAdapter
 import com.emikhalets.sunnydayapp.data.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
+import com.emikhalets.sunnydayapp.utils.ADDED_CITY
+import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
 import com.emikhalets.sunnydayapp.viewmodels.CityListViewModel
 
-class CityListFragment : Fragment() {
+class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
 
     private var _binding: FragmentCityListBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var viewModel: CityListViewModel
-    private val citiesAdapter = CitiesAdapter(ArrayList())
+    private lateinit var citiesAdapter: CitiesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,15 +34,26 @@ class CityListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CityListViewModel::class.java)
+        citiesAdapter = CitiesAdapter(ArrayList(), this)
         viewModel.cities.observe(viewLifecycleOwner, Observer { citiesObserver(it) })
+        ADDED_CITY.observe(viewLifecycleOwner, Observer { viewModel.getAddedCities() })
         binding.listCities.adapter = citiesAdapter
-        //viewModel.getAllCities()
+        viewModel.getAddedCities()
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onCityClick(city: City) {
+        CURRENT_QUERY.value = city.getQuery()
+    }
+
+    override fun onCityLongClick(city: City) {
+        // TODO: Add dialog for delete or implement itemTouchListener
+        viewModel.deleteCity(city)
     }
 
     private fun citiesObserver(cities: List<City>) {

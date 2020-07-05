@@ -62,11 +62,11 @@ class CurrentWeatherFragment : Fragment() {
             textWindDir.text = data.windDirAbbr
             textFeelslike.text =
                 getString(R.string.current_text_feelslike, data.tempFeelsLike.toInt())
-            textHumidity.text = getString(R.string.current_text_humidity, data.humidity)
-            textClouds.text = getString(R.string.current_text_clouds, data.clouds)
+            textHumidity.text = getString(R.string.current_text_humidity, data.humidity.toInt())
+            textClouds.text = getString(R.string.current_text_clouds, data.clouds.toInt())
             textVisibility.text = getString(R.string.current_text_visibility, data.visibility)
             textPrecip.text = getString(R.string.current_text_precip, data.precipitation)
-            textSnowfall.text = getString(R.string.current_text_snowfall, data.snowfall)
+            textSnowfall.text = getString(R.string.current_text_snowfall, data.snowfall.toInt())
             textUv.text = getString(R.string.current_text_uv, data.uvIndex)
         }
     }

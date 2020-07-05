@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.AppRepository
 import com.emikhalets.sunnydayapp.network.pojo.ResponseCurrent
-import com.emikhalets.sunnydayapp.network.pojo.ResponseDaily
 import com.emikhalets.sunnydayapp.network.pojo.ResponseHourly
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,19 +16,17 @@ class CurrentWeatherViewModel(application: Application) : AndroidViewModel(appli
     val currentWeather = MutableLiveData<ResponseCurrent>()
     val forecastHourly = MutableLiveData<ResponseHourly>()
 
-    fun requestCurrent(cityName: String) {
+    fun requestCurrent(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            currentWeather.postValue(repository.requestCurrent(cityName))
+            val array = query.split(", ")
+            currentWeather.postValue(repository.requestCurrent(array[0], array[1]))
         }
     }
 
-    fun requestForecastHourly(cityName: String) {
+    fun requestForecastHourly(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            forecastHourly.postValue(repository.requestForecastHourly(cityName))
+            val array = query.split(", ")
+            forecastHourly.postValue(repository.requestForecastHourly(array[0], array[1]))
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 }

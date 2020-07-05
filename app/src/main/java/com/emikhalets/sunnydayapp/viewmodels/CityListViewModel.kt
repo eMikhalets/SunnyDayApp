@@ -6,44 +6,27 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.AppRepository
 import com.emikhalets.sunnydayapp.data.City
-import com.emikhalets.sunnydayapp.network.pojo.ResponseCurrent
+import com.emikhalets.sunnydayapp.utils.ADDED_CITY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CityListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = AppRepository(application)
-    val currentWeather = MutableLiveData<ResponseCurrent>()
     val cities = MutableLiveData<List<City>>()
 
-    fun requestCurrent(cityName: String) {
+    fun getAddedCities() {
         viewModelScope.launch(Dispatchers.IO) {
-            currentWeather.postValue(repository.requestCurrent(cityName))
+            cities.postValue(repository.getAddedCities())
         }
     }
 
-    fun getAllCities() {
+    fun deleteCity(city: City) {
         viewModelScope.launch(Dispatchers.IO) {
-            cities.postValue(repository.getAllCities())
+            val cityDB = repository.getCity(city.id!!)
+            cityDB.isAdded = false
+            repository.updateCity(cityDB)
+            getAddedCities()
         }
-    }
-
-    fun insertCity(cityName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-//            val city = City(cityName = cityName)
-//            repository.insertCity(city)
-//            getAllCities()
-        }
-    }
-
-    fun deleteAll() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteAll()
-            getAllCities()
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 }

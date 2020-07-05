@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.AppRepository
 import com.emikhalets.sunnydayapp.data.City
+import com.emikhalets.sunnydayapp.utils.ADDED_CITY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -14,14 +15,7 @@ class ViewPagerViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val repository = AppRepository(application)
     private val citiesToDB = mutableListOf<City>()
-    val cities = MutableLiveData<List<City>>()
     val searchingCities = MutableLiveData<Array<String>>()
-
-    fun getAllCities() {
-        viewModelScope.launch(Dispatchers.IO) {
-            cities.postValue(repository.getAllCities())
-        }
-    }
 
     fun getCitiesByName(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -31,17 +25,13 @@ class ViewPagerViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-//    fun insertCity(cityName: String) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            repository.insertCity(city)
-//            getAllCities()
-//        }
-//    }
-
-    fun deleteAll() {
+    fun insertCity(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteAll()
-            getAllCities()
+            val array = query.split(", ")
+            val city = repository.getCityByName(array[0], array[1])
+            city.isAdded = true
+            repository.updateCity(city)
+            ADDED_CITY.postValue(query)
         }
     }
 
@@ -66,32 +56,5 @@ class ViewPagerViewModel(application: Application) : AndroidViewModel(applicatio
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertAllCities(citiesToDB)
         }
-    }
-
-//    fun parseAndInsertToDB(string: String) {
-//        val array = string.split("\n")
-//
-//        for (i in 1 until array.size) {
-//            val values = array[i].split(",")
-//            val city = City(
-//                cityId = values[0].toInt(),
-//                cityName = values[1],
-//                stateCode = values[2],
-//                countryCode = values[3],
-//                countryFull = values[4],
-//                lat = values[5].toDouble(),
-//                lon = values[6].toDouble(),
-//                isAdded = false
-//            )
-//            citiesToDB.add(city)
-//        }
-//
-//        viewModelScope.launch(Dispatchers.IO) {
-//            repository.insertAllCities(citiesToDB)
-//        }
-//    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 }

@@ -14,13 +14,10 @@ class ForecastDailyViewModel(application: Application) : AndroidViewModel(applic
     private val repository = AppRepository(application)
     val forecastDaily = MutableLiveData<ResponseDaily>()
 
-    fun requestForecastDaily(cityName: String) {
+    fun requestForecastDaily(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            forecastDaily.postValue(repository.requestForecastDaily(cityName))
+            val array = query.split(", ")
+            forecastDaily.postValue(repository.requestForecastDaily(array[0], array[1]))
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 }

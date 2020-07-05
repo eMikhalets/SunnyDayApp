@@ -17,7 +17,7 @@ class ForecastDailyFragment : Fragment() {
     private var _binding: FragmentForecastDailyBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModelForecast: ForecastDailyViewModel
+    private lateinit var viewModel: ForecastDailyViewModel
     private lateinit var adapter: DailyAdapter
 
     override fun onCreateView(
@@ -31,15 +31,11 @@ class ForecastDailyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModelForecast = ViewModelProvider(this).get(ForecastDailyViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ForecastDailyViewModel::class.java)
         adapter = DailyAdapter(ArrayList())
         binding.listForecastDaily.adapter = adapter
-        CURRENT_QUERY.observe(viewLifecycleOwner, Observer {
-            viewModelForecast.requestForecastDaily(it)
-        })
-        viewModelForecast.forecastDaily.observe(viewLifecycleOwner, Observer {
-            adapter.setList(it.data)
-        })
+        CURRENT_QUERY.observe(viewLifecycleOwner, Observer { viewModel.requestForecastDaily(it) })
+        viewModel.forecastDaily.observe(viewLifecycleOwner, Observer { adapter.setList(it.data) })
     }
 
     override fun onDestroy() {

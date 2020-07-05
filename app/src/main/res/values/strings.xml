@@ -70,4 +70,7 @@
     <string name="forecast_hourly.text.pressure">%.2f кПа</string>
     <string name="forecast_hourly.text.humidity">%d %%</string>
     <string name="forecast_hourly.text.wind">%.2f км/ч</string>
+
+    <!-- CITIES ADAPTER -->
+    <string name="cities_adapter.text.query">%s, %s</string>
 </resources>
