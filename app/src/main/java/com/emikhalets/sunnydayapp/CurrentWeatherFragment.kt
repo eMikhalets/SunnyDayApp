@@ -39,7 +39,6 @@ class CurrentWeatherFragment : Fragment() {
         weatherViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
             setWeatherData(it.data.first())
         })
-        weatherViewModel.requestCurrent("Moscow")
     }
 
     override fun onDestroy() {

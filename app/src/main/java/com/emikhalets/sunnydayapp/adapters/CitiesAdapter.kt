@@ -30,7 +30,7 @@ class CitiesAdapter(private var citiesList: List<City>) :
 
         fun bind(item: City) {
             with(binding) {
-                textName.text = item.name
+                textName.text = item.cityName
             }
         }
     }

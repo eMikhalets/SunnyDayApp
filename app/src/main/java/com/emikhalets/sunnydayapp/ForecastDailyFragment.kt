@@ -40,7 +40,6 @@ class ForecastDailyFragment : Fragment() {
         viewModelForecast.forecastDaily.observe(viewLifecycleOwner, Observer {
             adapter.setList(it.data)
         })
-        viewModelForecast.requestForecastDaily("Moscow")
     }
 
     override fun onDestroy() {

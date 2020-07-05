@@ -13,8 +13,10 @@ class AppRepository(context: Context) {
     suspend fun requestForecastHourly(cityName: String) = api.forecastHourly(cityName)
 
     suspend fun getAllCities() = citiesDao.getAllCities()
+    suspend fun getCitiesByName(name: String) = citiesDao.getCitiesByName(name)
     suspend fun getCity(id: Int) = citiesDao.getCityById(id)
     suspend fun deleteAll() = citiesDao.deleteAll()
+    suspend fun insertAllCities(cities: List<City>) = citiesDao.insertAll(cities)
     suspend fun insertCity(city: City) = citiesDao.insert(city)
     suspend fun updateCity(city: City) = citiesDao.update(city)
     suspend fun deleteCity(city: City) = citiesDao.delete(city)

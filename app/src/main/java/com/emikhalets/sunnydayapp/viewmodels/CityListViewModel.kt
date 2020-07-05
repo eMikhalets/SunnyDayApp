@@ -30,9 +30,9 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
 
     fun insertCity(cityName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val city = City(name = cityName)
-            repository.insertCity(city)
-            getAllCities()
+//            val city = City(cityName = cityName)
+//            repository.insertCity(city)
+//            getAllCities()
         }
     }
 

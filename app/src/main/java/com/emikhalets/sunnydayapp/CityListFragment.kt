@@ -34,7 +34,7 @@ class CityListFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(CityListViewModel::class.java)
         viewModel.cities.observe(viewLifecycleOwner, Observer { citiesObserver(it) })
         binding.listCities.adapter = citiesAdapter
-        viewModel.getAllCities()
+        //viewModel.getAllCities()
 
     }
 
