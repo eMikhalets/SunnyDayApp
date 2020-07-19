@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/viewPagerFragment"
-        android:name="com.emikhalets.sunnydayapp.ViewPagerFragment"
+        android:name="com.emikhalets.sunnydayapp.ui.ViewPagerFragment"
         android:label="ViewPagerFragment"
         tools:layout="@layout/fragment_pager" />
 
     <fragment
         android:id="@+id/cityListFragment"
-        android:name="com.emikhalets.sunnydayapp.CityListFragment"
+        android:name="com.emikhalets.sunnydayapp.ui.citylist.CityListFragment"
         android:label="CityListFragment"
         tools:layout="@layout/fragment_city_list" />
 
     <fragment
         android:id="@+id/currentFragment"
-        android:name="com.emikhalets.sunnydayapp.CurrentWeatherFragment"
+        android:name="com.emikhalets.sunnydayapp.ui.weather.CurrentWeatherFragment"
         android:label="CurrentFragment"
         tools:layout="@layout/fragment_current" />
 
     <fragment
         android:id="@+id/forecastDailyFragment"
-        android:name="com.emikhalets.sunnydayapp.ForecastDailyFragment"
+        android:name="com.emikhalets.sunnydayapp.ui.forecast.ForecastDailyFragment"
         android:label="ForecastDailyFragment"
         tools:layout="@layout/fragment_forecast_daily" />
 </navigation>

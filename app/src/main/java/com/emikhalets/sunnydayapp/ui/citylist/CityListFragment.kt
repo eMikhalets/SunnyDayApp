@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp
+package com.emikhalets.sunnydayapp.ui.citylist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,20 +7,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
+import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.adapters.CitiesAdapter
 import com.emikhalets.sunnydayapp.data.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.utils.ADDED_CITY
 import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
-import com.emikhalets.sunnydayapp.viewmodels.CityListViewModel
+import timber.log.Timber
 
 class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
 
     private var _binding: FragmentCityListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: CityListViewModel
     private lateinit var citiesAdapter: CitiesAdapter
+    private lateinit var viewModel: CityListViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,11 +37,13 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CityListViewModel::class.java)
         citiesAdapter = CitiesAdapter(ArrayList(), this)
-        viewModel.cities.observe(viewLifecycleOwner, Observer { citiesObserver(it) })
+        viewModel.addedCities.observe(viewLifecycleOwner, Observer { citiesObserver(it) })
+        // LiveData for added cities in cityList
         ADDED_CITY.observe(viewLifecycleOwner, Observer { viewModel.getAddedCities() })
         binding.listCities.adapter = citiesAdapter
         viewModel.getAddedCities()
 
+        binding.textLocationCity.text = getString(R.string.city_list_text_your_location)
     }
 
     override fun onDestroy() {
@@ -48,11 +52,14 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
     }
 
     override fun onCityClick(city: City) {
+        Timber.d("Clicked: $city")
         CURRENT_QUERY.value = city.getQuery()
+        Timber.d("Query updated: ${city.getQuery()}")
     }
 
     override fun onCityLongClick(city: City) {
         // TODO: Add dialog for delete or implement itemTouchListener
+        Timber.d("Delete: $city")
         viewModel.deleteCity(city)
     }
 
@@ -60,10 +67,15 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
         citiesAdapter.setList(cities)
         if (cities.isNotEmpty()) {
             hideTextEmptyList()
+            showLocationCity()
             showCitiesList()
+            Timber.d("Cities list:")
+            cities.forEach { Timber.d(it.toString()) }
         } else {
             hideCitiesList()
+            hideLocationCity()
             showTextEmptyList()
+            Timber.d("Cities list is empty")
         }
     }
 
@@ -73,6 +85,14 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
 
     private fun hideTextEmptyList() {
         binding.textEmptyList.visibility = View.INVISIBLE
+    }
+
+    private fun showLocationCity() {
+        binding.cardLocationCity.visibility = View.VISIBLE
+    }
+
+    private fun hideLocationCity() {
+        binding.cardLocationCity.visibility = View.INVISIBLE
     }
 
     private fun showCitiesList() {

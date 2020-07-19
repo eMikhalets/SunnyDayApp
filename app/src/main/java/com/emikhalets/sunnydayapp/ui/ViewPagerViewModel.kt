@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp.viewmodels
+package com.emikhalets.sunnydayapp.ui
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -10,6 +10,7 @@ import com.emikhalets.sunnydayapp.utils.ADDED_CITY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
+import timber.log.Timber
 
 class ViewPagerViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -29,9 +30,15 @@ class ViewPagerViewModel(application: Application) : AndroidViewModel(applicatio
         viewModelScope.launch(Dispatchers.IO) {
             val array = query.split(", ")
             val city = repository.getCityByName(array[0], array[1])
-            city.isAdded = true
-            repository.updateCity(city)
-            ADDED_CITY.postValue(query)
+            Timber.d("City before isAdded = ${city.isAdded}")
+
+            if (!city.isAdded) {
+                city.isAdded = true
+                Timber.d("City after isAdded = ${city.isAdded}")
+                repository.updateCity(city)
+                Timber.d("City isAdded status updated: $city")
+                ADDED_CITY.postValue(query)
+            }
         }
     }
 

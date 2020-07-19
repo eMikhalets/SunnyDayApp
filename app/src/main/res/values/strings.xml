@@ -27,9 +27,10 @@
     <string name="menu.view_pager.search">Search</string>
 
     <!-- CITY LIST LAYOUT -->
-    <string name="city_list.text.empty_list">Список городов пуст\n\nДобавьте новый город во вкладке погоды</string>
+    <string name="city_list.text.empty_list">Список городов пуст\n\nДобавьте новый город через поиск</string>
 
     <!-- WEATHER CURRENT LAYOUT -->
+    <string name="current.text.load_data">Загрузите погоду через поиск</string>
     <string name="current.text.sunrise_desc">Рассвет</string>
     <string name="current.text.sunset_desc">Закат</string>
     <string name="current.text.pressure_desc">Давление</string>
@@ -55,7 +56,7 @@
     <string name="current.text.uv">%.2f</string>
 
     <!-- FORECAST DAILY LAYOUT -->
-    <string name="forecast_daily.text.empty_list">Данные отсутствуют</string>
+    <string name="forecast_daily.text.empty_list">Загрузите прогноз через поиск</string>
 
     <!-- FORECAST DAILY ITEM LAYOUT -->
     <string name="forecast_daily.text.temp">%d °С\n%d °С</string>
@@ -73,4 +74,5 @@
 
     <!-- CITIES ADAPTER -->
     <string name="cities_adapter.text.query">%s, %s</string>
+    <string name="city_list.text.your_location">your location (not implemented)</string>
 </resources>

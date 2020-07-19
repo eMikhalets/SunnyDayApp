@@ -1,12 +1,12 @@
-package com.emikhalets.sunnydayapp.viewmodels
+package com.emikhalets.sunnydayapp.ui.weather
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.AppRepository
-import com.emikhalets.sunnydayapp.network.pojo.ResponseCurrent
-import com.emikhalets.sunnydayapp.network.pojo.ResponseHourly
+import com.emikhalets.sunnydayapp.data.network.pojo.ResponseCurrent
+import com.emikhalets.sunnydayapp.data.network.pojo.ResponseHourly
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

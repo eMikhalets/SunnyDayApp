@@ -1,7 +1,7 @@
 package com.emikhalets.sunnydayapp.data
 
 import android.content.Context
-import com.emikhalets.sunnydayapp.network.ApiFactory
+import com.emikhalets.sunnydayapp.data.network.ApiFactory
 
 class AppRepository(context: Context) {
 

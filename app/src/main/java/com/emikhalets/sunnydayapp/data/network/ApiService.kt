@@ -1,8 +1,8 @@
-package com.emikhalets.sunnydayapp.network
+package com.emikhalets.sunnydayapp.data.network
 
-import com.emikhalets.sunnydayapp.network.pojo.ResponseCurrent
-import com.emikhalets.sunnydayapp.network.pojo.ResponseDaily
-import com.emikhalets.sunnydayapp.network.pojo.ResponseHourly
+import com.emikhalets.sunnydayapp.data.network.pojo.ResponseCurrent
+import com.emikhalets.sunnydayapp.data.network.pojo.ResponseDaily
+import com.emikhalets.sunnydayapp.data.network.pojo.ResponseHourly
 import com.emikhalets.sunnydayapp.utils.API_KEY
 import com.emikhalets.sunnydayapp.utils.QUERY_LANG
 import com.emikhalets.sunnydayapp.utils.QUERY_UNITS

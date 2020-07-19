@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp
+package com.emikhalets.sunnydayapp.ui
 
 import android.database.Cursor
 import android.database.MatrixCursor
@@ -14,12 +14,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
+import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
+import com.emikhalets.sunnydayapp.ui.forecast.ForecastDailyFragment
+import com.emikhalets.sunnydayapp.ui.weather.CurrentWeatherFragment
 import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
 import com.emikhalets.sunnydayapp.utils.SP_FILE_NAME
 import com.emikhalets.sunnydayapp.utils.SP_FIRST_LAUNCH
-import com.emikhalets.sunnydayapp.viewmodels.ViewPagerViewModel
 import com.google.android.material.tabs.TabLayoutMediator
+import timber.log.Timber
 
 class ViewPagerFragment : Fragment() {
 
@@ -70,6 +74,8 @@ class ViewPagerFragment : Fragment() {
             searchAdapter.changeCursor(cursor)
             searchView.suggestionsAdapter = searchAdapter
         })
+
+        CURRENT_QUERY.observe(viewLifecycleOwner, Observer { binding.toolbar.subtitle = it })
     }
 
     private fun implementToolbar() {
@@ -122,6 +128,7 @@ class ViewPagerFragment : Fragment() {
                 val cursor = searchView.suggestionsAdapter.getItem(p0) as Cursor
                 val name = cursor.getString(cursor.getColumnIndex("city_name"))
                 cursor.close()
+                Timber.d("Select in search: $name")
 
                 searchView.setQuery(name, false)
                 searchView.onActionViewCollapsed()
@@ -131,6 +138,7 @@ class ViewPagerFragment : Fragment() {
                 CURRENT_QUERY.value = name
                 searchAdapter.changeCursor(null)
                 viewModel.insertCity(name)
+                Timber.d("Query updated: $name")
                 return true
             }
         })
@@ -156,6 +164,7 @@ class ViewPagerFragment : Fragment() {
             }
             sp.edit().putBoolean(SP_FIRST_LAUNCH, false).apply()
         }
+        Timber.d("Cities database is created.")
     }
 
     private inner class PagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {

@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp.network
+package com.emikhalets.sunnydayapp.data.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

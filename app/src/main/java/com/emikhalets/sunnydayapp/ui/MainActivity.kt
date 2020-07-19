@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp
+package com.emikhalets.sunnydayapp.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

@@ -1,11 +1,11 @@
-package com.emikhalets.sunnydayapp.viewmodels
+package com.emikhalets.sunnydayapp.ui.forecast
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.AppRepository
-import com.emikhalets.sunnydayapp.network.pojo.ResponseDaily
+import com.emikhalets.sunnydayapp.data.network.pojo.ResponseDaily
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
