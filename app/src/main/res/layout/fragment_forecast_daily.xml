@@ -8,7 +8,7 @@
     android:padding="4dp">
 
     <TextView
-        android:id="@+id/text_empty_list"
+        android:id="@+id/text_notice"
         style="@style/CityListTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

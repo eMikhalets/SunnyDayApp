@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -24,6 +25,7 @@ import com.emikhalets.sunnydayapp.utils.SP_FILE_NAME
 import com.emikhalets.sunnydayapp.utils.SP_FIRST_LAUNCH
 import com.google.android.material.tabs.TabLayoutMediator
 import timber.log.Timber
+import java.lang.Exception
 
 class ViewPagerFragment : Fragment() {
 
@@ -75,16 +77,14 @@ class ViewPagerFragment : Fragment() {
             searchView.suggestionsAdapter = searchAdapter
         })
 
-        CURRENT_QUERY.observe(viewLifecycleOwner, Observer { binding.toolbar.subtitle = it })
+        CURRENT_QUERY.observe(viewLifecycleOwner, Observer {
+            binding.toolbar.subtitle = it
+            // TODO: App crash if page is changed, I DON'T KNOW WHY!!!!
+            //binding.viewPager.setCurrentItem(1, true)
+        })
     }
 
     private fun implementToolbar() {
-        with(binding.toolbar) {
-            title = getString(R.string.app_name)
-            subtitle = getString(R.string.toolbar_subtitle)
-            inflateMenu(R.menu.menu_view_pager)
-        }
-
         searchView = binding.toolbar.menu.findItem(R.id.menu_pager_search).actionView as SearchView
         searchView.queryHint = "Search"
 

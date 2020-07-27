@@ -8,6 +8,11 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/AppToolBar"
+        app:menu="@menu/menu_view_pager"
+        app:subtitle="@string/toolbar.subtitle"
+        app:subtitleTextColor="@android:color/white"
+        app:title="@string/app_name"
+        app:titleTextColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

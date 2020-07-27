@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.adapters.CitiesAdapter
 import com.emikhalets.sunnydayapp.data.City
@@ -37,10 +36,8 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CityListViewModel::class.java)
         citiesAdapter = CitiesAdapter(ArrayList(), this)
-        viewModel.addedCities.observe(viewLifecycleOwner, Observer { citiesObserver(it) })
-        // LiveData for added cities in cityList
-        ADDED_CITY.observe(viewLifecycleOwner, Observer { viewModel.getAddedCities() })
         binding.listCities.adapter = citiesAdapter
+        observeData()
         viewModel.getAddedCities()
 
         binding.textLocationCity.text = getString(R.string.city_list_text_your_location)
@@ -49,6 +46,27 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun observeData() {
+        viewModel.addedCities.observe(viewLifecycleOwner, Observer {
+            citiesAdapter.setList(it)
+            if (it.isNotEmpty()) {
+                hideTextEmptyList()
+                showLocationCity()
+                showCitiesList()
+                Timber.d("Cities list:")
+                it.forEach { Timber.d(it.toString()) }
+            } else {
+                hideCitiesList()
+                hideLocationCity()
+                showTextEmptyList()
+                Timber.d("Cities list is empty")
+            }
+        })
+
+        // LiveData for added cities in cityList
+        ADDED_CITY.observe(viewLifecycleOwner, Observer { viewModel.getAddedCities() })
     }
 
     override fun onCityClick(city: City) {
@@ -61,22 +79,6 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
         // TODO: Add dialog for delete or implement itemTouchListener
         Timber.d("Delete: $city")
         viewModel.deleteCity(city)
-    }
-
-    private fun citiesObserver(cities: List<City>) {
-        citiesAdapter.setList(cities)
-        if (cities.isNotEmpty()) {
-            hideTextEmptyList()
-            showLocationCity()
-            showCitiesList()
-            Timber.d("Cities list:")
-            cities.forEach { Timber.d(it.toString()) }
-        } else {
-            hideCitiesList()
-            hideLocationCity()
-            showTextEmptyList()
-            Timber.d("Cities list is empty")
-        }
     }
 
     private fun showTextEmptyList() {

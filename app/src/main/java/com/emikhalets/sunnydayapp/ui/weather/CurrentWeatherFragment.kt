@@ -36,13 +36,7 @@ class CurrentWeatherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         weatherViewModel = ViewModelProvider(this).get(CurrentWeatherViewModel::class.java)
-        CURRENT_QUERY.observe(viewLifecycleOwner, Observer { queryObserver(it) })
-        weatherViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
-            Timber.d("Current weather is loaded.")
-            setWeatherData(it.data.first())
-            hideProgressbar()
-            showInterface()
-        })
+        observeData()
     }
 
     override fun onDestroy() {
@@ -50,11 +44,29 @@ class CurrentWeatherFragment : Fragment() {
         _binding = null
     }
 
-    private fun queryObserver(query: String) {
-        hideInterface()
-        hideTextLoadData()
-        showProgressbar()
-        weatherViewModel.requestCurrent(query)
+    private fun observeData() {
+        CURRENT_QUERY.observe(viewLifecycleOwner, Observer {
+            hideInterface()
+            hideTextNotice()
+            showProgressbar()
+            weatherViewModel.requestCurrent(it)
+        })
+
+        weatherViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
+            Timber.d("Current weather is loaded.")
+            Timber.d(it.toString())
+            hideProgressbar()
+            setWeatherData(it.data.first())
+            showInterface()
+        })
+
+        weatherViewModel.errorMessage.observe(viewLifecycleOwner, Observer {
+            Timber.d("Error loading weather.")
+            Timber.d(it)
+            hideProgressbar()
+            binding.textNotice.text = it
+            showTextNotice()
+        })
     }
 
     private fun setWeatherData(data: DataCurrent) {
@@ -103,12 +115,12 @@ class CurrentWeatherFragment : Fragment() {
         return simpleFormat.format(calendar.time)
     }
 
-    private fun showTextLoadData() {
-        binding.textLoadData.visibility = View.VISIBLE
+    private fun showTextNotice() {
+        binding.textNotice.visibility = View.VISIBLE
     }
 
-    private fun hideTextLoadData() {
-        binding.textLoadData.visibility = View.INVISIBLE
+    private fun hideTextNotice() {
+        binding.textNotice.visibility = View.INVISIBLE
     }
 
     private fun showProgressbar() {

@@ -1,8 +1,7 @@
 package com.emikhalets.sunnydayapp.ui.citylist
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.AppRepository
 import com.emikhalets.sunnydayapp.data.City
@@ -10,9 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class CityListViewModel(application: Application) : AndroidViewModel(application) {
+class CityListViewModel : ViewModel() {
 
-    private val repository = AppRepository(application)
+    private val repository = AppRepository()
     val addedCities = MutableLiveData<List<City>>()
 
     fun getAddedCities() {
@@ -23,11 +22,12 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
 
     fun deleteCity(city: City) {
         viewModelScope.launch(Dispatchers.IO) {
-            val cityDB = repository.getCity(city.id!!)
-            cityDB.isAdded = false
-            repository.updateCity(cityDB)
+            val receivedCity = repository.getCity(city.id!!)
+            receivedCity.isAdded = false
+            repository.updateCity(receivedCity)
             getAddedCities()
-            Timber.d("City deleted. Added cities updated")
+            Timber.d("City deleted from searched list. Added cities updated")
+
         }
     }
 }

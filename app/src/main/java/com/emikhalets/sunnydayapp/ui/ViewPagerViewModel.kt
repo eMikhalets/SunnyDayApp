@@ -1,8 +1,7 @@
 package com.emikhalets.sunnydayapp.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.AppRepository
 import com.emikhalets.sunnydayapp.data.City
@@ -12,9 +11,9 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber
 
-class ViewPagerViewModel(application: Application) : AndroidViewModel(application) {
+class ViewPagerViewModel : ViewModel() {
 
-    private val repository = AppRepository(application)
+    private val repository = AppRepository()
     private val citiesToDB = mutableListOf<City>()
     val searchingCities = MutableLiveData<Array<String>>()
 

@@ -13,7 +13,7 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         private var INSTANCE: AppDatabase? = null
 
-        fun get(context: Context): AppDatabase? {
+        fun implement(context: Context): AppDatabase? {
             if (INSTANCE == null) {
                 synchronized(this) {
                     INSTANCE = Room.databaseBuilder(
@@ -23,6 +23,8 @@ abstract class AppDatabase : RoomDatabase() {
             }
             return INSTANCE
         }
+
+        fun get() = INSTANCE!!
 
         fun destroy() {
             INSTANCE = null

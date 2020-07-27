@@ -11,6 +11,7 @@ import com.emikhalets.sunnydayapp.adapters.DailyAdapter
 import com.emikhalets.sunnydayapp.data.network.pojo.ResponseDaily
 import com.emikhalets.sunnydayapp.databinding.FragmentForecastDailyBinding
 import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
+import timber.log.Timber
 
 class ForecastDailyFragment : Fragment() {
 
@@ -34,8 +35,7 @@ class ForecastDailyFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ForecastDailyViewModel::class.java)
         adapter = DailyAdapter(ArrayList())
         binding.listForecastDaily.adapter = adapter
-        CURRENT_QUERY.observe(viewLifecycleOwner, Observer { queryObserver(it) })
-        viewModel.forecastDaily.observe(viewLifecycleOwner, Observer { forecastObserver(it) })
+        observeData()
     }
 
     override fun onDestroy() {
@@ -43,17 +43,27 @@ class ForecastDailyFragment : Fragment() {
         _binding = null
     }
 
-    private fun queryObserver(query: String) {
-        hideForecastList()
-        hideTextEmptyList()
-        showProgressbar()
-        viewModel.requestForecastDaily(query)
-    }
+    private fun observeData() {
+        CURRENT_QUERY.observe(viewLifecycleOwner, Observer {
+            hideForecastList()
+            hideNotice()
+            showProgressbar()
+            viewModel.requestForecastDaily(it)
+        })
 
-    private fun forecastObserver(forecast: ResponseDaily) {
-        adapter.setList(forecast.data)
-        hideProgressbar()
-        showForecastList()
+        viewModel.forecastDaily.observe(viewLifecycleOwner, Observer {
+            adapter.setList(it.data)
+            hideProgressbar()
+            showForecastList()
+        })
+
+        viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
+            Timber.d("Error loading weather.")
+            Timber.d(it)
+            hideProgressbar()
+            binding.textNotice.text = it
+            showNotice()
+        })
     }
 
     private fun showProgressbar() {
@@ -64,12 +74,12 @@ class ForecastDailyFragment : Fragment() {
         binding.pbLoadingDaily.visibility = View.INVISIBLE
     }
 
-    private fun showTextEmptyList() {
-        binding.textEmptyList.visibility = View.VISIBLE
+    private fun showNotice() {
+        binding.textNotice.visibility = View.VISIBLE
     }
 
-    private fun hideTextEmptyList() {
-        binding.textEmptyList.visibility = View.INVISIBLE
+    private fun hideNotice() {
+        binding.textNotice.visibility = View.INVISIBLE
     }
 
     private fun showForecastList() {
