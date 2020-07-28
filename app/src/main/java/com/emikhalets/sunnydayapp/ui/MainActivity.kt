@@ -3,7 +3,7 @@ package com.emikhalets.sunnydayapp.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.emikhalets.sunnydayapp.BuildConfig
-import com.emikhalets.sunnydayapp.data.AppDatabase
+import com.emikhalets.sunnydayapp.data.database.AppDatabase
 import com.emikhalets.sunnydayapp.databinding.ActivityMainBinding
 import timber.log.Timber
 

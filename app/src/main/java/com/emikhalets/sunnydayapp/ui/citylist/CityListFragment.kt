@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.adapters.CitiesAdapter
-import com.emikhalets.sunnydayapp.data.City
+import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.utils.ADDED_CITY
 import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY

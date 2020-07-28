@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp.data
+package com.emikhalets.sunnydayapp.data.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emikhalets.sunnydayapp.data.AppRepository
+import com.emikhalets.sunnydayapp.data.DailyRepository
 import com.emikhalets.sunnydayapp.data.network.AppResponse
-import com.emikhalets.sunnydayapp.data.network.pojo.ResponseCurrent
 import com.emikhalets.sunnydayapp.data.network.pojo.ResponseDaily
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +13,7 @@ import timber.log.Timber
 
 class ForecastDailyViewModel : ViewModel() {
 
-    private val repository = AppRepository()
+    private val repository = DailyRepository()
 
     private val _forecastDaily = MutableLiveData<ResponseDaily>()
     val forecastDaily: LiveData<ResponseDaily> get() = _forecastDaily

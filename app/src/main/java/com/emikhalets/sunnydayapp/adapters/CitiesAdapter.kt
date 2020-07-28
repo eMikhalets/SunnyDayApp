@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
-import com.emikhalets.sunnydayapp.data.City
+import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.ItemCityBinding
 
 class CitiesAdapter(private var citiesList: List<City>, val listener: OnCityClickListener) :

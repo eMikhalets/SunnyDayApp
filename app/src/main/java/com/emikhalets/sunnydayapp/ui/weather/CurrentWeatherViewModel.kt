@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emikhalets.sunnydayapp.data.AppRepository
+import com.emikhalets.sunnydayapp.data.CurrentRepository
 import com.emikhalets.sunnydayapp.data.network.AppResponse
 import com.emikhalets.sunnydayapp.data.network.pojo.ResponseCurrent
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ import timber.log.Timber
 
 class CurrentWeatherViewModel : ViewModel() {
 
-    private val repository = AppRepository()
+    private val repository = CurrentRepository()
 
     private val _currentWeather = MutableLiveData<ResponseCurrent>()
     val currentWeather: LiveData<ResponseCurrent> get() = _currentWeather
