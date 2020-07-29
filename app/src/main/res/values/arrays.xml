@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_query_lang">
+        <item>English</item>
+        <item>Русский</item>
+    </string-array>
+
+    <string-array name="pref_query_lang_values">
+        <item>en</item>
+        <item>ru</item>
+    </string-array>
+
+    <string-array name="pref_query_units">
+        <item>Metric</item>
+        <item>Scientific </item>
+        <item>Fahrenheit</item>
+    </string-array>
+
+    <string-array name="pref_query_units_values">
+        <item>M</item>
+        <item>S </item>
+        <item>I</item>
+    </string-array>
+</resources>

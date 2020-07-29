@@ -1,11 +1,31 @@
 <resources>
     <string name="app_name">SunnyDayApp</string>
 
+    <!-- QUERY PARAMETERS -->
+    <string name="query_lang_english">en</string>
+    <string name="query_lang_russian">ru</string>
+    <string name="query_units_metric">M</string> <!-- Celcius, m/s, mm -->
+    <string name="query_units_scientific">S</string> <!-- Kelvin, m/s, mm -->
+    <string name="query_units_fahrenheit">I</string> <!-- F, mph, in -->
+
+    <!-- SHARED PREFERENCES KEYS -->
+    <string name="sp_file_name">sp_application</string>
+    <string name="sp_is_first_launch">sp_is_first_launch</string>
+
+    <!-- PREFERENCE LAYOUT -->
+    <string name="pref_pager.category_main">Общие настройки</string>
+    <string name="pref_pager.lang_label">Язык</string>
+    <string name="pref_pager.units_label">Единицы измерения</string>
+    <string name="pref_pager.lang_summary">Язык приложения</string>
+    <string name="pref_pager.units_summary">Единицы измерения погодных данных</string>
+
     <!-- TAB LAYOUT -->
     <string name="tab_title.city_list">Список</string>
     <string name="tab_title.current">Погода</string>
     <string name="tab_title.forecast">Прогноз</string>
 
+    <!-- TOOLBAR LAYOUT -->
+    <string name="toolbar.menu.pref_title">Настройки</string>
     <string name="toolbar.subtitle">Город</string>
 
     <!-- IMAGE DESCRIPTION -->

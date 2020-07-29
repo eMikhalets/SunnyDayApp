@@ -9,7 +9,20 @@
         android:id="@+id/viewPagerFragment"
         android:name="com.emikhalets.sunnydayapp.ui.ViewPagerFragment"
         android:label="ViewPagerFragment"
-        tools:layout="@layout/fragment_pager" />
+        tools:layout="@layout/fragment_pager">
+        <action
+            android:id="@+id/action_viewPagerFragment_to_preferencePagerFragment"
+            app:destination="@id/preferencePagerFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/preferencePagerFragment"
+        android:name="com.emikhalets.sunnydayapp.ui.PreferencePagerFragment"
+        android:label="PreferencePagerFragment" />
 
     <fragment
         android:id="@+id/cityListFragment"

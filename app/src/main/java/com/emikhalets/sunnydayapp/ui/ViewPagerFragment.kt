@@ -5,15 +5,17 @@ import android.database.MatrixCursor
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
-import androidx.core.view.get
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
@@ -21,11 +23,8 @@ import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
 import com.emikhalets.sunnydayapp.ui.forecast.ForecastDailyFragment
 import com.emikhalets.sunnydayapp.ui.weather.CurrentWeatherFragment
 import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
-import com.emikhalets.sunnydayapp.utils.SP_FILE_NAME
-import com.emikhalets.sunnydayapp.utils.SP_FIRST_LAUNCH
 import com.google.android.material.tabs.TabLayoutMediator
 import timber.log.Timber
-import java.lang.Exception
 
 class ViewPagerFragment : Fragment() {
 
@@ -85,6 +84,11 @@ class ViewPagerFragment : Fragment() {
     }
 
     private fun implementToolbar() {
+        binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
+            Timber.d("Settings Click")
+            Navigation.findNavController(binding.root)
+                .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
+        }
         searchView = binding.toolbar.menu.findItem(R.id.menu_pager_search).actionView as SearchView
         searchView.queryHint = "Search"
 
@@ -156,13 +160,13 @@ class ViewPagerFragment : Fragment() {
     }
 
     private fun convertCitiesCitiesToDB() {
-        val sp = requireContext().getSharedPreferences(SP_FILE_NAME, 0)
-        if (sp.getBoolean(SP_FIRST_LAUNCH, true)) {
+        val sp = requireContext().getSharedPreferences(getString(R.string.sp_file_name), 0)
+        if (sp.getBoolean(getString(R.string.sp_is_first_launch), true)) {
             requireContext().assets.open("cities_20000.json").bufferedReader().use { bufferReader ->
                 val json = bufferReader.use { it.readText() }
                 viewModel.parseAndInsertToDB(json)
             }
-            sp.edit().putBoolean(SP_FIRST_LAUNCH, false).apply()
+            sp.edit().putBoolean(getString(R.string.sp_is_first_launch), false).apply()
         }
         Timber.d("Cities database is created.")
     }

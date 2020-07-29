@@ -25,7 +25,7 @@ class ForecastDailyViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             Timber.d("Forecast Daily Query %s", query)
             val array = query.split(", ")
-            when (val data = repository.requestForecastDaily(array[0], array[1])) {
+            when (val data = repository.requestForecastDaily(array[0], array[1], "ru", "M")) {
                 is AppResponse.Success ->
                     _forecastDaily.postValue(data.response)
                 is AppResponse.Error ->

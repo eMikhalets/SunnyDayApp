@@ -8,10 +8,9 @@ class DailyRepository {
     private val api = ApiFactory.getService()
     private val callHandler = NetworkCallHandler()
 
-    suspend fun requestForecastDaily(name: String, country: String) = callHandler.safeApiCall(
-        apiCall = {
-            val result = api.forecastDaily(name, country)
+    suspend fun requestForecastDaily(name: String, country: String, lang: String, units: String) =
+        callHandler.safeApiCall(apiCall = {
+            val result = api.forecastDaily(name, country, lang, units)
             return@safeApiCall AppResponse.Success(result)
-        }
-    )
+        })
 }

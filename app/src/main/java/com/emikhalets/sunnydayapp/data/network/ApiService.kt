@@ -4,28 +4,32 @@ import com.emikhalets.sunnydayapp.data.network.pojo.ResponseCurrent
 import com.emikhalets.sunnydayapp.data.network.pojo.ResponseDaily
 import com.emikhalets.sunnydayapp.data.network.pojo.ResponseHourly
 import com.emikhalets.sunnydayapp.utils.API_KEY
-import com.emikhalets.sunnydayapp.utils.QUERY_LANG
-import com.emikhalets.sunnydayapp.utils.QUERY_UNITS
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiService {
 
-    @GET("current?key=$API_KEY&lang=$QUERY_LANG&units=$QUERY_UNITS")
+    @GET("current?key=$API_KEY")
     suspend fun currentWeather(
         @Query("city") cityName: String,
-        @Query("country") country: String
+        @Query("country") country: String,
+        @Query("lang") lang: String,
+        @Query("units") units: String
     ): ResponseCurrent
 
-    @GET("forecast/daily?key=$API_KEY&lang=$QUERY_LANG&units=$QUERY_UNITS")
+    @GET("forecast/daily?key=$API_KEY")
     suspend fun forecastDaily(
         @Query("city") cityName: String,
-        @Query("country") country: String
+        @Query("country") country: String,
+        @Query("lang") lang: String,
+        @Query("units") units: String
     ): ResponseDaily
 
-    @GET("forecast/hourly?key=$API_KEY&lang=$QUERY_LANG&units=$QUERY_UNITS")
+    @GET("forecast/hourly?key=$API_KEY")
     suspend fun forecastHourly(
         @Query("city") cityName: String,
-        @Query("country") country: String
+        @Query("country") country: String,
+        @Query("lang") lang: String,
+        @Query("units") units: String
     ): ResponseHourly
 }

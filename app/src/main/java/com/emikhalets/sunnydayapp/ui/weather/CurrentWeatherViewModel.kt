@@ -25,7 +25,7 @@ class CurrentWeatherViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             Timber.d("Current Weather Query %s", query)
             val array = query.split(", ")
-            when (val data = repository.requestCurrent(array[0], array[1])) {
+            when (val data = repository.requestCurrent(array[0], array[1], "ru", "M")) {
                 is AppResponse.Success ->
                     _currentWeather.postValue(data.response)
                 is AppResponse.Error ->

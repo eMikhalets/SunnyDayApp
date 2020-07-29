@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <PreferenceCategory
+        android:key="pref_category_main"
+        android:title="@string/pref_pager.category_main">
+
+        <ListPreference
+            android:defaultValue="@string/query_lang_english"
+            android:entries="@array/pref_query_lang"
+            android:entryValues="@array/pref_query_lang_values"
+            android:key="pref_lang"
+            android:summary="%s"
+            android:title="@string/pref_pager.lang_label" />
+
+        <ListPreference
+            android:defaultValue="@string/query_units_metric"
+            android:entries="@array/pref_query_units"
+            android:entryValues="@array/pref_query_units_values"
+            android:key="pref_units"
+            android:summary="%s"
+            android:title="@string/pref_pager.units_label" />
+    </PreferenceCategory>
+</PreferenceScreen>

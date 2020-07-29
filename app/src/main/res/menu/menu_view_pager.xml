@@ -8,4 +8,10 @@
         android:title="@string/menu.view_pager.search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_pager_preference"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/toolbar.menu.pref_title"
+        app:showAsAction="ifRoom" />
 </menu>
