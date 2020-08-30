@@ -1,20 +1,18 @@
-package com.emikhalets.sunnydayapp.ui
+package com.emikhalets.sunnydayapp.ui.pager
 
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
@@ -22,7 +20,6 @@ import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
 import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
 import com.emikhalets.sunnydayapp.ui.forecast.ForecastDailyFragment
 import com.emikhalets.sunnydayapp.ui.weather.CurrentWeatherFragment
-import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
 import com.google.android.material.tabs.TabLayoutMediator
 import timber.log.Timber
 
@@ -31,10 +28,10 @@ class ViewPagerFragment : Fragment() {
     private var _binding: FragmentPagerBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: PagerAdapter
     private lateinit var searchView: SearchView
-    private lateinit var viewModel: ViewPagerViewModel
+    private lateinit var pagerAdapter: PagerAdapter
     private lateinit var searchAdapter: SimpleCursorAdapter
+    private val viewModel: ViewPagerViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,11 +45,10 @@ class ViewPagerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(ViewPagerViewModel::class.java)
-        adapter = PagerAdapter(this)
-        binding.viewPager.adapter = adapter
+        pagerAdapter = PagerAdapter(this)
+        binding.viewPager.adapter = pagerAdapter
 
-        observeLiveData()
+        implementObservers()
         implementToolbar()
         attachTabsAndPager()
 
@@ -66,7 +62,7 @@ class ViewPagerFragment : Fragment() {
         _binding = null
     }
 
-    private fun observeLiveData() {
+    private fun implementObservers() {
         viewModel.searchingCities.observe(viewLifecycleOwner, Observer {
             val cursor = MatrixCursor(arrayOf(BaseColumns._ID, "city_name"))
             for (i in it.indices) {
@@ -76,7 +72,7 @@ class ViewPagerFragment : Fragment() {
             searchView.suggestionsAdapter = searchAdapter
         })
 
-        CURRENT_QUERY.observe(viewLifecycleOwner, Observer {
+        viewModel.currentQuery.observe(viewLifecycleOwner, Observer {
             binding.toolbar.subtitle = it
             // TODO: App crash if page is changed, I DON'T KNOW WHY!!!!
             //binding.viewPager.setCurrentItem(1, true)
@@ -139,7 +135,7 @@ class ViewPagerFragment : Fragment() {
                 searchView.setQuery(null, false)
 
                 binding.toolbar.subtitle = name
-                CURRENT_QUERY.value = name
+                viewModel.updateCurrentQuery(name)
                 searchAdapter.changeCursor(null)
                 viewModel.insertCity(name)
                 Timber.d("Query updated: $name")
@@ -147,7 +143,7 @@ class ViewPagerFragment : Fragment() {
             }
         })
     }
-
+e
     private fun attachTabsAndPager() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
@@ -171,7 +167,7 @@ class ViewPagerFragment : Fragment() {
         Timber.d("Cities database is created.")
     }
 
-    private inner class PagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+    private class PagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
         override fun createFragment(position: Int): Fragment = when (position) {
             0 -> CityListFragment()

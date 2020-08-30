@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.DailyRepository
-import com.emikhalets.sunnydayapp.data.network.AppResponse
-import com.emikhalets.sunnydayapp.data.network.pojo.ResponseDaily
+import com.emikhalets.sunnydayapp.network.AppResponse
+import com.emikhalets.sunnydayapp.network.pojo.ResponseDaily
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber

@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.emikhalets.sunnydayapp.adapters.DailyAdapter
-import com.emikhalets.sunnydayapp.data.network.pojo.ResponseDaily
 import com.emikhalets.sunnydayapp.databinding.FragmentForecastDailyBinding
-import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
+import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import timber.log.Timber
 
 class ForecastDailyFragment : Fragment() {
@@ -18,8 +17,9 @@ class ForecastDailyFragment : Fragment() {
     private var _binding: FragmentForecastDailyBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: DailyAdapter
-    private lateinit var viewModel: ForecastDailyViewModel
+    private lateinit var dailyAdapter: DailyAdapter
+    private val viewModel: ForecastDailyViewModel by viewModels()
+    private val pagerViewModel: ViewPagerViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,10 +32,7 @@ class ForecastDailyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ForecastDailyViewModel::class.java)
-        adapter = DailyAdapter(ArrayList())
-        binding.listForecastDaily.adapter = adapter
-        observeData()
+        implementObservers()
     }
 
     override fun onDestroy() {
@@ -43,50 +40,28 @@ class ForecastDailyFragment : Fragment() {
         _binding = null
     }
 
-    private fun observeData() {
-        CURRENT_QUERY.observe(viewLifecycleOwner, Observer {
-            hideForecastList()
-            hideNotice()
-            showProgressbar()
+    private fun implementObservers() {
+        pagerViewModel.currentQuery.observe(viewLifecycleOwner, Observer {
+            dailyAdapter = DailyAdapter()
+            binding.listForecastDaily.adapter = dailyAdapter
+            binding.textNotice.visibility = View.INVISIBLE
+            binding.pbLoadingDaily.visibility = View.VISIBLE
+            binding.listForecastDaily.visibility = View.INVISIBLE
             viewModel.requestForecastDaily(it)
         })
 
         viewModel.forecastDaily.observe(viewLifecycleOwner, Observer {
-            adapter.setList(it.data)
-            hideProgressbar()
-            showForecastList()
+            dailyAdapter.submitList(it.data)
+            binding.pbLoadingDaily.visibility = View.INVISIBLE
+            binding.listForecastDaily.visibility = View.VISIBLE
         })
 
         viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
             Timber.d("Error loading weather.")
             Timber.d(it)
-            hideProgressbar()
             binding.textNotice.text = it
-            showNotice()
+            binding.textNotice.visibility = View.VISIBLE
+            binding.pbLoadingDaily.visibility = View.INVISIBLE
         })
-    }
-
-    private fun showProgressbar() {
-        binding.pbLoadingDaily.visibility = View.VISIBLE
-    }
-
-    private fun hideProgressbar() {
-        binding.pbLoadingDaily.visibility = View.INVISIBLE
-    }
-
-    private fun showNotice() {
-        binding.textNotice.visibility = View.VISIBLE
-    }
-
-    private fun hideNotice() {
-        binding.textNotice.visibility = View.INVISIBLE
-    }
-
-    private fun showForecastList() {
-        binding.listForecastDaily.visibility = View.VISIBLE
-    }
-
-    private fun hideForecastList() {
-        binding.listForecastDaily.visibility = View.INVISIBLE
     }
 }

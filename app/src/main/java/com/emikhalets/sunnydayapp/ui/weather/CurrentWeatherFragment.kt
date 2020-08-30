@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.emikhalets.sunnydayapp.R
-import com.emikhalets.sunnydayapp.data.network.pojo.DataCurrent
+import com.emikhalets.sunnydayapp.network.pojo.DataCurrent
 import com.emikhalets.sunnydayapp.databinding.FragmentCurrentBinding
 import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
 import com.emikhalets.sunnydayapp.utils.buildIconUrl

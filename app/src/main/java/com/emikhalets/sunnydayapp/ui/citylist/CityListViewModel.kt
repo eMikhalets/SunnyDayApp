@@ -27,7 +27,6 @@ class CityListViewModel : ViewModel() {
             repository.updateCity(receivedCity)
             getAddedCities()
             Timber.d("City deleted from searched list. Added cities updated")
-
         }
     }
 }

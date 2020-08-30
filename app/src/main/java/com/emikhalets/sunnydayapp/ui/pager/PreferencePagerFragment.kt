@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp.ui
+package com.emikhalets.sunnydayapp.ui.pager
 
 import android.os.Bundle
 import androidx.preference.ListPreference

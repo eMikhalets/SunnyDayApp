@@ -1,8 +1,8 @@
-package com.emikhalets.sunnydayapp.data.network
+package com.emikhalets.sunnydayapp.network
 
-import com.emikhalets.sunnydayapp.data.network.pojo.ResponseCurrent
-import com.emikhalets.sunnydayapp.data.network.pojo.ResponseDaily
-import com.emikhalets.sunnydayapp.data.network.pojo.ResponseHourly
+import com.emikhalets.sunnydayapp.network.pojo.ResponseCurrent
+import com.emikhalets.sunnydayapp.network.pojo.ResponseDaily
+import com.emikhalets.sunnydayapp.network.pojo.ResponseHourly
 import com.emikhalets.sunnydayapp.utils.API_KEY
 import retrofit2.http.GET
 import retrofit2.http.Query

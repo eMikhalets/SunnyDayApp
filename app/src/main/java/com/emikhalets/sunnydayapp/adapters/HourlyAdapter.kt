@@ -2,20 +2,15 @@ package com.emikhalets.sunnydayapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
+import com.emikhalets.sunnydayapp.network.pojo.DataHourly
 import com.emikhalets.sunnydayapp.databinding.ItemForecastHourlyBinding
-import com.emikhalets.sunnydayapp.data.network.pojo.DataHourly
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
 
-class HourlyAdapter(private var forecastList: List<DataHourly>) :
-    RecyclerView.Adapter<HourlyAdapter.ViewHolder>() {
-
-    fun setList(list: List<DataHourly>) {
-        forecastList = list
-        notifyDataSetChanged()
-    }
+class HourlyAdapter : ListAdapter<DataHourly, HourlyAdapter.ViewHolder>(HourlyDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -23,11 +18,11 @@ class HourlyAdapter(private var forecastList: List<DataHourly>) :
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = forecastList.size
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
 
-    override fun onBindViewHolder(p0: ViewHolder, p1: Int) = p0.bind(forecastList[p1])
-
-    inner class ViewHolder(private val binding: ItemForecastHourlyBinding) :
+    class ViewHolder(private val binding: ItemForecastHourlyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DataHourly) {

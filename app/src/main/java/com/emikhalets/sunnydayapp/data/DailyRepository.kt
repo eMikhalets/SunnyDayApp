@@ -1,7 +1,7 @@
 package com.emikhalets.sunnydayapp.data
 
-import com.emikhalets.sunnydayapp.data.network.ApiFactory
-import com.emikhalets.sunnydayapp.data.network.AppResponse
+import com.emikhalets.sunnydayapp.network.ApiFactory
+import com.emikhalets.sunnydayapp.network.AppResponse
 
 class DailyRepository {
 

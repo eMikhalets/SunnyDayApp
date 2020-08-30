@@ -1,11 +1,10 @@
-package com.emikhalets.sunnydayapp.ui
+package com.emikhalets.sunnydayapp.ui.pager
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.PagerRepository
 import com.emikhalets.sunnydayapp.data.database.City
-import com.emikhalets.sunnydayapp.utils.ADDED_CITY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -15,7 +14,19 @@ class ViewPagerViewModel : ViewModel() {
 
     private val repository = PagerRepository()
     private val citiesToDB = mutableListOf<City>()
-    val searchingCities = MutableLiveData<Array<String>>()
+
+    private var _searchingCities = MutableLiveData<Array<String>>()
+    val searchingCities get() = _searchingCities
+
+    private var _currentQuery = MutableLiveData<String>()
+    val currentQuery get() = _currentQuery
+
+    private var _addedCity = MutableLiveData<String>()
+    val addedCity get() = _addedCity
+
+    fun updateCurrentQuery(query: String) {
+        _currentQuery.postValue(query)
+    }
 
     fun getCitiesByName(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -36,11 +47,12 @@ class ViewPagerViewModel : ViewModel() {
                 Timber.d("City after isAdded = ${city.isAdded}")
                 repository.updateCity(city)
                 Timber.d("City isAdded status updated: $city")
-                ADDED_CITY.postValue(query)
+                _addedCity.postValue(query)
             }
         }
     }
 
+    // TODO: make async
     fun parseAndInsertToDB(string: String) {
         val array = JSONArray(string)
 

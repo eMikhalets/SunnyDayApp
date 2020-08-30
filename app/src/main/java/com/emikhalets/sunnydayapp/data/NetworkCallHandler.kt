@@ -1,7 +1,7 @@
 package com.emikhalets.sunnydayapp.data
 
-import com.emikhalets.sunnydayapp.data.network.AppResponse
-import com.emikhalets.sunnydayapp.data.network.pojo.ResponseError
+import com.emikhalets.sunnydayapp.network.AppResponse
+import com.emikhalets.sunnydayapp.network.pojo.ResponseError
 import com.google.gson.GsonBuilder
 import retrofit2.HttpException
 import timber.log.Timber

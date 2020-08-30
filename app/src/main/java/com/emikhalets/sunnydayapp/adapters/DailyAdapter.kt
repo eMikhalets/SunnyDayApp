@@ -2,34 +2,29 @@ package com.emikhalets.sunnydayapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
+import com.emikhalets.sunnydayapp.network.pojo.DataDaily
 import com.emikhalets.sunnydayapp.databinding.ItemForecastDailyBinding
-import com.emikhalets.sunnydayapp.data.network.pojo.DataDaily
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DailyAdapter(private var forecastList: List<DataDaily>) :
-    RecyclerView.Adapter<DailyAdapter.ViewHolder>() {
-
-    fun setList(list: List<DataDaily>) {
-        forecastList = list
-        notifyDataSetChanged()
-    }
+class DailyAdapter : ListAdapter<DataDaily, DailyAdapter.ViewHolder>(DailyDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemForecastDailyBinding.inflate(inflater)
+        val binding = ItemForecastDailyBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = forecastList.size
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
 
-    override fun onBindViewHolder(p0: ViewHolder, p1: Int) = p0.bind(forecastList[p1])
-
-    inner class ViewHolder(private val binding: ItemForecastDailyBinding) :
+    class ViewHolder(private val binding: ItemForecastDailyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DataDaily) {

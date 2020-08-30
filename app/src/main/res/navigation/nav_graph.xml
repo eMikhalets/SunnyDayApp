@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/viewPagerFragment"
-        android:name="com.emikhalets.sunnydayapp.ui.ViewPagerFragment"
+        android:name="com.emikhalets.sunnydayapp.ui.pager.ViewPagerFragment"
         android:label="ViewPagerFragment"
         tools:layout="@layout/fragment_pager">
         <action
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/preferencePagerFragment"
-        android:name="com.emikhalets.sunnydayapp.ui.PreferencePagerFragment"
+        android:name="com.emikhalets.sunnydayapp.ui.pager.PreferencePagerFragment"
         android:label="PreferencePagerFragment" />
 
     <fragment

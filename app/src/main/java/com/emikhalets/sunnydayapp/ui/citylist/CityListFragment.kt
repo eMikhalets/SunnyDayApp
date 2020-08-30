@@ -5,23 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.adapters.CitiesAdapter
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
-import com.emikhalets.sunnydayapp.utils.ADDED_CITY
-import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
+import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import timber.log.Timber
 
-class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
+class CityListFragment : Fragment(), CitiesAdapter.CityClick {
 
     private var _binding: FragmentCityListBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var citiesAdapter: CitiesAdapter
-    private lateinit var viewModel: CityListViewModel
+    private val viewModel: CityListViewModel by viewModels()
+    private val pagerViewModel: ViewPagerViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,12 +34,9 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(CityListViewModel::class.java)
-        citiesAdapter = CitiesAdapter(ArrayList(), this)
-        binding.listCities.adapter = citiesAdapter
-        observeData()
-        viewModel.getAddedCities()
-
+        implementObservers()
+        if (savedInstanceState == null) viewModel.getAddedCities()
+        // TODO: TEMP
         binding.textLocationCity.text = getString(R.string.city_list_text_your_location)
     }
 
@@ -48,30 +45,30 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
         _binding = null
     }
 
-    private fun observeData() {
+    private fun implementObservers() {
         viewModel.addedCities.observe(viewLifecycleOwner, Observer {
-            citiesAdapter.setList(it)
             if (it.isNotEmpty()) {
-                hideTextEmptyList()
-                showLocationCity()
-                showCitiesList()
-                Timber.d("Cities list:")
-                it.forEach { Timber.d(it.toString()) }
+                citiesAdapter = CitiesAdapter(this)
+                citiesAdapter.submitList(it)
+                binding.listCities.adapter = citiesAdapter
+                binding.listCities.visibility = View.VISIBLE
+                binding.textEmptyList.visibility = View.INVISIBLE
+                binding.cardLocationCity.visibility = View.VISIBLE
             } else {
-                hideCitiesList()
-                hideLocationCity()
-                showTextEmptyList()
-                Timber.d("Cities list is empty")
+                binding.listCities.visibility = View.INVISIBLE
+                binding.textEmptyList.visibility = View.VISIBLE
+                binding.cardLocationCity.visibility = View.INVISIBLE
             }
         })
 
-        // LiveData for added cities in cityList
-        ADDED_CITY.observe(viewLifecycleOwner, Observer { viewModel.getAddedCities() })
+        pagerViewModel.addedCity.observe(
+            viewLifecycleOwner, Observer { viewModel.getAddedCities() }
+        )
     }
 
     override fun onCityClick(city: City) {
         Timber.d("Clicked: $city")
-        CURRENT_QUERY.value = city.getQuery()
+        pagerViewModel.updateCurrentQuery(city.getQuery())
         Timber.d("Query updated: ${city.getQuery()}")
     }
 
@@ -79,29 +76,6 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClickListener {
         // TODO: Add dialog for delete or implement itemTouchListener
         Timber.d("Delete: $city")
         viewModel.deleteCity(city)
-    }
-
-    private fun showTextEmptyList() {
-        binding.textEmptyList.visibility = View.VISIBLE
-    }
-
-    private fun hideTextEmptyList() {
-        binding.textEmptyList.visibility = View.INVISIBLE
-    }
-
-    private fun showLocationCity() {
-        binding.cardLocationCity.visibility = View.VISIBLE
-    }
-
-    private fun hideLocationCity() {
-        binding.cardLocationCity.visibility = View.INVISIBLE
-    }
-
-    private fun showCitiesList() {
-        binding.listCities.visibility = View.VISIBLE
-    }
-
-    private fun hideCitiesList() {
-        binding.listCities.visibility = View.INVISIBLE
+        viewModel.getAddedCities()
     }
 }
