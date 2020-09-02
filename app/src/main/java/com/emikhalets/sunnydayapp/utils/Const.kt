@@ -1,7 +1,5 @@
 package com.emikhalets.sunnydayapp.utils
 
-import androidx.lifecycle.MutableLiveData
-
 /**
  * Constants used throughout the app
  */

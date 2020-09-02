@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.emikhalets.sunnydayapp.R
-import com.emikhalets.sunnydayapp.network.pojo.DataCurrent
 import com.emikhalets.sunnydayapp.databinding.FragmentCurrentBinding
-import com.emikhalets.sunnydayapp.utils.CURRENT_QUERY
+import com.emikhalets.sunnydayapp.network.pojo.DataCurrent
+import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
 import timber.log.Timber
@@ -22,7 +22,8 @@ class CurrentWeatherFragment : Fragment() {
     private var _binding: FragmentCurrentBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var weatherViewModel: CurrentWeatherViewModel
+    private val pagerViewModel: ViewPagerViewModel by viewModels()
+    private val weatherViewModel: CurrentWeatherViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,8 +36,7 @@ class CurrentWeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        weatherViewModel = ViewModelProvider(this).get(CurrentWeatherViewModel::class.java)
-        observeData()
+        implementObservers()
     }
 
     override fun onDestroy() {
@@ -44,8 +44,8 @@ class CurrentWeatherFragment : Fragment() {
         _binding = null
     }
 
-    private fun observeData() {
-        CURRENT_QUERY.observe(viewLifecycleOwner, Observer {
+    private fun implementObservers() {
+        pagerViewModel.currentQuery.observe(viewLifecycleOwner, Observer {
             hideInterface()
             hideTextNotice()
             showProgressbar()

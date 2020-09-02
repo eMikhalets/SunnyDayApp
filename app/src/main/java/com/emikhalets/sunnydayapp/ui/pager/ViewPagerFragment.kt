@@ -45,16 +45,15 @@ class ViewPagerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        savedInstanceState?.let { convertCitiesCitiesToDB() }
+        implementObservers()
+        implementListeners()
+        implementSearch()
+
         pagerAdapter = PagerAdapter(this)
         binding.viewPager.adapter = pagerAdapter
 
-        implementObservers()
-        implementToolbar()
         attachTabsAndPager()
-
-        if (savedInstanceState == null) {
-            convertCitiesCitiesToDB()
-        }
     }
 
     override fun onDestroy() {
@@ -65,9 +64,7 @@ class ViewPagerFragment : Fragment() {
     private fun implementObservers() {
         viewModel.searchingCities.observe(viewLifecycleOwner, Observer {
             val cursor = MatrixCursor(arrayOf(BaseColumns._ID, "city_name"))
-            for (i in it.indices) {
-                cursor.addRow(arrayOf(i, it[i]))
-            }
+            for (i in it.indices) cursor.addRow(arrayOf(i, it[i]))
             searchAdapter.changeCursor(cursor)
             searchView.suggestionsAdapter = searchAdapter
         })
@@ -79,48 +76,36 @@ class ViewPagerFragment : Fragment() {
         })
     }
 
-    private fun implementToolbar() {
-        binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
-            Timber.d("Settings Click")
-            Navigation.findNavController(binding.root)
-                .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
-        }
+    private fun implementSearch() {
         searchView = binding.toolbar.menu.findItem(R.id.menu_pager_search).actionView as SearchView
-        searchView.queryHint = "Search"
 
-        searchTextListener()
-        implementSuggestionsAdapter()
-        searchSuggestionListener()
-    }
-
-    private fun implementSuggestionsAdapter() {
-        val from = arrayOf("city_name")
-        val to = intArrayOf(android.R.id.text1)
-        searchAdapter = SimpleCursorAdapter(
-            requireContext(),
-            android.R.layout.simple_list_item_1,
-            null,
-            from,
-            to,
-            CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER
-        )
-    }
-
-    private fun searchTextListener() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean = false
 
             override fun onQueryTextChange(newText: String): Boolean {
                 searchAdapter.changeCursor(null)
-                if (newText.length >= 3) {
-                    viewModel.getCitiesByName(newText)
-                }
-                return false
+                if (newText.length >= 2) viewModel.getCitiesByName(newText)
+                return true
             }
         })
+
+        implementSuggestionsAdapter()
     }
 
-    private fun searchSuggestionListener() {
+    private fun implementListeners() {
+        binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
+            Timber.d("Settings Click")
+            Navigation.findNavController(binding.root)
+                .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
+        }
+    }
+
+    private fun implementSuggestionsAdapter() {
+        searchAdapter = SimpleCursorAdapter(
+            requireContext(), android.R.layout.simple_list_item_1, null, arrayOf("city_name"),
+            intArrayOf(android.R.id.text1), CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER
+        )
+
         searchView.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
             override fun onSuggestionSelect(p0: Int): Boolean = false
 
@@ -137,13 +122,13 @@ class ViewPagerFragment : Fragment() {
                 binding.toolbar.subtitle = name
                 viewModel.updateCurrentQuery(name)
                 searchAdapter.changeCursor(null)
-                viewModel.insertCity(name)
+                viewModel.changeIsAddedCity(name)
                 Timber.d("Query updated: $name")
                 return true
             }
         })
     }
-e
+
     private fun attachTabsAndPager() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {

@@ -32,19 +32,17 @@ class ViewPagerViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val list = repository.getCitiesByName(name)
             val searchList = Array(list.size) { i -> "${list[i].cityName}, ${list[i].countryFull}" }
-            searchingCities.postValue(searchList)
+            _searchingCities.postValue(searchList)
         }
     }
 
-    fun insertCity(query: String) {
+    fun changeIsAddedCity(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val array = query.split(", ")
             val city = repository.getCityByName(array[0], array[1])
-            Timber.d("City before isAdded = ${city.isAdded}")
 
             if (!city.isAdded) {
                 city.isAdded = true
-                Timber.d("City after isAdded = ${city.isAdded}")
                 repository.updateCity(city)
                 Timber.d("City isAdded status updated: $city")
                 _addedCity.postValue(query)
