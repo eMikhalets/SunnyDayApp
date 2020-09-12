@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.emikhalets.sunnydayapp.R
@@ -22,8 +23,8 @@ class CurrentWeatherFragment : Fragment() {
     private var _binding: FragmentCurrentBinding? = null
     private val binding get() = _binding!!
 
-    private val pagerViewModel: ViewPagerViewModel by viewModels()
     private val weatherViewModel: CurrentWeatherViewModel by viewModels()
+    private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,14 +46,14 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     private fun implementObservers() {
-        pagerViewModel.currentQuery.observe(viewLifecycleOwner, Observer {
+        pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
             hideInterface()
             hideTextNotice()
             showProgressbar()
             weatherViewModel.requestCurrent(it)
         })
 
-        weatherViewModel.currentWeather.observe(viewLifecycleOwner, Observer {
+        weatherViewModel.currentWeather.observe(viewLifecycleOwner, {
             Timber.d("Current weather is loaded.")
             Timber.d(it.toString())
             hideProgressbar()
@@ -60,7 +61,7 @@ class CurrentWeatherFragment : Fragment() {
             showInterface()
         })
 
-        weatherViewModel.errorMessage.observe(viewLifecycleOwner, Observer {
+        weatherViewModel.errorMessage.observe(viewLifecycleOwner, {
             Timber.d("Error loading weather.")
             Timber.d(it)
             hideProgressbar()

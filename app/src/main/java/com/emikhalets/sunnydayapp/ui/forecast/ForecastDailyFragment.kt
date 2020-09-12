@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.emikhalets.sunnydayapp.adapters.DailyAdapter
@@ -19,7 +20,7 @@ class ForecastDailyFragment : Fragment() {
 
     private lateinit var dailyAdapter: DailyAdapter
     private val viewModel: ForecastDailyViewModel by viewModels()
-    private val pagerViewModel: ViewPagerViewModel by viewModels()
+    private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,7 +42,7 @@ class ForecastDailyFragment : Fragment() {
     }
 
     private fun implementObservers() {
-        pagerViewModel.currentQuery.observe(viewLifecycleOwner, Observer {
+        pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
             dailyAdapter = DailyAdapter()
             binding.listForecastDaily.adapter = dailyAdapter
             binding.textNotice.visibility = View.INVISIBLE
@@ -50,13 +51,13 @@ class ForecastDailyFragment : Fragment() {
             viewModel.requestForecastDaily(it)
         })
 
-        viewModel.forecastDaily.observe(viewLifecycleOwner, Observer {
+        viewModel.forecastDaily.observe(viewLifecycleOwner, {
             dailyAdapter.submitList(it.data)
             binding.pbLoadingDaily.visibility = View.INVISIBLE
             binding.listForecastDaily.visibility = View.VISIBLE
         })
 
-        viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
+        viewModel.errorMessage.observe(viewLifecycleOwner, {
             Timber.d("Error loading weather.")
             Timber.d(it)
             binding.textNotice.text = it

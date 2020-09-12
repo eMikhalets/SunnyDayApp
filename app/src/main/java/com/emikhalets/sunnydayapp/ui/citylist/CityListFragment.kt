@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.adapters.CitiesAdapter
 import com.emikhalets.sunnydayapp.data.database.City
@@ -21,7 +21,7 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
 
     private lateinit var citiesAdapter: CitiesAdapter
     private val viewModel: CityListViewModel by viewModels()
-    private val pagerViewModel: ViewPagerViewModel by viewModels()
+    private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +34,7 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        implementObservers()
+            implementObservers()
         if (savedInstanceState == null) viewModel.getAddedCities()
         // TODO: TEMP
         binding.textLocationCity.text = getString(R.string.city_list_text_your_location)
@@ -46,7 +46,7 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
     }
 
     private fun implementObservers() {
-        viewModel.addedCities.observe(viewLifecycleOwner, Observer {
+        viewModel.addedCities.observe(viewLifecycleOwner, {
             if (it.isNotEmpty()) {
                 citiesAdapter = CitiesAdapter(this)
                 citiesAdapter.submitList(it)
@@ -62,7 +62,7 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
         })
 
         pagerViewModel.addedCity.observe(
-            viewLifecycleOwner, Observer { viewModel.getAddedCities() }
+            viewLifecycleOwner, { viewModel.getAddedCities() }
         )
     }
 

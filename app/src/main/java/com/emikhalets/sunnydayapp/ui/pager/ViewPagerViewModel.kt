@@ -26,6 +26,7 @@ class ViewPagerViewModel : ViewModel() {
 
     fun updateCurrentQuery(query: String) {
         _currentQuery.postValue(query)
+        Timber.d("Query updated: $query")
     }
 
     fun getCitiesByName(name: String) {
@@ -68,6 +69,8 @@ class ViewPagerViewModel : ViewModel() {
             )
             citiesToDB.add(city)
         }
+
+        Timber.d(citiesToDB.toString())
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertAllCities(citiesToDB)

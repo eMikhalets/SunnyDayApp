@@ -11,8 +11,7 @@ import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
@@ -20,6 +19,7 @@ import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
 import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
 import com.emikhalets.sunnydayapp.ui.forecast.ForecastDailyFragment
 import com.emikhalets.sunnydayapp.ui.weather.CurrentWeatherFragment
+import com.emikhalets.sunnydayapp.utils.Keys
 import com.google.android.material.tabs.TabLayoutMediator
 import timber.log.Timber
 
@@ -31,7 +31,7 @@ class ViewPagerFragment : Fragment() {
     private lateinit var searchView: SearchView
     private lateinit var pagerAdapter: PagerAdapter
     private lateinit var searchAdapter: SimpleCursorAdapter
-    private val viewModel: ViewPagerViewModel by viewModels()
+    private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +45,8 @@ class ViewPagerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        savedInstanceState?.let { convertCitiesCitiesToDB() }
+        savedInstanceState ?: convertCitiesCitiesToDB()
+
         implementObservers()
         implementListeners()
         implementSearch()
@@ -62,14 +63,14 @@ class ViewPagerFragment : Fragment() {
     }
 
     private fun implementObservers() {
-        viewModel.searchingCities.observe(viewLifecycleOwner, Observer {
+        pagerViewModel.searchingCities.observe(viewLifecycleOwner, {
             val cursor = MatrixCursor(arrayOf(BaseColumns._ID, "city_name"))
             for (i in it.indices) cursor.addRow(arrayOf(i, it[i]))
             searchAdapter.changeCursor(cursor)
             searchView.suggestionsAdapter = searchAdapter
         })
 
-        viewModel.currentQuery.observe(viewLifecycleOwner, Observer {
+        pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
             binding.toolbar.subtitle = it
             // TODO: App crash if page is changed, I DON'T KNOW WHY!!!!
             //binding.viewPager.setCurrentItem(1, true)
@@ -84,7 +85,7 @@ class ViewPagerFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 searchAdapter.changeCursor(null)
-                if (newText.length >= 2) viewModel.getCitiesByName(newText)
+                if (newText.length >= 2) pagerViewModel.getCitiesByName(newText)
                 return true
             }
         })
@@ -120,10 +121,9 @@ class ViewPagerFragment : Fragment() {
                 searchView.setQuery(null, false)
 
                 binding.toolbar.subtitle = name
-                viewModel.updateCurrentQuery(name)
+                pagerViewModel.updateCurrentQuery(name)
                 searchAdapter.changeCursor(null)
-                viewModel.changeIsAddedCity(name)
-                Timber.d("Query updated: $name")
+                pagerViewModel.changeIsAddedCity(name)
                 return true
             }
         })
@@ -145,11 +145,11 @@ class ViewPagerFragment : Fragment() {
         if (sp.getBoolean(getString(R.string.sp_is_first_launch), true)) {
             requireContext().assets.open("cities_20000.json").bufferedReader().use { bufferReader ->
                 val json = bufferReader.use { it.readText() }
-                viewModel.parseAndInsertToDB(json)
+                pagerViewModel.parseAndInsertToDB(json)
             }
             sp.edit().putBoolean(getString(R.string.sp_is_first_launch), false).apply()
+            Timber.d("Cities database is created.")
         }
-        Timber.d("Cities database is created.")
     }
 
     private class PagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {

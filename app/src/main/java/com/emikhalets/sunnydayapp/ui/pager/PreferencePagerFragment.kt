@@ -37,15 +37,15 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
             }
         }
 
-        prefViewModel.getApiStatistics()
+        //prefViewModel.getApiStatistics()
     }
 
     private fun implementObservers() {
-        prefViewModel.apiStatistics.observe(viewLifecycleOwner, Observer {
+        prefViewModel.apiStatistics.observe(viewLifecycleOwner, {
             // insert data
         })
 
-        prefViewModel.notice.observe(viewLifecycleOwner, Observer {
+        prefViewModel.notice.observe(viewLifecycleOwner, {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         })
     }
