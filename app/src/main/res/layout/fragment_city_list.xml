@@ -3,53 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#eee"
-    android:padding="@dimen/layout.padding">
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/text_empty_list"
-        style="@style/CityListTextView"
+        android:id="@+id/text_notice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:alpha="0"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
         android:gravity="center"
         android:text="@string/city_list.text.empty_list"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/text_location_city"
+        tools:alpha="1" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_location_city"
+    <TextView
+        android:id="@+id/text_location_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:visibility="invisible"
-        app:cardCornerRadius="4dp"
+        android:alpha="0"
+        android:background="#caf0f8"
+        android:padding="8dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/text_location_city"
-            style="@style/ListItemTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            tools:text="Moscow, Russia" />
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:alpha="1"
+        tools:text="Moscow, Russia" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_cities"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/text_location_city"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_location_city"
         tools:listitem="@layout/item_city" />
 </androidx.constraintlayout.widget.ConstraintLayout>

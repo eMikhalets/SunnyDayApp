@@ -17,9 +17,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
 import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
-import com.emikhalets.sunnydayapp.ui.forecast.ForecastDailyFragment
-import com.emikhalets.sunnydayapp.ui.weather.CurrentWeatherFragment
-import com.emikhalets.sunnydayapp.utils.Keys
+import com.emikhalets.sunnydayapp.ui.weather.WeatherFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import timber.log.Timber
 
@@ -72,8 +70,7 @@ class ViewPagerFragment : Fragment() {
 
         pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
             binding.toolbar.subtitle = it
-            // TODO: App crash if page is changed, I DON'T KNOW WHY!!!!
-            //binding.viewPager.setCurrentItem(1, true)
+            binding.viewPager.setCurrentItem(1, true)
         })
     }
 
@@ -134,10 +131,10 @@ class ViewPagerFragment : Fragment() {
             when (position) {
                 0 -> tab.text = getString(R.string.tab_title_city_list)
                 1 -> tab.text = getString(R.string.tab_title_current)
-                2 -> tab.text = getString(R.string.tab_title_forecast)
             }
             tab.select()
         }.attach()
+        binding.viewPager.setCurrentItem(1, false)
     }
 
     private fun convertCitiesCitiesToDB() {
@@ -156,10 +153,9 @@ class ViewPagerFragment : Fragment() {
 
         override fun createFragment(position: Int): Fragment = when (position) {
             0 -> CityListFragment()
-            1 -> CurrentWeatherFragment()
-            else -> ForecastDailyFragment()
+            else -> WeatherFragment()
         }
 
-        override fun getItemCount(): Int = 3
+        override fun getItemCount(): Int = 2
     }
 }

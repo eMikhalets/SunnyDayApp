@@ -1,5 +1,6 @@
 package com.emikhalets.sunnydayapp.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -31,6 +32,9 @@ class CitiesAdapter(private val click: CityClick) :
 
         fun bind(item: City, click: CityClick) {
             with(binding) {
+                if (adapterPosition % 2 == 0) root.setBackgroundColor(Color.parseColor("#48cae4"))
+                else root.setBackgroundColor(Color.parseColor("#caf0f8"))
+
                 textName.text = binding.root.context.getString(
                     R.string.cities_adapter_text_query,
                     item.cityName,

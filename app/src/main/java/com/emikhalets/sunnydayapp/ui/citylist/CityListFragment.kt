@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.adapters.CitiesAdapter
 import com.emikhalets.sunnydayapp.data.database.City
@@ -14,12 +16,14 @@ import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import timber.log.Timber
 
+const val CITIES = "CITIES"
+const val NOTICE = "NOTICE"
+
 class CityListFragment : Fragment(), CitiesAdapter.CityClick {
 
     private var _binding: FragmentCityListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var citiesAdapter: CitiesAdapter
     private val viewModel: CityListViewModel by viewModels()
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
@@ -48,22 +52,19 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
     private fun implementObservers() {
         viewModel.addedCities.observe(viewLifecycleOwner, {
             if (it.isNotEmpty()) {
-                citiesAdapter = CitiesAdapter(this)
-                citiesAdapter.submitList(it)
+                val citiesAdapter = CitiesAdapter(this)
+                binding.listCities.addItemDecoration(
+                    DividerItemDecoration(requireContext(), LinearLayoutManager.HORIZONTAL)
+                )
                 binding.listCities.adapter = citiesAdapter
-                binding.listCities.visibility = View.VISIBLE
-                binding.textEmptyList.visibility = View.INVISIBLE
-                binding.cardLocationCity.visibility = View.VISIBLE
+                citiesAdapter.submitList(it)
+                setVisibilityMode(CITIES)
             } else {
-                binding.listCities.visibility = View.INVISIBLE
-                binding.textEmptyList.visibility = View.VISIBLE
-                binding.cardLocationCity.visibility = View.INVISIBLE
+                setVisibilityMode(NOTICE)
             }
         })
 
-        pagerViewModel.addedCity.observe(
-            viewLifecycleOwner, { viewModel.getAddedCities() }
-        )
+        pagerViewModel.addedCity.observe(viewLifecycleOwner, { viewModel.getAddedCities() })
     }
 
     override fun onCityClick(city: City) {
@@ -77,5 +78,21 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
         Timber.d("Delete: $city")
         viewModel.deleteCity(city)
         viewModel.getAddedCities()
+    }
+
+    private fun setVisibilityMode(mode: String) {
+        val durationMills = 500L
+        when (mode) {
+            CITIES -> {
+                binding.textNotice.animate().alpha(0f).setDuration(durationMills).start()
+                binding.textLocationCity.animate().alpha(1f).setDuration(durationMills).start()
+                binding.listCities.animate().alpha(1f).setDuration(durationMills).start()
+            }
+            else -> {
+                binding.textNotice.animate().alpha(1f).setDuration(durationMills).start()
+                binding.textLocationCity.animate().alpha(0f).setDuration(durationMills).start()
+                binding.listCities.animate().alpha(0f).setDuration(durationMills).start()
+            }
+        }
     }
 }

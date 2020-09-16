@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">SunnyDayApp</string>
 
+    <string name="city_list.text.your_location">your location (not implemented)</string>
+
     <!-- QUERY PARAMETERS -->
     <string name="query_lang_english">en</string>
     <string name="query_lang_russian">ru</string>
@@ -20,9 +22,8 @@
     <string name="pref_pager.units_summary">Единицы измерения погодных данных</string>
 
     <!-- TAB LAYOUT -->
-    <string name="tab_title.city_list">Список</string>
+    <string name="tab_title.city_list">Города</string>
     <string name="tab_title.current">Погода</string>
-    <string name="tab_title.forecast">Прогноз</string>
 
     <!-- TOOLBAR LAYOUT -->
     <string name="toolbar.menu.pref_title">Настройки</string>
@@ -62,11 +63,10 @@
     <string name="current.text.visibility_desc">Видимость</string>
     <string name="current.text.precip_desc">Осадки</string>
     <string name="current.text.snowfall_desc">Снегопад</string>
-    <string name="current.text.uv_icon">UV</string>
     <string name="current.text.uv_desc">Индекс UV</string>
     <string name="current.text.temp">%d °С</string>
     <string name="current.text.pressure">%.2f кПа</string>
-    <string name="current.text.wind_speed">%.2f км/ч</string>
+    <string name="current.text.wind_speed">%.2f м/с</string>
     <string name="current.text.feelslike">%d °С</string>
     <string name="current.text.humidity">%d %%</string>
     <string name="current.text.clouds">%d %%</string>
@@ -79,20 +79,9 @@
     <string name="forecast_daily.text.empty_list">Загрузите прогноз через поиск</string>
 
     <!-- FORECAST DAILY ITEM LAYOUT -->
-    <string name="forecast_daily.text.temp">%d °С\n%d °С</string>
-    <string name="forecast_daily.text.feelslike">Ощущается как %d°С / %d°С</string>
-    <string name="forecast_daily.text.pressure">%.2f кПа</string>
-    <string name="forecast_daily.text.humidity">%d %%</string>
-    <string name="forecast_daily.text.wind">%.2f км/ч</string>
-
-    <!-- FORECAST HOURLY ITEM LAYOUT -->
-    <string name="forecast_hourly.text.temp">%.2f °С</string>
-    <string name="forecast_hourly.text.feelslike">Ощущается как %d °С</string>
-    <string name="forecast_hourly.text.pressure">%.2f кПа</string>
-    <string name="forecast_hourly.text.humidity">%d %%</string>
-    <string name="forecast_hourly.text.wind">%.2f км/ч</string>
+    <string name="forecast_daily.text.temp">%d °С</string>
 
     <!-- CITIES ADAPTER -->
     <string name="cities_adapter.text.query">%s, %s</string>
-    <string name="city_list.text.your_location">your location (not implemented)</string>
+    <string name="current.btn.more_details">Подробнее</string>
 </resources>
