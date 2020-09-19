@@ -17,9 +17,9 @@ import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
 import timber.log.Timber
 
-const val WEATHER = "WEATHER"
-const val LOADING = "LOADING"
-const val NOTICE = "NOTICE"
+private const val WEATHER = "WEATHER"
+private const val LOADING = "LOADING"
+private const val NOTICE = "NOTICE"
 
 class WeatherFragment : Fragment() {
 
@@ -50,14 +50,15 @@ class WeatherFragment : Fragment() {
 
     private fun implementObservers() {
         pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
+            Timber.d("Query has been updated: ($it)")
             setVisibilityMode(LOADING)
             weatherViewModel.requestCurrent(it)
             weatherViewModel.requestForecastDaily(it)
         })
 
         weatherViewModel.currentWeather.observe(viewLifecycleOwner, {
-            Timber.d("Current weather is loaded.")
             val weather = it.data.first()
+            Timber.d("Current weather has been loaded: ($weather)")
             Picasso.get().load(buildIconUrl(weather.weather.icon)).into(binding.imageWeatherIcon)
             with(binding) {
                 textCityName.text = weather.cityName
@@ -74,22 +75,29 @@ class WeatherFragment : Fragment() {
         })
 
         weatherViewModel.forecastDaily.observe(viewLifecycleOwner, {
-            Timber.d("Forecast daily is loaded.")
+            val forecast = it.data
+            Timber.d("Forecast daily has been loaded: ($forecast)")
             val forecastAdapter = DailyAdapter()
-            with(binding.listForecastDaily) {
-                addItemDecoration(
-                    DividerItemDecoration(requireContext(), LinearLayoutManager.HORIZONTAL)
-                )
-                adapter = forecastAdapter
-            }
-            forecastAdapter.submitList(it.data)
+            val layoutManager = LinearLayoutManager(requireContext())
+            val divider = DividerItemDecoration(requireContext(), layoutManager.orientation)
+            binding.listForecastDaily.layoutManager = layoutManager
+            binding.listForecastDaily.addItemDecoration(divider)
+            binding.listForecastDaily.adapter = forecastAdapter
+            forecastAdapter.submitList(forecast)
             setVisibilityMode(WEATHER)
         })
 
         weatherViewModel.errorMessage.observe(viewLifecycleOwner, {
-            Timber.d("Error loading weather.")
+            Timber.d("Error when sending a request to the server")
             binding.textNotice.text = it
             setVisibilityMode(NOTICE)
+        })
+
+        pagerViewModel.location.observe(viewLifecycleOwner, {
+            Timber.d("Location coordinates is updated.")
+            setVisibilityMode(LOADING)
+            weatherViewModel.requestCurrent(it[0], it[1])
+            weatherViewModel.requestForecastDaily(it[0], it[1])
         })
     }
 

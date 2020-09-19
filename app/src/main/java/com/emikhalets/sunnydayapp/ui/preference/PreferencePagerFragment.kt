@@ -1,13 +1,13 @@
-package com.emikhalets.sunnydayapp.ui.pager
+package com.emikhalets.sunnydayapp.ui.preference
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.emikhalets.sunnydayapp.R
+import com.emikhalets.sunnydayapp.ui.preference.PreferenceViewModel
 
 class PreferencePagerFragment : PreferenceFragmentCompat() {
 

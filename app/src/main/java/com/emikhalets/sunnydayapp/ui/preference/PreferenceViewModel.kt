@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp.ui.pager
+package com.emikhalets.sunnydayapp.ui.preference
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

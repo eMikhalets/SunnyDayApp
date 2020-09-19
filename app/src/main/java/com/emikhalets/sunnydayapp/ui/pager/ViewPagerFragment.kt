@@ -1,7 +1,14 @@
 package com.emikhalets.sunnydayapp.ui.pager
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.Context.LOCATION_SERVICE
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.database.Cursor
 import android.database.MatrixCursor
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.view.LayoutInflater
@@ -10,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
@@ -20,6 +28,9 @@ import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
 import com.emikhalets.sunnydayapp.ui.weather.WeatherFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import timber.log.Timber
+import java.util.*
+
+private const val REQUEST_PERMISSIONS_CODE = 42
 
 class ViewPagerFragment : Fragment() {
 
@@ -30,6 +41,7 @@ class ViewPagerFragment : Fragment() {
     private lateinit var pagerAdapter: PagerAdapter
     private lateinit var searchAdapter: SimpleCursorAdapter
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
+    private lateinit var locationManager: LocationManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,11 +65,65 @@ class ViewPagerFragment : Fragment() {
         binding.viewPager.adapter = pagerAdapter
 
         attachTabsAndPager()
+
+        locationManager = requireActivity().getSystemService(LOCATION_SERVICE) as LocationManager
+
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                ACCESS_FINE_LOCATION
+            ) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                ACCESS_COARSE_LOCATION
+            ) != PERMISSION_GRANTED
+        ) {
+            requestPermissions()
+        }
+
+        locationManager.requestLocationUpdates(
+            LocationManager.GPS_PROVIDER, 1000 * 10, 10f
+        ) { setLocation(it) }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun setLocation(location: Location) {
+        if (location.provider == LocationManager.GPS_PROVIDER ||
+            location.provider == LocationManager.NETWORK_PROVIDER
+        ) {
+            Timber.d("Location has been updated: $location")
+            val lat = location.latitude
+            val lon = location.longitude
+            val geo = Geocoder(requireContext(), Locale.getDefault())
+            val address = geo.getFromLocation(lat, lon, 1).first()
+            val query = "${address.locality}, ${address.countryName}"
+            Timber.d("Location query has been updated: ($query)")
+            pagerViewModel.updateLocation(lat, lon, query)
+        }
+    }
+
+    private fun requestPermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                ACCESS_COARSE_LOCATION
+            )
+        ) {
+            Timber.d("Displaying permission rationale to provide additional context")
+            requestLocationPermission()
+        } else {
+            Timber.d("Requesting permission")
+            requestLocationPermission()
+        }
+    }
+
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION),
+            REQUEST_PERMISSIONS_CODE
+        )
     }
 
     private fun implementObservers() {
@@ -69,8 +135,14 @@ class ViewPagerFragment : Fragment() {
         })
 
         pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
+            Timber.d("Query has been updated: ($it)")
             binding.toolbar.subtitle = it
             binding.viewPager.setCurrentItem(1, true)
+        })
+
+        pagerViewModel.locationQuery.observe(viewLifecycleOwner, {
+            Timber.d("Location query has been updated: ($it)")
+            binding.toolbar.subtitle = it
         })
     }
 
@@ -82,7 +154,10 @@ class ViewPagerFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 searchAdapter.changeCursor(null)
-                if (newText.length >= 2) pagerViewModel.getCitiesByName(newText)
+                if (newText.length >= 2) {
+                    Timber.d("The search query has been changed: ($newText)")
+                    pagerViewModel.getCitiesByName(newText)
+                }
                 return true
             }
         })
@@ -92,6 +167,7 @@ class ViewPagerFragment : Fragment() {
 
     private fun implementListeners() {
         binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
+            // TODO: DO IT!!!
             Timber.d("Settings Click")
             Navigation.findNavController(binding.root)
                 .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
@@ -145,7 +221,7 @@ class ViewPagerFragment : Fragment() {
                 pagerViewModel.parseAndInsertToDB(json)
             }
             sp.edit().putBoolean(getString(R.string.sp_is_first_launch), false).apply()
-            Timber.d("Cities database is created.")
+            Timber.d("City database was created.")
         }
     }
 

@@ -16,7 +16,9 @@ class CityListViewModel : ViewModel() {
 
     fun getAddedCities() {
         viewModelScope.launch(Dispatchers.IO) {
-            addedCities.postValue(repository.getAddedCities())
+            val result = repository.getAddedCities()
+            Timber.d("The list of the added cities from the database is loaded")
+            addedCities.postValue(result)
         }
     }
 
@@ -25,8 +27,8 @@ class CityListViewModel : ViewModel() {
             val receivedCity = repository.getCity(city.id!!)
             receivedCity.isAdded = false
             repository.updateCity(receivedCity)
+            Timber.d("City removed from search history : (${city.getQuery()})")
             getAddedCities()
-            Timber.d("City deleted from searched list. Added cities updated")
         }
     }
 }

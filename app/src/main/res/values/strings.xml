@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">SunnyDayApp</string>
 
-    <string name="city_list.text.your_location">your location (not implemented)</string>
-
     <!-- QUERY PARAMETERS -->
     <string name="query_lang_english">en</string>
     <string name="query_lang_russian">ru</string>
@@ -49,6 +47,7 @@
 
     <!-- CITY LIST LAYOUT -->
     <string name="city_list.text.empty_list">Список городов пуст\n\nДобавьте новый город через поиск</string>
+    <string name="city_list.text.location_not_determined">Геолокация не определена</string>
 
     <!-- WEATHER CURRENT LAYOUT -->
     <string name="current.text.load_data">Загрузите погоду через поиск</string>

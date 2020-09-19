@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/preferencePagerFragment"
-        android:name="com.emikhalets.sunnydayapp.ui.pager.PreferencePagerFragment"
+        android:name="com.emikhalets.sunnydayapp.ui.preference.PreferencePagerFragment"
         android:label="PreferencePagerFragment" />
 
     <fragment

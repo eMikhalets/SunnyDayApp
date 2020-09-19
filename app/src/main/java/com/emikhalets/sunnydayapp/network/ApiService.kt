@@ -17,11 +17,29 @@ interface ApiService {
         @Query("units") units: String
     ): ResponseCurrent
 
+    @GET("current")
+    suspend fun currentWeather(
+        @Query("key") apiKey: String,
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
+        @Query("lang") lang: String,
+        @Query("units") units: String
+    ): ResponseCurrent
+
     @GET("forecast/daily")
     suspend fun forecastDaily(
         @Query("key") apiKey: String,
         @Query("city") cityName: String,
         @Query("country") country: String,
+        @Query("lang") lang: String,
+        @Query("units") units: String
+    ): ResponseDaily
+
+    @GET("forecast/daily")
+    suspend fun forecastDaily(
+        @Query("key") apiKey: String,
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
         @Query("lang") lang: String,
         @Query("units") units: String
     ): ResponseDaily

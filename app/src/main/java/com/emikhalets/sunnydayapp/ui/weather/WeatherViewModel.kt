@@ -27,7 +27,7 @@ class WeatherViewModel : ViewModel() {
 
     fun requestCurrent(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            Timber.d("Current Weather Query %s", query)
+            Timber.d("Sending current weather request by city name: ($query)")
             val array = query.split(", ")
             when (val data = repository.requestCurrent(array[0], array[1], "ru", "M")) {
                 is AppResponse.Success ->
@@ -40,11 +40,39 @@ class WeatherViewModel : ViewModel() {
         }
     }
 
+    fun requestCurrent(lat: Double, lon: Double) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Timber.d("Sending current weather request by location: (lat=$lat, lon=$lon)")
+            when (val data = repository.requestCurrent(lat, lon, "ru", "M")) {
+                is AppResponse.Success ->
+                    _currentWeather.postValue(data.response)
+                is AppResponse.Error ->
+                    _errorMessage.postValue("Code: ${data.code}, Data: ${data.error?.error}")
+                is AppResponse.NetworkError ->
+                    _errorMessage.postValue(data.toString())
+            }
+        }
+    }
+
     fun requestForecastDaily(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            Timber.d("Forecast Daily Query %s", query)
+            Timber.d("Sending daily forecast request by city name: ($query)")
             val array = query.split(", ")
             when (val data = repository.requestForecastDaily(array[0], array[1], "ru", "M")) {
+                is AppResponse.Success ->
+                    _forecastDaily.postValue(data.response)
+                is AppResponse.Error ->
+                    _errorMessage.postValue("Code: ${data.code}, Data: ${data.error?.error}")
+                is AppResponse.NetworkError ->
+                    _errorMessage.postValue(data.toString())
+            }
+        }
+    }
+
+    fun requestForecastDaily(lat: Double, lon: Double) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Timber.d("Sending daily forecast request by location: (lat=$lat, lon=$lon)")
+            when (val data = repository.requestForecastDaily(lat, lon, "ru", "M")) {
                 is AppResponse.Success ->
                     _forecastDaily.postValue(data.response)
                 is AppResponse.Error ->
