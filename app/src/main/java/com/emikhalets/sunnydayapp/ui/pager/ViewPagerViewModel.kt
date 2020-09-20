@@ -77,7 +77,6 @@ class ViewPagerViewModel : ViewModel() {
         Timber.d("Data parsed into JSON array")
         for (i in 0 until array.length()) {
             val json = array.getJSONObject(i)
-            Timber.d("Iterable into JSON object: ($json)")
             val city = City(
                 cityId = json.getInt("city_id"),
                 cityName = json.getString("city_name"),
@@ -88,7 +87,6 @@ class ViewPagerViewModel : ViewModel() {
                 lon = json.getDouble("lon"),
                 isAdded = false
             )
-            Timber.d("Created city: ($city)")
             citiesToDB.add(city)
         }
         Timber.d("Number of cities in the list: (${citiesToDB.size}")

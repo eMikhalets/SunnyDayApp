@@ -2,6 +2,7 @@ package com.emikhalets.sunnydayapp.ui.pager
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
 import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.database.Cursor
@@ -17,10 +18,10 @@ import android.view.ViewGroup
 import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
-import androidx.core.app.ActivityCompat
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
@@ -30,9 +31,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import timber.log.Timber
 import java.util.*
 
-private const val REQUEST_PERMISSIONS_CODE = 42
-
 class ViewPagerFragment : Fragment() {
+
+    private val LOCATION_PERMISSIONS_REQUEST = 42
 
     private var _binding: FragmentPagerBinding? = null
     private val binding get() = _binding!!
@@ -54,39 +55,82 @@ class ViewPagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         savedInstanceState ?: convertCitiesCitiesToDB()
-
-        implementObservers()
-        implementListeners()
+        implementObserversClickListeners()
         implementSearch()
-
         pagerAdapter = PagerAdapter(this)
         binding.viewPager.adapter = pagerAdapter
-
         attachTabsAndPager()
-
         locationManager = requireActivity().getSystemService(LOCATION_SERVICE) as LocationManager
-
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                ACCESS_FINE_LOCATION
-            ) != PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                ACCESS_COARSE_LOCATION
-            ) != PERMISSION_GRANTED
-        ) {
-            requestPermissions()
+        if (!checkCoarseLocationPermission() && !checkFineLocationPermission()) {
+            Timber.d("Location permissions not granted. Request permissions")
+            requestLocationPermissions()
+        } else {
+            Timber.d("Location permissions was granted. Request location")
+            requestLocation()
         }
-
-        locationManager.requestLocationUpdates(
-            LocationManager.GPS_PROVIDER, 1000 * 10, 10f
-        ) { setLocation(it) }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    // Granting location permissions
+
+    private fun checkCoarseLocationPermission() =
+        when (ContextCompat.checkSelfPermission(requireContext(), ACCESS_COARSE_LOCATION)) {
+            PERMISSION_GRANTED -> true
+            else -> false
+        }
+
+    private fun checkFineLocationPermission() =
+        when (ContextCompat.checkSelfPermission(requireContext(), ACCESS_FINE_LOCATION)) {
+            PERMISSION_GRANTED -> true
+            else -> false
+        }
+
+    private fun requestLocationPermissions() {
+        requestPermissions(
+            arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION),
+            LOCATION_PERMISSIONS_REQUEST
+        )
+    }
+
+    // Request location
+
+    @SuppressLint("MissingPermission")
+    private fun requestLocation() {
+        locationManager.requestLocationUpdates(
+            LocationManager.GPS_PROVIDER, 10000, 1000f
+        ) {
+            Timber.d("Location has been updated: ($it)")
+            setLocation(it)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Timber.d("Request Permissions Result")
+        when (requestCode) {
+            LOCATION_PERMISSIONS_REQUEST -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) {
+                    Timber.d("Location permissions have been granted")
+                    requestLocation()
+                } else {
+                    Timber.d("Location permissions have not been granted")
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.city_list_text_location_permissions_not_granted),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     private fun setLocation(location: Location) {
@@ -104,29 +148,7 @@ class ViewPagerFragment : Fragment() {
         }
     }
 
-    private fun requestPermissions() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(),
-                ACCESS_COARSE_LOCATION
-            )
-        ) {
-            Timber.d("Displaying permission rationale to provide additional context")
-            requestLocationPermission()
-        } else {
-            Timber.d("Requesting permission")
-            requestLocationPermission()
-        }
-    }
-
-    private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION),
-            REQUEST_PERMISSIONS_CODE
-        )
-    }
-
-    private fun implementObservers() {
+    private fun implementObserversClickListeners() {
         pagerViewModel.searchingCities.observe(viewLifecycleOwner, {
             val cursor = MatrixCursor(arrayOf(BaseColumns._ID, "city_name"))
             for (i in it.indices) cursor.addRow(arrayOf(i, it[i]))
@@ -144,6 +166,13 @@ class ViewPagerFragment : Fragment() {
             Timber.d("Location query has been updated: ($it)")
             binding.toolbar.subtitle = it
         })
+
+        binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
+            // TODO: DO CLICK ON SETTINGS!!!
+            Timber.d("Settings Click")
+//            Navigation.findNavController(binding.root)
+//                .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
+        }
     }
 
     private fun implementSearch() {
@@ -163,15 +192,6 @@ class ViewPagerFragment : Fragment() {
         })
 
         implementSuggestionsAdapter()
-    }
-
-    private fun implementListeners() {
-        binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
-            // TODO: DO IT!!!
-            Timber.d("Settings Click")
-            Navigation.findNavController(binding.root)
-                .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
-        }
     }
 
     private fun implementSuggestionsAdapter() {
