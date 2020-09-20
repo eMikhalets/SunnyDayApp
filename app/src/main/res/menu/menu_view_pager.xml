@@ -14,4 +14,10 @@
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/toolbar.menu.pref_title"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_pager_recreate_db"
+        android:icon="@drawable/ic_baseline_update_24"
+        android:title="@string/toolbar.menu.pref_title"
+        app:showAsAction="ifRoom" />
 </menu>

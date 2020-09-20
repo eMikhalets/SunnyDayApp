@@ -7,10 +7,10 @@ import com.emikhalets.sunnydayapp.data.database.City
 interface CitiesDao {
 
     /**
-     * Get all cities from table. Checking for Rows in a Table.
+     * Delete all cities from table.
      */
-    @Query("SELECT * FROM cities")
-    suspend fun getAllCities(): List<City>
+    @Query("DELETE FROM cities")
+    suspend fun deleteAllCities()
 
     /**
      * Get cities from database that appear in the cities list, that user looking for

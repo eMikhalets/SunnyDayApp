@@ -43,6 +43,7 @@ class ViewPagerFragment : Fragment() {
 
     private val LOCATION_PERMISSIONS_REQUEST = 42
     private val CREATED = "CREATED"
+    private val DELETED = "DELETED"
     private val CREATING = "CREATING"
 
     private var _binding: FragmentPagerBinding? = null
@@ -65,7 +66,7 @@ class ViewPagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        savedInstanceState ?: convertCitiesCitiesToDB()
+        savedInstanceState ?: checkExistingCitiesTable()
         implementObserversClickListeners()
         implementSearch()
         pagerAdapter = PagerAdapter(this)
@@ -178,8 +179,16 @@ class ViewPagerFragment : Fragment() {
         })
 
         pagerViewModel.dbStatus.observe(viewLifecycleOwner, {
-            Timber.d("Cities table in database has been created")
-            setVisibilityMode(it)
+            when (it) {
+                CREATED -> {
+                    Timber.d("Cities table in database has been created")
+                    setVisibilityMode(it)
+                }
+                DELETED -> {
+                    Timber.d("Cities table has been deleted")
+                    convertCitiesCitiesToDB()
+                }
+            }
         })
 
         binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
@@ -187,6 +196,12 @@ class ViewPagerFragment : Fragment() {
             Timber.d("Settings Click")
 //            Navigation.findNavController(binding.root)
 //                .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
+        }
+
+        binding.toolbar.findViewById<View>(R.id.menu_pager_recreate_db).setOnClickListener {
+            Timber.d("Recreating database click")
+            setVisibilityMode(CREATING)
+            pagerViewModel.deleteCitiesTable()
         }
     }
 
@@ -248,7 +263,7 @@ class ViewPagerFragment : Fragment() {
         binding.viewPager.setCurrentItem(1, false)
     }
 
-    private fun convertCitiesCitiesToDB() {
+    private fun checkExistingCitiesTable() {
         val dataStore = requireContext().createDataStore(getString(R.string.ds_file_name))
         val isDbCreatedKey = preferencesKey<Boolean>(getString(R.string.ds_is_db_created))
         val isDbCreatedFlow: Flow<Boolean> = dataStore.data.map { it[isDbCreatedKey] ?: false }
@@ -257,11 +272,7 @@ class ViewPagerFragment : Fragment() {
                 if (!isDbCreated) {
                     Timber.d("Cities table not exist")
                     setVisibilityMode(CREATING)
-                    requireContext().assets.open("cities_20000.json").bufferedReader()
-                        .use { bufferReader ->
-                            val json = bufferReader.use { it.readText() }
-                            pagerViewModel.parseAndInsertToDB(json)
-                        }
+                    convertCitiesCitiesToDB()
                     dataStore.edit { it[isDbCreatedKey] = true }
                 } else {
                     Timber.d("Cities table in database was created")
@@ -271,8 +282,15 @@ class ViewPagerFragment : Fragment() {
         }
     }
 
+    private fun convertCitiesCitiesToDB() {
+        requireContext().assets.open("cities_20000.json").bufferedReader()
+            .use { bufferReader ->
+                val json = bufferReader.use { it.readText() }
+                pagerViewModel.parseAndInsertToDB(json)
+            }
+    }
+
     private fun setVisibilityMode(mode: String) {
-        val duration = 500L
         when (mode) {
             CREATING -> {
                 Timber.d("Showing progressbar, notice. Hiding viewpager, tabs")

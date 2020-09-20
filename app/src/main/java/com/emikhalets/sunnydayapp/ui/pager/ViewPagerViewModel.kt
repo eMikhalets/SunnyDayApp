@@ -13,6 +13,9 @@ import timber.log.Timber
 
 class ViewPagerViewModel : ViewModel() {
 
+    private val dbDeleted = "DELETED"
+    private val dbCreated = "CREATED"
+
     private val repository = PagerRepository()
     private val citiesToDB = mutableListOf<City>()
 
@@ -76,11 +79,11 @@ class ViewPagerViewModel : ViewModel() {
         }
     }
 
-    fun getAllCities() {
+    fun deleteCitiesTable() {
         viewModelScope.launch(Dispatchers.IO) {
-            val list = repository.getAllCities()
-            Timber.d("Request for a list of cities has been completed")
-            _citiesList.postValue(list)
+            Timber.d("Deleting cities database")
+            repository.deleteAllCities()
+            _dbStatus.postValue(dbDeleted)
         }
     }
 
@@ -106,7 +109,7 @@ class ViewPagerViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertAllCities(citiesToDB)
             Timber.d("Parsed list of cities added to the database")
-            _dbStatus.postValue("CREATED")
+            _dbStatus.postValue(dbCreated)
         }
     }
 }
