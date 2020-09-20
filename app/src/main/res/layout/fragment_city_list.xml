@@ -25,7 +25,7 @@
         android:id="@+id/text_location_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:alpha="0"
+        android:alpha="1"
         android:background="#caf0f8"
         android:padding="8dp"
         android:textAlignment="center"
@@ -34,7 +34,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:alpha="1"
         tools:text="Moscow, Russia" />
 
     <androidx.recyclerview.widget.RecyclerView

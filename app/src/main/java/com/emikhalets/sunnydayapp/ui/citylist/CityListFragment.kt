@@ -116,12 +116,10 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
         when (mode) {
             CITIES -> {
                 binding.textNotice.animate().alpha(0f).setDuration(durationMills).start()
-                binding.textLocationCity.animate().alpha(1f).setDuration(durationMills).start()
                 binding.listCities.animate().alpha(1f).setDuration(durationMills).start()
             }
             else -> {
                 binding.textNotice.animate().alpha(1f).setDuration(durationMills).start()
-                binding.textLocationCity.animate().alpha(0f).setDuration(durationMills).start()
                 binding.listCities.animate().alpha(0f).setDuration(durationMills).start()
             }
         }

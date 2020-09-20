@@ -8,9 +8,9 @@
     <string name="query_units_scientific">S</string> <!-- Kelvin, m/s, mm -->
     <string name="query_units_fahrenheit">I</string> <!-- F, mph, in -->
 
-    <!-- SHARED PREFERENCES KEYS -->
-    <string name="sp_file_name">sp_application</string>
-    <string name="sp_is_first_launch">sp_is_first_launch</string>
+    <!-- DATA STORE PREFERENCES KEYS -->
+    <string name="ds_file_name">ds_application</string>
+    <string name="ds_is_db_created">ds_is_database_created</string>
 
     <!-- PREFERENCE LAYOUT -->
     <string name="pref_pager.category_main">Общие настройки</string>
@@ -43,6 +43,7 @@
 
     <!-- VIEW PAGER LAYOUT -->
     <string name="pager.text.error_location">Ошибка при определении местоположения</string>
+    <string name="menu.view_pager.db_creating">Создание базы данных городов</string>
     <string name="menu.view_pager.search">Search</string>
 
     <!-- CITY LIST LAYOUT -->

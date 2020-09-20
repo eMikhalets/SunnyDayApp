@@ -20,20 +20,30 @@ import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.datastore.preferences.createDataStore
+import androidx.datastore.preferences.edit
+import androidx.datastore.preferences.preferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
 import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
 import com.emikhalets.sunnydayapp.ui.weather.WeatherFragment
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
 class ViewPagerFragment : Fragment() {
 
     private val LOCATION_PERMISSIONS_REQUEST = 42
+    private val CREATED = "CREATED"
+    private val CREATING = "CREATING"
 
     private var _binding: FragmentPagerBinding? = null
     private val binding get() = _binding!!
@@ -167,6 +177,11 @@ class ViewPagerFragment : Fragment() {
             binding.toolbar.subtitle = it
         })
 
+        pagerViewModel.dbStatus.observe(viewLifecycleOwner, {
+            Timber.d("Cities table in database has been created")
+            setVisibilityMode(it)
+        })
+
         binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
             // TODO: DO CLICK ON SETTINGS!!!
             Timber.d("Settings Click")
@@ -234,14 +249,45 @@ class ViewPagerFragment : Fragment() {
     }
 
     private fun convertCitiesCitiesToDB() {
-        val sp = requireContext().getSharedPreferences(getString(R.string.sp_file_name), 0)
-        if (sp.getBoolean(getString(R.string.sp_is_first_launch), true)) {
-            requireContext().assets.open("cities_20000.json").bufferedReader().use { bufferReader ->
-                val json = bufferReader.use { it.readText() }
-                pagerViewModel.parseAndInsertToDB(json)
+        val dataStore = requireContext().createDataStore(getString(R.string.ds_file_name))
+        val isDbCreatedKey = preferencesKey<Boolean>(getString(R.string.ds_is_db_created))
+        val isDbCreatedFlow: Flow<Boolean> = dataStore.data.map { it[isDbCreatedKey] ?: false }
+        lifecycleScope.launch {
+            isDbCreatedFlow.collect { isDbCreated ->
+                if (!isDbCreated) {
+                    Timber.d("Cities table not exist")
+                    setVisibilityMode(CREATING)
+                    requireContext().assets.open("cities_20000.json").bufferedReader()
+                        .use { bufferReader ->
+                            val json = bufferReader.use { it.readText() }
+                            pagerViewModel.parseAndInsertToDB(json)
+                        }
+                    dataStore.edit { it[isDbCreatedKey] = true }
+                } else {
+                    Timber.d("Cities table in database was created")
+                    setVisibilityMode(CREATED)
+                }
             }
-            sp.edit().putBoolean(getString(R.string.sp_is_first_launch), false).apply()
-            Timber.d("City database was created.")
+        }
+    }
+
+    private fun setVisibilityMode(mode: String) {
+        val duration = 500L
+        when (mode) {
+            CREATING -> {
+                Timber.d("Showing progressbar, notice. Hiding viewpager, tabs")
+                binding.pbDbCreating.visibility = View.VISIBLE
+                binding.textNotice.visibility = View.VISIBLE
+                binding.viewPager.visibility = View.INVISIBLE
+                binding.tabLayout.visibility = View.INVISIBLE
+            }
+            CREATED -> {
+                Timber.d("Hiding progressbar, notice. Showing viewpager, tabs")
+                binding.pbDbCreating.visibility = View.INVISIBLE
+                binding.textNotice.visibility = View.INVISIBLE
+                binding.viewPager.visibility = View.VISIBLE
+                binding.tabLayout.visibility = View.VISIBLE
+            }
         }
     }
 

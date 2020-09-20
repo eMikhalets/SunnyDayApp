@@ -7,6 +7,12 @@ import com.emikhalets.sunnydayapp.data.database.City
 interface CitiesDao {
 
     /**
+     * Get all cities from table. Checking for Rows in a Table.
+     */
+    @Query("SELECT * FROM cities")
+    suspend fun getAllCities(): List<City>
+
+    /**
      * Get cities from database that appear in the cities list, that user looking for
      */
     @Query("SELECT * FROM cities WHERE is_city_added = 1")

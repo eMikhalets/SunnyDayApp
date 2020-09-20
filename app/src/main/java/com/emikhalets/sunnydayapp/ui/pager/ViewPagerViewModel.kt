@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.PagerRepository
 import com.emikhalets.sunnydayapp.data.database.City
-import com.emikhalets.sunnydayapp.network.AppResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -31,6 +30,12 @@ class ViewPagerViewModel : ViewModel() {
 
     private var _locationQuery = MutableLiveData<String>()
     val locationQuery: LiveData<String> get() = _locationQuery
+
+    private var _dbStatus = MutableLiveData<String>()
+    val dbStatus: LiveData<String> get() = _dbStatus
+
+    private var _citiesList = MutableLiveData<List<City>>()
+    val citiesList: LiveData<List<City>> get() = _citiesList
 
     fun updateCurrentQuery(query: String) {
         Timber.d("Query has been updated: ($query)")
@@ -71,7 +76,14 @@ class ViewPagerViewModel : ViewModel() {
         }
     }
 
-    // TODO: make async
+    fun getAllCities() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val list = repository.getAllCities()
+            Timber.d("Request for a list of cities has been completed")
+            _citiesList.postValue(list)
+        }
+    }
+
     fun parseAndInsertToDB(string: String) {
         val array = JSONArray(string)
         Timber.d("Data parsed into JSON array")
@@ -89,11 +101,12 @@ class ViewPagerViewModel : ViewModel() {
             )
             citiesToDB.add(city)
         }
-        Timber.d("Number of cities in the list: (${citiesToDB.size}")
+        Timber.d("Number of cities in the list: (${citiesToDB.size})")
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertAllCities(citiesToDB)
             Timber.d("Parsed list of cities added to the database")
+            _dbStatus.postValue("CREATED")
         }
     }
 }
