@@ -3,14 +3,13 @@ package com.emikhalets.sunnydayapp.ui.pager
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
-import android.content.Context.LOCATION_SERVICE
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.location.Geocoder
 import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import android.provider.BaseColumns
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +30,7 @@ import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
 import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
 import com.emikhalets.sunnydayapp.ui.weather.WeatherFragment
+import com.google.android.gms.location.*
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -53,7 +53,7 @@ class ViewPagerFragment : Fragment() {
     private lateinit var pagerAdapter: PagerAdapter
     private lateinit var searchAdapter: SimpleCursorAdapter
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
-    private lateinit var locationManager: LocationManager
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,7 +72,8 @@ class ViewPagerFragment : Fragment() {
         pagerAdapter = PagerAdapter(this)
         binding.viewPager.adapter = pagerAdapter
         attachTabsAndPager()
-        locationManager = requireActivity().getSystemService(LOCATION_SERVICE) as LocationManager
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
         if (!checkCoarseLocationPermission() && !checkFineLocationPermission()) {
             Timber.d("Location permissions not granted. Request permissions")
             requestLocationPermissions()
@@ -112,11 +113,24 @@ class ViewPagerFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun requestLocation() {
-        locationManager.requestLocationUpdates(
-            LocationManager.GPS_PROVIDER, 10000, 1000f
-        ) {
-            Timber.d("Location has been updated: ($it)")
-            setLocation(it)
+        val locationRequest = LocationRequest.create()?.apply {
+            interval = 1000 * 60 * 10
+            fastestInterval = interval / 2
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            smallestDisplacement = 1000f
+        }
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback(),
+            Looper.getMainLooper()
+        )
+    }
+
+    private fun locationCallback() = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult?) {
+            super.onLocationResult(locationResult)
+            locationResult ?: return
+            setLocation(locationResult.locations.first())
         }
     }
 
@@ -144,10 +158,8 @@ class ViewPagerFragment : Fragment() {
         }
     }
 
-    private fun setLocation(location: Location) {
-        if (location.provider == LocationManager.GPS_PROVIDER ||
-            location.provider == LocationManager.NETWORK_PROVIDER
-        ) {
+    private fun setLocation(location: Location?) {
+        location?.let {
             Timber.d("Location has been updated: $location")
             val lat = location.latitude
             val lon = location.longitude
