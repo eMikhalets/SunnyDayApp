@@ -1,0 +1,23 @@
+<resources>
+
+    <!-- DATA STORE KEYS -->
+    <string name="ds_file_name">ds_application</string>
+    <string name="ds_is_db_created">ds_is_database_created</string>
+
+    <!-- BUNDLE KEYS -->
+    <string name="args_current_weather">args_current_weather</string>
+    <string name="args_daily_forecast">args_daily_forecast</string>
+
+    <!-- PREFERENCE KEYS -->
+    <string name="pref_key_lang">pref_key_lang</string>
+    <string name="pref_key_theme">pref_key_theme</string>
+    <string name="pref_key_temp">pref_key_temp</string>
+    <string name="pref_key_press">pref_key_press</string>
+    <string name="pref_key_speed">pref_key_speed</string>
+    <string name="pref_key_calls">pref_key_calls</string>
+    <string name="pref_key_calls_rem">pref_key_calls_rem</string>
+    <string name="pref_key_calls_ts">pref_key_calls_ts</string>
+    <string name="pref_key_hist">pref_key_hist</string>
+    <string name="pref_key_hist_rem">pref_key_hist_rem</string>
+    <string name="pref_key_hist_ts">pref_key_hist_ts</string>
+</resources>

@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_viewPagerFragment_to_preferencePagerFragment"
             app:destination="@id/preferencePagerFragment" />
+        <action
+            android:id="@+id/action_viewPagerFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
 
     <fragment
@@ -30,5 +33,12 @@
         android:id="@+id/currentFragment"
         android:name="com.emikhalets.sunnydayapp.ui.weather.WeatherFragment"
         android:label="CurrentFragment"
-        tools:layout="@layout/fragment_current" />
+        tools:layout="@layout/fragment_current" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.emikhalets.sunnydayapp.ui.details.DetailsFragment"
+        android:label="DetailsFragment"
+        tools:layout="@layout/fragment_details" />
 </navigation>

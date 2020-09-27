@@ -11,16 +11,84 @@
             android:defaultValue="@string/query_lang_english"
             android:entries="@array/pref_query_lang"
             android:entryValues="@array/pref_query_lang_values"
-            android:key="pref_lang"
-            android:summary="%s"
+            android:key="@string/pref_key_lang"
+            android:summary="@string/pref_pager.lang_sum"
             android:title="@string/pref_pager.lang_label" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_theme"
+            android:title="@string/pref_pager.dark_theme" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_pager.category_units">
         <ListPreference
-            android:defaultValue="@string/query_units_metric"
-            android:entries="@array/pref_query_units"
-            android:entryValues="@array/pref_query_units_values"
-            android:key="pref_units"
-            android:summary="%s"
-            android:title="@string/pref_pager.units_label" />
+            android:defaultValue="1"
+            android:entries="@array/pref_units_temp"
+            android:entryValues="@array/pref_units_temp_values"
+            android:key="@string/pref_key_temp"
+            android:summary="@string/pref_pager.units_temp_sum"
+            android:title="@string/pref_pager.units_temp" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/pref_units_pressure"
+            android:entryValues="@array/pref_units_pressure_values"
+            android:key="@string/pref_key_press"
+            android:summary="@string/pref_pager.units_pressure_sum"
+            android:title="@string/pref_pager.units_pressure" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/pref_units_speed"
+            android:entryValues="@array/pref_units_speed_values"
+            android:key="@string/pref_key_speed"
+            android:summary="@string/pref_pager.units_speed_sum"
+            android:title="@string/pref_pager.units_speed" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_pager.category_api">
+
+        <EditTextPreference
+            android:defaultValue="0"
+            android:key="@string/pref_key_calls"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_pager.api_calls_count" />
+
+        <EditTextPreference
+            android:defaultValue="0"
+            android:key="@string/pref_key_calls_rem"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_pager.api_calls_remaining" />
+
+        <EditTextPreference
+            android:defaultValue="0"
+            android:key="@string/pref_key_calls_ts"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_pager.api_calls_reset_ts" />
+
+        <EditTextPreference
+            android:defaultValue="0"
+            android:key="@string/pref_key_hist"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_pager.api_historical_calls_count" />
+
+        <EditTextPreference
+            android:defaultValue="0"
+            android:key="@string/pref_key_hist_rem"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_pager.api_historical_calls_remaining" />
+
+        <EditTextPreference
+            android:defaultValue="0"
+            android:key="@string/pref_key_hist_ts"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_pager.api_historical_calls_reset_ts" />
     </PreferenceCategory>
 </PreferenceScreen>

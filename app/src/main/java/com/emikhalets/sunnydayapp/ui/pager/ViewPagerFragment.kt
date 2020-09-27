@@ -25,6 +25,7 @@ import androidx.datastore.preferences.preferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
@@ -78,8 +79,11 @@ class ViewPagerFragment : Fragment() {
             Timber.d("Location permissions not granted. Request permissions")
             requestLocationPermissions()
         } else {
-            Timber.d("Location permissions was granted. Request location")
-            requestLocation()
+            if (!pagerViewModel.isLocation) {
+                Timber.d("Location permissions was granted. Request location")
+                pagerViewModel.isLocation = true
+                requestLocation()
+            }
         }
     }
 
@@ -206,15 +210,15 @@ class ViewPagerFragment : Fragment() {
         binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
             // TODO: DO CLICK ON SETTINGS!!!
             Timber.d("Settings Click")
-//            Navigation.findNavController(binding.root)
-//                .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
+            Navigation.findNavController(binding.root)
+                .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
         }
 
-        binding.toolbar.findViewById<View>(R.id.menu_pager_recreate_db).setOnClickListener {
-            Timber.d("Recreating database click")
-            setVisibilityMode(CREATING)
-            pagerViewModel.deleteCitiesTable()
-        }
+//        binding.toolbar.findViewById<View>(R.id.menu_pager_recreate_db).setOnClickListener {
+//            Timber.d("Recreating database click")
+//            setVisibilityMode(CREATING)
+//            pagerViewModel.deleteCitiesTable()
+//        }
     }
 
     private fun implementSearch() {
@@ -246,6 +250,7 @@ class ViewPagerFragment : Fragment() {
             override fun onSuggestionSelect(p0: Int): Boolean = false
 
             override fun onSuggestionClick(p0: Int): Boolean {
+                pagerViewModel.isWeatherLoaded = false
                 val cursor = searchView.suggestionsAdapter.getItem(p0) as Cursor
                 val name = cursor.getString(cursor.getColumnIndex("city_name"))
                 cursor.close()

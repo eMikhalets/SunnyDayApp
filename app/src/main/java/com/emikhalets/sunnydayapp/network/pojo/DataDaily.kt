@@ -2,6 +2,7 @@ package com.emikhalets.sunnydayapp.network.pojo
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class DataDaily(
     @SerializedName("moonrise_ts") @Expose val moonriseTime: Long,
@@ -40,4 +41,4 @@ data class DataDaily(
     @SerializedName("min_temp") @Expose val temperatureMin: Double,
     @SerializedName("clouds_mid") @Expose val cloudsMid: Double,
     @SerializedName("clouds_low") @Expose val cloudsLow: Double
-)
+) : Serializable

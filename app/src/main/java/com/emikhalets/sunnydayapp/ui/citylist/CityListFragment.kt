@@ -101,6 +101,7 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
 
     override fun onCityClick(city: City) {
         Timber.d("Clicked ($city) in the list of cities")
+        pagerViewModel.isWeatherLoaded = false
         pagerViewModel.updateCurrentQuery(city.getQuery())
     }
 

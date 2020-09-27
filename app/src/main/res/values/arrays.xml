@@ -10,15 +10,39 @@
         <item>ru</item>
     </string-array>
 
-    <string-array name="pref_query_units">
-        <item>Metric</item>
-        <item>Scientific </item>
-        <item>Fahrenheit</item>
+    <string-array name="pref_units_temp">
+        <item>Цельсий</item>
+        <item>Фаренгейт </item>
+        <item>Кельвин</item>
     </string-array>
 
-    <string-array name="pref_query_units_values">
-        <item>M</item>
-        <item>S </item>
-        <item>I</item>
+    <string-array name="pref_units_temp_values">
+        <item>C</item>
+        <item>F</item>
+        <item>K</item>
+    </string-array>
+
+    <string-array name="pref_units_pressure">
+        <item>Атмосфера</item>
+        <item>Миллибар</item>
+        <item>Паскаль</item>
+        <item>Ньютон на кв. см</item>
+    </string-array>
+
+    <string-array name="pref_units_pressure_values">
+        <item>atm</item>
+        <item>mb</item>
+        <item>pa</item>
+        <item>nsm</item>
+    </string-array>
+
+    <string-array name="pref_units_speed">
+        <item>Метр в секунду</item>
+        <item>Киломерт в час</item>
+    </string-array>
+
+    <string-array name="pref_units_speed_values">
+        <item>ms</item>
+        <item>kmh</item>
     </string-array>
 </resources>

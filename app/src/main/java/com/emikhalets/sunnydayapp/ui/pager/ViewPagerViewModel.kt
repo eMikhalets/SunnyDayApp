@@ -40,9 +40,19 @@ class ViewPagerViewModel : ViewModel() {
     private var _citiesList = MutableLiveData<List<City>>()
     val citiesList: LiveData<List<City>> get() = _citiesList
 
+    private var _timezone = MutableLiveData<String>()
+    val timezone: LiveData<String> get() = _timezone
+
+    var isWeatherLoaded = false
+    var isLocation = false
+
     fun updateCurrentQuery(query: String) {
         Timber.d("Query has been updated: ($query)")
         _currentQuery.postValue(query)
+    }
+
+    fun updateTimezone(timezone: String) {
+        _timezone.postValue(timezone)
     }
 
     fun updateLocation(lat: Double, lon: Double, query: String) {

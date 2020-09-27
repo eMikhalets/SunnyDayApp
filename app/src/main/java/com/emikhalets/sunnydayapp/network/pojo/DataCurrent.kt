@@ -2,6 +2,7 @@ package com.emikhalets.sunnydayapp.network.pojo
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class DataCurrent(
     @SerializedName("rh") @Expose val humidity: Double,
@@ -12,7 +13,7 @@ data class DataCurrent(
     @SerializedName("ob_time") @Expose val observationTime: String,
     @SerializedName("country_code") @Expose val countryCode: String,
     @SerializedName("clouds") @Expose val clouds: Double,
-    @SerializedName("ts") @Expose val unixTime: Long,
+    @SerializedName("ts") @Expose val timestamp: Long,
     @SerializedName("solar_rad") @Expose val solarRad: Double,
     @SerializedName("state_code") @Expose val stateCode: String,
     @SerializedName("city_name") @Expose val cityName: String,
@@ -40,4 +41,4 @@ data class DataCurrent(
     @SerializedName("station") @Expose val station: String,
     @SerializedName("elev_angle") @Expose val elevationAngle: Double,
     @SerializedName("app_temp") @Expose val tempFeelsLike: Double
-)
+) : Serializable

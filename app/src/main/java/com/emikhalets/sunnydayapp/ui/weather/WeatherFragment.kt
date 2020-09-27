@@ -7,21 +7,28 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.adapters.DailyAdapter
 import com.emikhalets.sunnydayapp.databinding.FragmentCurrentBinding
+import com.emikhalets.sunnydayapp.network.pojo.DataDaily
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
 import timber.log.Timber
+import java.io.Serializable
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 private const val WEATHER = "WEATHER"
 private const val LOADING = "LOADING"
 private const val NOTICE = "NOTICE"
 
-class WeatherFragment : Fragment() {
+class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
 
     private var _binding: FragmentCurrentBinding? = null
     private val binding get() = _binding!!
@@ -40,7 +47,7 @@ class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        implementObservers()
+        implementObserversAndListeners()
     }
 
     override fun onDestroy() {
@@ -48,25 +55,46 @@ class WeatherFragment : Fragment() {
         _binding = null
     }
 
-    private fun implementObservers() {
+    private fun implementObserversAndListeners() {
         pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
-            Timber.d("Query has been updated: ($it)")
-            setVisibilityMode(LOADING)
-            weatherViewModel.requestCurrent(it)
-            weatherViewModel.requestForecastDaily(it)
+            if (!pagerViewModel.isWeatherLoaded) {
+                Timber.d("Query has been updated: ($it)")
+                setVisibilityMode(LOADING)
+                weatherViewModel.requestCurrent(it)
+                weatherViewModel.requestForecastDaily(it)
+                pagerViewModel.isWeatherLoaded = true
+            }
+        })
+
+        pagerViewModel.location.observe(viewLifecycleOwner, {
+            if (!pagerViewModel.isWeatherLoaded) {
+                Timber.d("Location coordinates is updated.")
+                setVisibilityMode(LOADING)
+                weatherViewModel.requestCurrent(it[0], it[1])
+                weatherViewModel.requestForecastDaily(it[0], it[1])
+                pagerViewModel.isWeatherLoaded = true
+            }
         })
 
         weatherViewModel.currentWeather.observe(viewLifecycleOwner, {
+            pagerViewModel.updateTimezone(it.data.first().timezone)
             val weather = it.data.first()
             Timber.d("Current weather has been loaded: ($weather)")
-            Picasso.get().load(buildIconUrl(weather.weather.icon)).into(binding.imageWeatherIcon)
+            Picasso.get().load(buildIconUrl(weather.weather.icon))
+                .into(binding.imageWeatherIcon)
             with(binding) {
                 textCityName.text = weather.cityName
-                textDate.text = "SomeDate"
-                textTemp.text = getString(R.string.current_text_temp, weather.temperature.toInt())
+                val date = LocalDateTime.ofInstant(
+                    Instant.ofEpochMilli(weather.timestamp * 1000),
+                    ZoneId.of(weather.timezone)
+                )
+                val formatter = DateTimeFormatter.ofPattern("d E H:m")
+                textDate.text = date.format(formatter)
+                textTemp.text =
+                    getString(R.string.current_text_temp, weather.temperature.toInt())
                 textDesc.text = weather.weather.description
                 textWind.text =
-                    getString(R.string.current_text_wind_speed, weather.windSpeed * 1000 / 3600)
+                    getString(R.string.current_text_wind_speed, weather.windSpeed)
                 textHumidity.text =
                     getString(R.string.current_text_humidity, weather.humidity.toInt())
                 textPressure.text = getString(R.string.current_text_pressure, weather.pressure)
@@ -75,9 +103,10 @@ class WeatherFragment : Fragment() {
         })
 
         weatherViewModel.forecastDaily.observe(viewLifecycleOwner, {
+            pagerViewModel.updateTimezone(it.timezone)
             val forecast = it.data
             Timber.d("Forecast daily has been loaded: ($forecast)")
-            val forecastAdapter = DailyAdapter()
+            val forecastAdapter = DailyAdapter(it.timezone, this)
             val layoutManager = LinearLayoutManager(requireContext())
             val divider = DividerItemDecoration(requireContext(), layoutManager.orientation)
             binding.listForecastDaily.layoutManager = layoutManager
@@ -93,12 +122,19 @@ class WeatherFragment : Fragment() {
             setVisibilityMode(NOTICE)
         })
 
-        pagerViewModel.location.observe(viewLifecycleOwner, {
-            Timber.d("Location coordinates is updated.")
-            setVisibilityMode(LOADING)
-            weatherViewModel.requestCurrent(it[0], it[1])
-            weatherViewModel.requestForecastDaily(it[0], it[1])
-        })
+        binding.btnMoreWeather.setOnClickListener {
+            Timber.d("Clicked on current weather details")
+            weatherViewModel.currentWeather.value?.data?.let {
+                Timber.d("Navigate to current weather details")
+                val args = Bundle()
+                args.putSerializable(
+                    getString(R.string.args_current_weather),
+                    it.first() as Serializable
+                )
+                Navigation.findNavController(binding.root)
+                    .navigate(R.id.action_viewPagerFragment_to_detailsFragment, args)
+            }
+        }
     }
 
     private fun setVisibilityMode(mode: String) {
@@ -132,5 +168,15 @@ class WeatherFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onDailyForecastClick(dailyForecast: DataDaily) {
+        super.onDailyForecastClick(dailyForecast)
+        Timber.d("Clicked on forecast weather details")
+        Timber.d("Navigate to forecast weather details")
+        val args = Bundle()
+        args.putSerializable(getString(R.string.args_daily_forecast), dailyForecast as Serializable)
+        Navigation.findNavController(binding.root)
+            .navigate(R.id.action_viewPagerFragment_to_detailsFragment, args)
     }
 }
