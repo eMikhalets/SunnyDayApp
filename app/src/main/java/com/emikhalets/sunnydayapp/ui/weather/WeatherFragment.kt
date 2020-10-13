@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.adapters.DailyAdapter
-import com.emikhalets.sunnydayapp.databinding.FragmentCurrentBinding
 import com.emikhalets.sunnydayapp.data.pojo.DataDaily
+import com.emikhalets.sunnydayapp.databinding.FragmentCurrentBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
+import com.emikhalets.sunnydayapp.utils.WeatherStatus
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,10 +25,6 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-
-private const val WEATHER = "WEATHER"
-private const val LOADING = "LOADING"
-private const val NOTICE = "NOTICE"
 
 @AndroidEntryPoint
 class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
@@ -61,7 +58,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
         pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
             if (!pagerViewModel.isWeatherLoaded) {
                 Timber.d("Query has been updated: ($it)")
-                setVisibilityMode(LOADING)
+                setVisibilityMode(WeatherStatus.LOADING)
                 weatherViewModel.requestCurrent(it)
                 weatherViewModel.requestForecastDaily(it)
                 pagerViewModel.isWeatherLoaded = true
@@ -71,7 +68,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
         pagerViewModel.location.observe(viewLifecycleOwner, {
             if (!pagerViewModel.isWeatherLoaded) {
                 Timber.d("Location coordinates is updated.")
-                setVisibilityMode(LOADING)
+                setVisibilityMode(WeatherStatus.LOADING)
                 weatherViewModel.requestCurrent(it[0], it[1])
                 weatherViewModel.requestForecastDaily(it[0], it[1])
                 pagerViewModel.isWeatherLoaded = true
@@ -101,7 +98,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
                     getString(R.string.current_text_humidity, weather.humidity.toInt())
                 textPressure.text = getString(R.string.current_text_pressure, weather.pressure)
             }
-            setVisibilityMode(WEATHER)
+            setVisibilityMode(WeatherStatus.WEATHER)
         })
 
         weatherViewModel.forecastDaily.observe(viewLifecycleOwner, {
@@ -115,13 +112,13 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
             binding.listForecastDaily.addItemDecoration(divider)
             binding.listForecastDaily.adapter = forecastAdapter
             forecastAdapter.submitList(forecast)
-            setVisibilityMode(WEATHER)
+            setVisibilityMode(WeatherStatus.WEATHER)
         })
 
         weatherViewModel.errorMessage.observe(viewLifecycleOwner, {
             Timber.d("Error when sending a request to the server")
             binding.textNotice.text = it
-            setVisibilityMode(NOTICE)
+            setVisibilityMode(WeatherStatus.NOTICE)
         })
 
         binding.btnMoreWeather.setOnClickListener {
@@ -139,10 +136,10 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
         }
     }
 
-    private fun setVisibilityMode(mode: String) {
+    private fun setVisibilityMode(status: WeatherStatus) {
         val duration = 500L
-        when (mode) {
-            WEATHER -> {
+        when (status) {
+            WeatherStatus.WEATHER -> {
                 with(binding) {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingCurrent.animate().alpha(0f).setDuration(duration).start()
@@ -151,7 +148,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
                     listForecastDaily.animate().alpha(1f).setDuration(duration).start()
                 }
             }
-            LOADING -> {
+            WeatherStatus.LOADING -> {
                 with(binding) {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingCurrent.animate().alpha(1f).setDuration(duration).start()

@@ -17,8 +17,6 @@ import android.view.ViewGroup
 import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.createDataStore
 import androidx.datastore.preferences.edit
 import androidx.datastore.preferences.preferencesKey
@@ -31,6 +29,9 @@ import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
 import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
 import com.emikhalets.sunnydayapp.ui.weather.WeatherFragment
+import com.emikhalets.sunnydayapp.utils.LocationHandler
+import com.emikhalets.sunnydayapp.utils.PagerStatus
+import com.emikhalets.sunnydayapp.utils.ToastBuilder
 import com.google.android.gms.location.*
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,9 +46,6 @@ import java.util.*
 class ViewPagerFragment : Fragment() {
 
     private val LOCATION_PERMISSIONS_REQUEST = 42
-    private val CREATED = "CREATED"
-    private val DELETED = "DELETED"
-    private val CREATING = "CREATING"
 
     private var _binding: FragmentPagerBinding? = null
     private val binding get() = _binding!!
@@ -77,7 +75,7 @@ class ViewPagerFragment : Fragment() {
         attachTabsAndPager()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        if (!checkCoarseLocationPermission() && !checkFineLocationPermission()) {
+        if (LocationHandler.checkLocationPermissions(requireContext())) {
             Timber.d("Location permissions not granted. Request permissions")
             requestLocationPermissions()
         } else {
@@ -93,20 +91,6 @@ class ViewPagerFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
-
-    // Granting location permissions
-
-    private fun checkCoarseLocationPermission() =
-        when (ContextCompat.checkSelfPermission(requireContext(), ACCESS_COARSE_LOCATION)) {
-            PERMISSION_GRANTED -> true
-            else -> false
-        }
-
-    private fun checkFineLocationPermission() =
-        when (ContextCompat.checkSelfPermission(requireContext(), ACCESS_FINE_LOCATION)) {
-            PERMISSION_GRANTED -> true
-            else -> false
-        }
 
     private fun requestLocationPermissions() {
         requestPermissions(
@@ -154,11 +138,7 @@ class ViewPagerFragment : Fragment() {
                     requestLocation()
                 } else {
                     Timber.d("Location permissions have not been granted")
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.city_list_text_location_permissions_not_granted),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    ToastBuilder.build(getString(R.string.city_list_text_location_permissions_not_granted))
                 }
             }
         }
@@ -198,11 +178,11 @@ class ViewPagerFragment : Fragment() {
 
         pagerViewModel.dbStatus.observe(viewLifecycleOwner, {
             when (it) {
-                CREATED -> {
+                PagerStatus.DB_CREATED -> {
                     Timber.d("Cities table in database has been created")
                     setVisibilityMode(it)
                 }
-                DELETED -> {
+                PagerStatus.DB_DELETED -> {
                     Timber.d("Cities table has been deleted")
                     convertCitiesCitiesToDB()
                 }
@@ -290,12 +270,12 @@ class ViewPagerFragment : Fragment() {
             isDbCreatedFlow.collect { isDbCreated ->
                 if (!isDbCreated) {
                     Timber.d("Cities table not exist")
-                    setVisibilityMode(CREATING)
+                    setVisibilityMode(PagerStatus.DB_CREATING)
                     convertCitiesCitiesToDB()
                     dataStore.edit { it[isDbCreatedKey] = true }
                 } else {
                     Timber.d("Cities table in database was created")
-                    setVisibilityMode(CREATED)
+                    setVisibilityMode(PagerStatus.DB_CREATED)
                 }
             }
         }
@@ -309,16 +289,16 @@ class ViewPagerFragment : Fragment() {
             }
     }
 
-    private fun setVisibilityMode(mode: String) {
-        when (mode) {
-            CREATING -> {
+    private fun setVisibilityMode(status: PagerStatus) {
+        when (status) {
+            PagerStatus.DB_CREATING -> {
                 Timber.d("Showing progressbar, notice. Hiding viewpager, tabs")
                 binding.pbDbCreating.visibility = View.VISIBLE
                 binding.textNotice.visibility = View.VISIBLE
                 binding.viewPager.visibility = View.INVISIBLE
                 binding.tabLayout.visibility = View.INVISIBLE
             }
-            CREATED -> {
+            PagerStatus.DB_CREATED -> {
                 Timber.d("Hiding progressbar, notice. Showing viewpager, tabs")
                 binding.pbDbCreating.visibility = View.INVISIBLE
                 binding.textNotice.visibility = View.INVISIBLE

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.data.repository.PagerRepository
+import com.emikhalets.sunnydayapp.utils.PagerStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -14,9 +15,6 @@ import timber.log.Timber
 
 class ViewPagerViewModel @ViewModelInject constructor(private val repository: PagerRepository) :
     ViewModel() {
-
-    private val dbDeleted = "DELETED"
-    private val dbCreated = "CREATED"
 
     private val citiesToDB = mutableListOf<City>()
 
@@ -35,8 +33,8 @@ class ViewPagerViewModel @ViewModelInject constructor(private val repository: Pa
     private var _locationQuery = MutableLiveData<String>()
     val locationQuery: LiveData<String> get() = _locationQuery
 
-    private var _dbStatus = MutableLiveData<String>()
-    val dbStatus: LiveData<String> get() = _dbStatus
+    private var _dbStatus = MutableLiveData<PagerStatus>()
+    val dbStatus: LiveData<PagerStatus> get() = _dbStatus
 
     private var _citiesList = MutableLiveData<List<City>>()
     val citiesList: LiveData<List<City>> get() = _citiesList
@@ -94,7 +92,7 @@ class ViewPagerViewModel @ViewModelInject constructor(private val repository: Pa
         viewModelScope.launch(Dispatchers.IO) {
             Timber.d("Deleting cities database")
             repository.deleteAllCities()
-            _dbStatus.postValue(dbDeleted)
+            _dbStatus.postValue(PagerStatus.DB_DELETED)
         }
     }
 
@@ -120,7 +118,7 @@ class ViewPagerViewModel @ViewModelInject constructor(private val repository: Pa
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertAllCities(citiesToDB)
             Timber.d("Parsed list of cities added to the database")
-            _dbStatus.postValue(dbCreated)
+            _dbStatus.postValue(PagerStatus.DB_CREATED)
         }
     }
 }
