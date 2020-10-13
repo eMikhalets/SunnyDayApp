@@ -1,7 +1,6 @@
 package com.emikhalets.sunnydayapp.data.database
 
 import androidx.room.*
-import com.emikhalets.sunnydayapp.data.database.City
 
 @Dao
 interface CitiesDao {

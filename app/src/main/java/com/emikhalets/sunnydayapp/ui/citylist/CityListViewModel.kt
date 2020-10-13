@@ -1,17 +1,18 @@
 package com.emikhalets.sunnydayapp.ui.citylist
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emikhalets.sunnydayapp.data.CityListRepository
 import com.emikhalets.sunnydayapp.data.database.City
+import com.emikhalets.sunnydayapp.data.repository.CityListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class CityListViewModel : ViewModel() {
+class CityListViewModel @ViewModelInject constructor(private val repository: CityListRepository) :
+    ViewModel() {
 
-    private val repository = CityListRepository()
     val addedCities = MutableLiveData<List<City>>()
 
     fun getAddedCities() {

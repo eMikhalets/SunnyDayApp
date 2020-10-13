@@ -1,13 +1,13 @@
-package com.emikhalets.sunnydayapp.data
+package com.emikhalets.sunnydayapp.data.api
 
-import com.emikhalets.sunnydayapp.network.AppResponse
-import com.emikhalets.sunnydayapp.network.pojo.ResponseError
+import com.emikhalets.sunnydayapp.data.pojo.ResponseError
 import com.google.gson.GsonBuilder
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
-class NetworkCallHandler {
+class NetworkCallHandler @Inject constructor() {
 
     suspend fun <T> safeApiCall(apiCall: suspend () -> AppResponse<T>): AppResponse<T> {
         try {

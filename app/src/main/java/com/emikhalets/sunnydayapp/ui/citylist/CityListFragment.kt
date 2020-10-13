@@ -16,12 +16,14 @@ import com.emikhalets.sunnydayapp.adapters.CitiesAdapter
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.util.*
 
 private const val CITIES = "CITIES"
 private const val NOTICE = "NOTICE"
 
+@AndroidEntryPoint
 class CityListFragment : Fragment(), CitiesAdapter.CityClick {
 
     private var _binding: FragmentCityListBinding? = null

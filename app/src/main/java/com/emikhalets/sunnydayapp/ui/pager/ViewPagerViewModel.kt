@@ -1,22 +1,23 @@
 package com.emikhalets.sunnydayapp.ui.pager
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emikhalets.sunnydayapp.data.PagerRepository
 import com.emikhalets.sunnydayapp.data.database.City
+import com.emikhalets.sunnydayapp.data.repository.PagerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import timber.log.Timber
 
-class ViewPagerViewModel : ViewModel() {
+class ViewPagerViewModel @ViewModelInject constructor(private val repository: PagerRepository) :
+    ViewModel() {
 
     private val dbDeleted = "DELETED"
     private val dbCreated = "CREATED"
 
-    private val repository = PagerRepository()
     private val citiesToDB = mutableListOf<City>()
 
     private var _searchingCities = MutableLiveData<Array<String>>()

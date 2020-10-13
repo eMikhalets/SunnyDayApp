@@ -9,11 +9,13 @@ import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.emikhalets.sunnydayapp.R
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+@AndroidEntryPoint
 class PreferencePagerFragment : PreferenceFragmentCompat() {
 
     private lateinit var language: ListPreference

@@ -1,17 +1,17 @@
 package com.emikhalets.sunnydayapp.ui.preference
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emikhalets.sunnydayapp.data.PreferenceRepository
-import com.emikhalets.sunnydayapp.network.AppResponse
-import com.emikhalets.sunnydayapp.network.pojo.ResponseUsage
+import com.emikhalets.sunnydayapp.data.api.AppResponse
+import com.emikhalets.sunnydayapp.data.pojo.ResponseUsage
+import com.emikhalets.sunnydayapp.data.repository.PreferenceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PreferenceViewModel : ViewModel() {
-
-    private val repository = PreferenceRepository()
+class PreferenceViewModel @ViewModelInject constructor(private val repository: PreferenceRepository) :
+    ViewModel() {
 
     private var _apiStatistics = MutableLiveData<ResponseUsage>()
     val apiStatistics get() = _apiStatistics

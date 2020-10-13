@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.ItemForecastDailyBinding
-import com.emikhalets.sunnydayapp.network.pojo.DataDaily
+import com.emikhalets.sunnydayapp.data.pojo.DataDaily
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
 import java.time.Instant

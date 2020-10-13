@@ -33,6 +33,7 @@ import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
 import com.emikhalets.sunnydayapp.ui.weather.WeatherFragment
 import com.google.android.gms.location.*
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
@@ -40,6 +41,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
+@AndroidEntryPoint
 class ViewPagerFragment : Fragment() {
 
     private val LOCATION_PERMISSIONS_REQUEST = 42

@@ -1,20 +1,20 @@
 package com.emikhalets.sunnydayapp.ui.weather
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emikhalets.sunnydayapp.data.WeatherRepository
-import com.emikhalets.sunnydayapp.network.AppResponse
-import com.emikhalets.sunnydayapp.network.pojo.ResponseCurrent
-import com.emikhalets.sunnydayapp.network.pojo.ResponseDaily
+import com.emikhalets.sunnydayapp.data.api.AppResponse
+import com.emikhalets.sunnydayapp.data.pojo.ResponseCurrent
+import com.emikhalets.sunnydayapp.data.pojo.ResponseDaily
+import com.emikhalets.sunnydayapp.data.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class WeatherViewModel : ViewModel() {
-
-    private val repository = WeatherRepository()
+class WeatherViewModel @ViewModelInject constructor(private val repository: WeatherRepository) :
+    ViewModel() {
 
     private val _currentWeather = MutableLiveData<ResponseCurrent>()
     val currentWeather: LiveData<ResponseCurrent> get() = _currentWeather

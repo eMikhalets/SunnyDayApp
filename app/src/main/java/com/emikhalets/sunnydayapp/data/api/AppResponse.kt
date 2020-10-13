@@ -1,6 +1,6 @@
-package com.emikhalets.sunnydayapp.network
+package com.emikhalets.sunnydayapp.data.api
 
-import com.emikhalets.sunnydayapp.network.pojo.ResponseError
+import com.emikhalets.sunnydayapp.data.pojo.ResponseError
 
 sealed class AppResponse<out T> {
     data class Success<out T>(val response: T) : AppResponse<T>()

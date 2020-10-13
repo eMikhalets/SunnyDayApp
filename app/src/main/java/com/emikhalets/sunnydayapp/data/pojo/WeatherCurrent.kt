@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp.network.pojo
+package com.emikhalets.sunnydayapp.data.pojo
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

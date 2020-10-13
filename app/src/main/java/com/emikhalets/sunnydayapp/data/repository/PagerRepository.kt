@@ -1,11 +1,11 @@
-package com.emikhalets.sunnydayapp.data
+package com.emikhalets.sunnydayapp.data.repository
 
-import com.emikhalets.sunnydayapp.data.database.AppDatabase
+import com.emikhalets.sunnydayapp.data.database.CitiesDao
 import com.emikhalets.sunnydayapp.data.database.City
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class PagerRepository {
-
-    private val db = AppDatabase.get().citiesDao()
+class PagerRepository @Inject constructor(private val db: CitiesDao) {
 
     suspend fun deleteAllCities() = db.deleteAllCities()
     suspend fun getCitiesByName(name: String) = db.getCitiesByName(name)

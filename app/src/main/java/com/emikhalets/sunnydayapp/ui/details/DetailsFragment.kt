@@ -8,18 +8,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.emikhalets.sunnydayapp.R
+import com.emikhalets.sunnydayapp.data.pojo.DataCurrent
+import com.emikhalets.sunnydayapp.data.pojo.DataDaily
 import com.emikhalets.sunnydayapp.databinding.FragmentDetailsBinding
-import com.emikhalets.sunnydayapp.network.pojo.DataCurrent
-import com.emikhalets.sunnydayapp.network.pojo.DataDaily
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+@AndroidEntryPoint
 class DetailsFragment : Fragment() {
 
     private var _binding: FragmentDetailsBinding? = null

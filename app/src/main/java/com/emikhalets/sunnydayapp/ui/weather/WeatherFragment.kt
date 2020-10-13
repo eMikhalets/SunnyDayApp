@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.adapters.DailyAdapter
 import com.emikhalets.sunnydayapp.databinding.FragmentCurrentBinding
-import com.emikhalets.sunnydayapp.network.pojo.DataDaily
+import com.emikhalets.sunnydayapp.data.pojo.DataDaily
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.io.Serializable
 import java.time.Instant
@@ -28,6 +29,7 @@ private const val WEATHER = "WEATHER"
 private const val LOADING = "LOADING"
 private const val NOTICE = "NOTICE"
 
+@AndroidEntryPoint
 class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
 
     private var _binding: FragmentCurrentBinding? = null
