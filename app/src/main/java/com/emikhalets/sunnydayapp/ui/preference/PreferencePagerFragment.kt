@@ -9,6 +9,7 @@ import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.emikhalets.sunnydayapp.R
+import com.emikhalets.sunnydayapp.utils.ToastBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
 import java.time.LocalDateTime
@@ -82,7 +83,7 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         })
 
         prefViewModel.notice.observe(viewLifecycleOwner, {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            ToastBuilder.build(it)
         })
     }
 

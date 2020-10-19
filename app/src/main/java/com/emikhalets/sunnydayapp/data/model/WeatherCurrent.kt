@@ -1,10 +1,10 @@
-package com.emikhalets.sunnydayapp.data.pojo
+package com.emikhalets.sunnydayapp.data.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class WeatherForecast(
+data class WeatherCurrent(
     @SerializedName("icon") @Expose val icon: String,
-    @SerializedName("code") @Expose val code: Int,
+    @SerializedName("code") @Expose val code: String,
     @SerializedName("description") @Expose val description: String
 )

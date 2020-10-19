@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp.adapters
+package com.emikhalets.sunnydayapp.ui.weather
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.ItemForecastDailyBinding
-import com.emikhalets.sunnydayapp.data.pojo.DataDaily
-import com.emikhalets.sunnydayapp.utils.buildIconUrl
+import com.emikhalets.sunnydayapp.data.model.DataDaily
+import com.emikhalets.sunnydayapp.utils.AppHelper
 import com.squareup.picasso.Picasso
 import java.time.Instant
 import java.time.LocalDateTime
@@ -36,7 +36,7 @@ class DailyAdapter(private val timezone: String, private val dailyClick: DailyFo
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DataDaily, timezone: String, dailyClick: DailyForecastItemClick) {
-            Picasso.get().load(buildIconUrl(item.weather.icon)).into(binding.imageIcon)
+            Picasso.get().load(AppHelper.buildIconUrl(item.weather.icon)).into(binding.imageIcon)
 
             with(binding) {
                 textDate.text = formatDate(item.timestamp, timezone)

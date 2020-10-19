@@ -1,6 +1,6 @@
 package com.emikhalets.sunnydayapp.data.api
 
-import com.emikhalets.sunnydayapp.data.pojo.ResponseError
+import com.emikhalets.sunnydayapp.data.model.ResponseError
 import com.google.gson.GsonBuilder
 import retrofit2.HttpException
 import timber.log.Timber

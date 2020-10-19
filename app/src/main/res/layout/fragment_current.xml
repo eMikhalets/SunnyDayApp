@@ -140,7 +140,7 @@
             tools:text="007 кПа" />
 
         <Button
-            android:id="@+id/btn_more_weather"
+            android:id="@+id/btn_details"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -158,7 +158,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_more_weather" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_details" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar

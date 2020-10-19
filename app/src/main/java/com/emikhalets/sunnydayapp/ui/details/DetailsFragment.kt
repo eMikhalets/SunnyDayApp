@@ -1,6 +1,5 @@
 package com.emikhalets.sunnydayapp.ui.details
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.emikhalets.sunnydayapp.R
-import com.emikhalets.sunnydayapp.data.pojo.DataCurrent
-import com.emikhalets.sunnydayapp.data.pojo.DataDaily
+import com.emikhalets.sunnydayapp.data.model.DataCurrent
+import com.emikhalets.sunnydayapp.data.model.DataDaily
 import com.emikhalets.sunnydayapp.databinding.FragmentDetailsBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
-import com.emikhalets.sunnydayapp.utils.buildIconUrl
+import com.emikhalets.sunnydayapp.utils.AppHelper
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -28,10 +27,6 @@ class DetailsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,48 +65,50 @@ class DetailsFragment : Fragment() {
         Timber.d("Set weather data")
         currentWeather?.let {
             Timber.d("Set current weather data")
-            Picasso.get().load(buildIconUrl(it.weather.icon)).into(binding.imageWeatherIcon)
-            binding.textTemp.text = getString(R.string.details_text_temp, it.temperature.toInt())
-            binding.textAppTemp.text =
-                getString(R.string.details_text_temp, it.tempFeelsLike.toInt())
-            binding.textSunset.text = it.sunset
-            binding.textSunrise.text = it.sunrise
-            binding.textPressure.text = getString(R.string.details_text_pressure, it.pressure)
-            binding.textWindSpeed.text = getString(R.string.details_text_wind_speed, it.windSpeed)
-            binding.textWindDir.text =
-                getString(R.string.details_text_wind_dir, it.windDir.toInt(), it.windDirFull)
-            binding.textVisibility.text = getString(R.string.details_text_visibility, it.visibility)
-            binding.textClouds.text = getString(R.string.details_text_clouds, it.clouds.toInt())
-            binding.textHumidity.text =
-                getString(R.string.details_text_humidity, it.humidity.toInt())
-            binding.textPrecip.text = getString(R.string.details_text_precip, it.precipitation)
-            binding.textSnow.text = getString(R.string.details_text_snow, it.snowfall)
-            binding.textUv.text = it.uvIndex.toString()
-            binding.textWeatherCode.text = it.weather.code
-            binding.textStation.text = it.station
+            Picasso.get().load(AppHelper.buildIconUrl(it.weather.icon))
+                .into(binding.imageWeatherIcon)
+            with(binding) {
+                textTemp.text = getString(R.string.details_text_temp, it.temperature.toInt())
+                textAppTemp.text = getString(R.string.details_text_temp, it.tempFeelsLike.toInt())
+                textSunset.text = it.sunset
+                textSunrise.text = it.sunrise
+                textPressure.text = getString(R.string.details_text_pressure, it.pressure)
+                textWindSpeed.text = getString(R.string.details_text_wind_speed, it.windSpeed)
+                textWindDir.text =
+                    getString(R.string.details_text_wind_dir, it.windDir.toInt(), it.windDirFull)
+                textVisibility.text = getString(R.string.details_text_visibility, it.visibility)
+                textClouds.text = getString(R.string.details_text_clouds, it.clouds.toInt())
+                textHumidity.text = getString(R.string.details_text_humidity, it.humidity.toInt())
+                textPrecip.text = getString(R.string.details_text_precip, it.precipitation)
+                textSnow.text = getString(R.string.details_text_snow, it.snowfall)
+                textUv.text = it.uvIndex.toString()
+                textWeatherCode.text = it.weather.code
+                textStation.text = it.station
+            }
         }
         forecastWeather?.let {
             Timber.d("Set forecast weather data")
             val appTemp = (it.tempFeelsLikeMax + it.tempFeelsLikeMin) / 2
-            Picasso.get().load(buildIconUrl(it.weather.icon)).into(binding.imageWeatherIcon)
-            binding.textTemp.text = getString(R.string.details_text_temp, it.temperature.toInt())
-            binding.textAppTemp.text =
-                getString(R.string.details_text_temp, appTemp.toInt())
-            binding.textSunset.text = formatTime(it.sunsetTime)
-            binding.textSunrise.text = formatTime(it.sunriseTime)
-            binding.textPressure.text = getString(R.string.details_text_pressure, it.pressure)
-            binding.textWindSpeed.text = getString(R.string.details_text_wind_speed, it.windSpeed)
-            binding.textWindDir.text =
-                getString(R.string.details_text_wind_dir, it.windDir.toInt(), it.windDirFull)
-            binding.textVisibility.text = getString(R.string.details_text_visibility, it.visibility)
-            binding.textClouds.text = getString(R.string.details_text_clouds, it.clouds.toInt())
-            binding.textHumidity.text =
-                getString(R.string.details_text_humidity, it.humidity.toInt())
-            binding.textPrecip.text = getString(R.string.details_text_precip, it.precip)
-            binding.textSnow.text = getString(R.string.details_text_snow, it.snowfall)
-            binding.textUv.text = it.uvIndex.toString()
-            binding.textWeatherCode.text = it.weather.code.toString()
-            binding.textStation.text = getString(R.string.details_text_none)
+            Picasso.get().load(AppHelper.buildIconUrl(it.weather.icon))
+                .into(binding.imageWeatherIcon)
+            with(binding) {
+                textTemp.text = getString(R.string.details_text_temp, it.temperature.toInt())
+                textAppTemp.text = getString(R.string.details_text_temp, appTemp.toInt())
+                textSunset.text = formatTime(it.sunsetTime)
+                textSunrise.text = formatTime(it.sunriseTime)
+                textPressure.text = getString(R.string.details_text_pressure, it.pressure)
+                textWindSpeed.text = getString(R.string.details_text_wind_speed, it.windSpeed)
+                textWindDir.text =
+                    getString(R.string.details_text_wind_dir, it.windDir.toInt(), it.windDirFull)
+                textVisibility.text = getString(R.string.details_text_visibility, it.visibility)
+                textClouds.text = getString(R.string.details_text_clouds, it.clouds.toInt())
+                textHumidity.text = getString(R.string.details_text_humidity, it.humidity.toInt())
+                textPrecip.text = getString(R.string.details_text_precip, it.precip)
+                textSnow.text = getString(R.string.details_text_snow, it.snowfall)
+                textUv.text = it.uvIndex.toString()
+                textWeatherCode.text = it.weather.code.toString()
+                textStation.text = getString(R.string.details_text_none)
+            }
         }
     }
 

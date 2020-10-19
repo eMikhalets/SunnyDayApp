@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.data.repository.CityListRepository
+import com.emikhalets.sunnydayapp.utils.status.CitiesResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -13,13 +14,14 @@ import timber.log.Timber
 class CityListViewModel @ViewModelInject constructor(private val repository: CityListRepository) :
     ViewModel() {
 
-    val addedCities = MutableLiveData<List<City>>()
+    val addedCities = MutableLiveData<CitiesResource<List<City>>>()
 
     fun getAddedCities() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getAddedCities()
             Timber.d("The list of the added cities from the database is loaded")
-            addedCities.postValue(result)
+            if (result.isNotEmpty()) addedCities.postValue(CitiesResource.cities(result))
+            else addedCities.postValue(CitiesResource.empty())
         }
     }
 

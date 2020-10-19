@@ -1,7 +1,7 @@
-package com.emikhalets.sunnydayapp.adapters
+package com.emikhalets.sunnydayapp.ui.weather
 
 import androidx.recyclerview.widget.DiffUtil
-import com.emikhalets.sunnydayapp.data.pojo.DataDaily
+import com.emikhalets.sunnydayapp.data.model.DataDaily
 
 class DailyDiffCallback : DiffUtil.ItemCallback<DataDaily>() {
 

@@ -1,8 +1,8 @@
 package com.emikhalets.sunnydayapp.data.api
 
-import com.emikhalets.sunnydayapp.data.pojo.ResponseCurrent
-import com.emikhalets.sunnydayapp.data.pojo.ResponseDaily
-import com.emikhalets.sunnydayapp.data.pojo.ResponseUsage
+import com.emikhalets.sunnydayapp.data.model.ResponseCurrent
+import com.emikhalets.sunnydayapp.data.model.ResponseDaily
+import com.emikhalets.sunnydayapp.data.model.ResponseUsage
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -52,6 +52,7 @@ interface ApiService {
     ): ResponseUsage
 
     companion object {
+
         private const val BASE_URL = "https://api.weatherbit.io/v2.0/"
 
         fun create(): ApiService = Retrofit.Builder()

@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp.adapters
+package com.emikhalets.sunnydayapp.ui.citylist
 
 import android.graphics.Color
 import android.view.LayoutInflater

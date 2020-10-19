@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.api.AppResponse
-import com.emikhalets.sunnydayapp.data.pojo.ResponseUsage
+import com.emikhalets.sunnydayapp.data.model.ResponseUsage
 import com.emikhalets.sunnydayapp.data.repository.PreferenceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,8 +13,7 @@ import kotlinx.coroutines.launch
 class PreferenceViewModel @ViewModelInject constructor(private val repository: PreferenceRepository) :
     ViewModel() {
 
-    private var _apiStatistics = MutableLiveData<ResponseUsage>()
-    val apiStatistics get() = _apiStatistics
+    val apiStatistics = MutableLiveData<ResponseUsage>()
 
     private var _notice = MutableLiveData<String>()
     val notice get() = _notice
@@ -23,7 +22,7 @@ class PreferenceViewModel @ViewModelInject constructor(private val repository: P
         viewModelScope.launch(Dispatchers.IO) {
             when (val data = repository.requestApiUsage()) {
                 is AppResponse.Success ->
-                    _apiStatistics.postValue(data.response)
+                    apiStatistics.postValue(data.response)
                 is AppResponse.Error ->
                     _notice.postValue("Code: ${data.code}, Data: ${data.error?.error}")
                 is AppResponse.NetworkError ->

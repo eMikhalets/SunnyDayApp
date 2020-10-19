@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp.adapters
+package com.emikhalets.sunnydayapp.ui.citylist
 
 import androidx.recyclerview.widget.DiffUtil
 import com.emikhalets.sunnydayapp.data.database.City

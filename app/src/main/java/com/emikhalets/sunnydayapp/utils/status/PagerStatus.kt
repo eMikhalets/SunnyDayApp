@@ -1,4 +1,4 @@
-package com.emikhalets.sunnydayapp.utils
+package com.emikhalets.sunnydayapp.utils.status
 
 enum class PagerStatus {
     DB_CREATING,

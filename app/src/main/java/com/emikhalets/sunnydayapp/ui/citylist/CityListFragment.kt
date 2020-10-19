@@ -4,19 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.emikhalets.sunnydayapp.R
-import com.emikhalets.sunnydayapp.adapters.CitiesAdapter
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
-import com.emikhalets.sunnydayapp.utils.CitiesListStatus
-import com.emikhalets.sunnydayapp.utils.LocationHandler
+import com.emikhalets.sunnydayapp.utils.ToastBuilder
+import com.emikhalets.sunnydayapp.utils.status.CitiesResource
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -40,12 +38,9 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setObservers()
         setClickListeners()
-
-        if (savedInstanceState == null) viewModel.getAddedCities()
-
+        viewModel.getAddedCities()
         binding.textLocationCity.text = getString(R.string.city_list_text_location_not_determined)
     }
 
@@ -56,14 +51,19 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
 
     private fun setObservers() {
         viewModel.addedCities.observe(viewLifecycleOwner, {
-            if (it.isNotEmpty()) {
-                Timber.d("The list of added cities has been updated")
-                setCitiesAdapter(it)
-                setVisibilityMode(CitiesListStatus.CITIES)
-            } else {
-                Timber.d("The list of added cities is empty")
-                setVisibilityMode(CitiesListStatus.NOTICE)
+            if (it.status == CitiesResource.Status.CITIES) {
+                val citiesAdapter = CitiesAdapter(this)
+                val citiesLayoutManager = LinearLayoutManager(requireContext())
+                val divider =
+                    DividerItemDecoration(requireContext(), citiesLayoutManager.orientation)
+                binding.listCities.run {
+                    layoutManager = citiesLayoutManager
+                    addItemDecoration(divider)
+                    adapter = citiesAdapter
+                }
+                citiesAdapter.submitList(it.data)
             }
+            setVisibilityMode(it.status)
         })
 
         pagerViewModel.addedCity.observe(viewLifecycleOwner, {
@@ -85,31 +85,14 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
             val lon = pagerViewModel.location.value?.get(1)
 
             if (lat != null && lon != null) {
-                val query = LocationHandler.getCityAndCountry(requireContext(), lat, lon)
+                val query = pagerViewModel.getCityAndCountry(lat, lon)
                 Timber.d("Location query has been updated: ($query)")
                 pagerViewModel.updateLocation(lat, lon, query)
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.city_list_text_location_not_determined),
-                    Toast.LENGTH_SHORT
-                ).show()
+                ToastBuilder.build(getString(R.string.city_list_text_location_not_determined))
             }
         }
     }
-
-    private fun setCitiesAdapter(list: List<City>) {
-        val citiesAdapter = CitiesAdapter(this)
-        val citiesLayoutManager = LinearLayoutManager(requireContext())
-        val divider = DividerItemDecoration(requireContext(), citiesLayoutManager.orientation)
-        binding.listCities.run {
-            layoutManager = citiesLayoutManager
-            addItemDecoration(divider)
-            adapter = citiesAdapter
-        }
-        citiesAdapter.submitList(list)
-    }
-
 
     override fun onCityClick(city: City) {
         Timber.d("Clicked ($city) in the list of cities")
@@ -125,24 +108,24 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
     }
 
     private fun updateCitiesList() {
+        setVisibilityMode(CitiesResource.Status.LOADING)
         viewModel.getAddedCities()
-        setVisibilityMode(CitiesListStatus.LOADING)
     }
 
-    private fun setVisibilityMode(status: CitiesListStatus) {
+    private fun setVisibilityMode(status: CitiesResource.Status) {
         val durationMills = 500L
         when (status) {
-            CitiesListStatus.CITIES -> {
+            CitiesResource.Status.CITIES -> {
                 binding.textNotice.animate().alpha(0f).setDuration(durationMills).start()
                 binding.pbLoadingCities.animate().alpha(0f).setDuration(durationMills).start()
                 binding.listCities.animate().alpha(1f).setDuration(durationMills).start()
             }
-            CitiesListStatus.LOADING -> {
+            CitiesResource.Status.LOADING -> {
                 binding.textNotice.animate().alpha(0f).setDuration(durationMills).start()
                 binding.pbLoadingCities.animate().alpha(1f).setDuration(durationMills).start()
                 binding.listCities.animate().alpha(0f).setDuration(durationMills).start()
             }
-            CitiesListStatus.NOTICE -> {
+            CitiesResource.Status.EMPTY -> {
                 binding.textNotice.animate().alpha(1f).setDuration(durationMills).start()
                 binding.pbLoadingCities.animate().alpha(0f).setDuration(durationMills).start()
                 binding.listCities.animate().alpha(0f).setDuration(durationMills).start()

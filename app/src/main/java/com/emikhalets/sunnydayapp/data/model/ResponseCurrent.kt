@@ -1,6 +1,5 @@
-package com.emikhalets.sunnydayapp.data.pojo
+package com.emikhalets.sunnydayapp.data.model
 
-import com.emikhalets.sunnydayapp.data.pojo.DataCurrent
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
