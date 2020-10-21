@@ -88,12 +88,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
                         .into(binding.imageWeatherIcon)
                     with(binding) {
                         textCityName.text = weather.cityName
-                        val date = LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(weather.timestamp * 1000),
-                            ZoneId.of(weather.timezone)
-                        )
-                        val formatter = DateTimeFormatter.ofPattern("d E H:m")
-                        textDate.text = date.format(formatter)
+                        textDate.text = formatDate(weather.timestamp, weather.timezone)
                         textTemp.text =
                             getString(R.string.current_text_temp, weather.temperature.toInt())
                         textDesc.text = weather.weather.description
@@ -150,6 +145,15 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
                     .navigate(R.id.action_viewPagerFragment_to_detailsFragment, args)
             }
         }
+    }
+
+    private fun formatDate(timestamp: Long, timezone: String): String {
+        val date = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(timestamp * 1000),
+            ZoneId.systemDefault()
+        )
+        val formatter = DateTimeFormatter.ofPattern("d EEEE H:m")
+        return date.format(formatter)
     }
 
     private fun setVisibilityMode(status: WeatherResource.Status) {

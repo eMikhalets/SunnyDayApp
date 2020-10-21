@@ -17,8 +17,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment() {
@@ -70,8 +72,8 @@ class DetailsFragment : Fragment() {
             with(binding) {
                 textTemp.text = getString(R.string.details_text_temp, it.temperature.toInt())
                 textAppTemp.text = getString(R.string.details_text_temp, it.tempFeelsLike.toInt())
-                textSunset.text = it.sunset
-                textSunrise.text = it.sunrise
+                textSunset.text = formatTime(it.sunset)
+                textSunrise.text = formatTime(it.sunrise)
                 textPressure.text = getString(R.string.details_text_pressure, it.pressure)
                 textWindSpeed.text = getString(R.string.details_text_wind_speed, it.windSpeed)
                 textWindDir.text =
@@ -110,6 +112,15 @@ class DetailsFragment : Fragment() {
                 textStation.text = getString(R.string.details_text_none)
             }
         }
+    }
+
+    private fun formatTime(time: String): String {
+        val arr = time.split(":")
+        var localTime = LocalTime.of(arr[0].toInt(), arr[1].toInt())
+        val offset = TimeZone.getTimeZone(pagerViewModel.timezone.value).rawOffset / 3600000L
+        localTime = localTime.plusHours(offset)
+        val formatter = DateTimeFormatter.ofPattern("H:m")
+        return localTime.format(formatter)
     }
 
     private fun formatTime(ts: Long): String {

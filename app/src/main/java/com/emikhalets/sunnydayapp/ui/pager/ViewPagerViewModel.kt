@@ -38,11 +38,12 @@ class ViewPagerViewModel @ViewModelInject constructor(
     val locationQuery = MutableLiveData<String>()
     val dbStatus = MutableLiveData<PagerStatus>()
     val location = MutableLiveData<List<Double>>()
+    val currentLocation = MutableLiveData<Location>()
 
     //    val citiesList = MutableLiveData<List<City>>()
     val searchingCities = MutableLiveData<Array<String>>()
 
-    var isLocation = false
+    private var isLocation = false
     var isWeatherLoaded = false
 
     fun updateCurrentQuery(query: String) {
@@ -161,21 +162,7 @@ class ViewPagerViewModel @ViewModelInject constructor(
     private fun locationCallback() = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
             super.onLocationResult(locationResult)
-            locationResult ?: return
-            setLocation(locationResult.locations.first())
-        }
-    }
-
-    private fun setLocation(location: Location?) {
-        location?.let {
-            Timber.d("Location has been updated: $location")
-            val lat = location.latitude
-            val lon = location.longitude
-            val geo = Geocoder(getApplication(), Locale.getDefault())
-            val address = geo.getFromLocation(lat, lon, 1).first()
-            val query = "${address.locality}, ${address.countryName}"
-            Timber.d("Location query has been updated: ($query)")
-            updateLocation(lat, lon, query)
+            locationResult?.let { currentLocation.value = locationResult.locations.first() }
         }
     }
 }

@@ -5,6 +5,7 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.database.Cursor
 import android.database.MatrixCursor
+import android.location.Geocoder
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.view.LayoutInflater
@@ -33,6 +34,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 @AndroidEntryPoint
 class ViewPagerFragment : Fragment() {
@@ -132,6 +134,19 @@ class ViewPagerFragment : Fragment() {
                     Timber.d("Cities table has been deleted")
                     convertCitiesToDB()
                 }
+            }
+        })
+
+        pagerViewModel.currentLocation.observe(viewLifecycleOwner, {
+            it?.let {
+                Timber.d("Location has been updated: $it")
+                val lat = it.latitude
+                val lon = it.longitude
+                val geo = Geocoder(requireContext(), Locale.getDefault())
+                val address = geo.getFromLocation(lat, lon, 1).first()
+                val query = "${address.locality}, ${address.countryName}"
+                Timber.d("Location query has been updated: ($query)")
+                pagerViewModel.updateLocation(lat, lon, query)
             }
         })
 
