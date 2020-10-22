@@ -1,11 +1,13 @@
 package com.emikhalets.sunnydayapp.ui.details
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.preference.PreferenceManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.DataCurrent
 import com.emikhalets.sunnydayapp.data.model.DataDaily
@@ -30,6 +32,11 @@ class DetailsFragment : Fragment() {
 
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
+    private lateinit var pref: SharedPreferences
+    private lateinit var prefTemp: String
+    private lateinit var prefPressure: String
+    private lateinit var prefSpeed: String
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,6 +48,10 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        prefTemp = pref.getString(getString(R.string.pref_key_temp), "C")!!
+        prefPressure = pref.getString(getString(R.string.pref_key_press), "mb")!!
+        prefSpeed = pref.getString(getString(R.string.pref_key_speed), "ms")!!
         fetchArgs()
     }
 
@@ -70,12 +81,12 @@ class DetailsFragment : Fragment() {
             Picasso.get().load(AppHelper.buildIconUrl(it.weather.icon))
                 .into(binding.imageWeatherIcon)
             with(binding) {
-                textTemp.text = getString(R.string.details_text_temp, it.temperature.toInt())
-                textAppTemp.text = getString(R.string.details_text_temp, it.tempFeelsLike.toInt())
+                AppHelper.setTempUnit(requireContext(), textTemp, it.temperature, prefTemp)
+                AppHelper.setTempUnit(requireContext(), textAppTemp, it.tempFeelsLike, prefTemp)
                 textSunset.text = formatTime(it.sunset)
                 textSunrise.text = formatTime(it.sunrise)
-                textPressure.text = getString(R.string.details_text_pressure, it.pressure)
-                textWindSpeed.text = getString(R.string.details_text_wind_speed, it.windSpeed)
+                AppHelper.setPressureUnit(requireContext(), textPressure, it.pressure, prefPressure)
+                AppHelper.setSpeedUnit(requireContext(), textWindSpeed, it.windSpeed, prefSpeed)
                 textWindDir.text =
                     getString(R.string.details_text_wind_dir, it.windDir.toInt(), it.windDirFull)
                 textVisibility.text = getString(R.string.details_text_visibility, it.visibility)
@@ -94,12 +105,12 @@ class DetailsFragment : Fragment() {
             Picasso.get().load(AppHelper.buildIconUrl(it.weather.icon))
                 .into(binding.imageWeatherIcon)
             with(binding) {
-                textTemp.text = getString(R.string.details_text_temp, it.temperature.toInt())
-                textAppTemp.text = getString(R.string.details_text_temp, appTemp.toInt())
+                AppHelper.setTempUnit(requireContext(), textTemp, it.temperature, prefTemp)
+                AppHelper.setTempUnit(requireContext(), textAppTemp, appTemp, prefTemp)
                 textSunset.text = formatTime(it.sunsetTime)
                 textSunrise.text = formatTime(it.sunriseTime)
-                textPressure.text = getString(R.string.details_text_pressure, it.pressure)
-                textWindSpeed.text = getString(R.string.details_text_wind_speed, it.windSpeed)
+                AppHelper.setPressureUnit(requireContext(), textPressure, it.pressure, prefPressure)
+                AppHelper.setSpeedUnit(requireContext(), textWindSpeed, it.windSpeed, prefSpeed)
                 textWindDir.text =
                     getString(R.string.details_text_wind_dir, it.windDir.toInt(), it.windDirFull)
                 textVisibility.text = getString(R.string.details_text_visibility, it.visibility)

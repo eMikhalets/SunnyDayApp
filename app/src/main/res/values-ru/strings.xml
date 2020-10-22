@@ -1,0 +1,96 @@
+<resources>
+    <string name="app_name">SunnyDayApp</string>
+
+    <!-- PREFERENCE LAYOUT -->
+    <string name="pref_pager.lang_en">Английский</string>
+    <string name="pref_pager.lang_ru">Русский</string>
+    <string name="pref_pager.unit_temp_c">Цельсий</string>
+    <string name="pref_pager.unit_temp_f">Фаренгейт</string>
+    <string name="pref_pager.unit_temp_k">Кельвин</string>
+    <string name="pref_pager.unit_press_mb">Миллибар</string>
+    <string name="pref_pager.unit_press_atm">Атмосфера</string>
+    <string name="pref_pager.unit_press_pa">Паскаль</string>
+    <string name="pref_pager.unit_speed_ms">Метр в секунду</string>
+    <string name="pref_pager.unit_speed_kmh">Километр в час</string>
+
+    <string name="pref_pager.category_main">Общие настройки</string>
+    <string name="pref_pager.lang_label">Язык</string>
+    <string name="pref_pager.dark_theme">Темная тема</string>
+
+    <string name="pref_pager.category_units">Единицы измерения</string>
+    <string name="pref_pager.units_temp">Температура</string>
+    <string name="pref_pager.units_pressure">Давление</string>
+    <string name="pref_pager.units_speed">Скорость</string>
+
+    <string name="pref_pager.category_api">Статистика API</string>
+    <string name="pref_pager.api_calls_count">Сделано запросов</string>
+    <string name="pref_pager.api_calls_remaining">Осталось запросов</string>
+    <string name="pref_pager.api_calls_reset_ts">Время сброса запросов</string>
+    <string name="pref_pager.api_historical_calls_count">Сделано запросов прогноза</string>
+    <string name="pref_pager.api_historical_calls_remaining">Осталось запросов прогноза</string>
+    <string name="pref_pager.api_historical_calls_reset_ts">Время сброса прогноза</string>
+
+    <!-- TAB LAYOUT -->
+    <string name="tab_title.city_list">Города</string>
+    <string name="tab_title.current">Погода</string>
+
+    <!-- TOOLBAR LAYOUT -->
+    <string name="toolbar.menu.pref_title">Настройки</string>
+    <string name="toolbar.subtitle">Город</string>
+
+    <!-- IMAGE DESCRIPTION -->
+    <string name="image.description">Описание иконки</string>
+
+    <!-- VIEW PAGER LAYOUT -->
+    <string name="pager.text.error_location">Ошибка при определении местоположения</string>
+    <string name="menu.view_pager.db_creating">Создание базы данных городов</string>
+    <string name="menu.view_pager.search">Search</string>
+
+    <!-- CITY LIST LAYOUT -->
+    <string name="city_list.text.empty_list">Список городов пуст\n\nДобавьте новый город через поиск</string>
+    <string name="city_list.text.location_not_determined">Геолокация не определена</string>
+    <string name="city_list.text.location_permissions_not_granted">Нет доступа к геолокации</string>
+
+    <!-- VARIABLE PARAMETERS -->
+    <string name="variable.text.temp">%d °С</string>
+    <string name="variable.text.temp_f">%d °Ф</string>
+    <string name="variable.text.temp_k">%d °К</string>
+    <string name="variable.text.pressure">%.2f мб</string>
+    <string name="variable.text.pressure_pa">%.2f Па</string>
+    <string name="variable.text.pressure_atm">%.2f атм</string>
+    <string name="variable.text.wind_speed">%.2f м/с</string>
+    <string name="variable.text.wind_speed_kmh">%.2f км/ч</string>
+
+    <!-- WEATHER CURRENT LAYOUT -->
+    <string name="current.text.load_data">Загрузите погоду через поиск или включите GPS для определения местоположения</string>
+    <string name="current.text.humidity">%d %%</string>
+
+    <!-- FORECAST DAILY ITEM LAYOUT -->
+    <string name="forecast_daily.text.today">Сегодня</string>
+    <string name="forecast_daily.text.tomorrow">Завтра</string>
+
+    <!-- DETAILS LAYOUT -->
+    <string name="details.text.none">NONE</string>
+    <string name="details.text.app_temp_desc">ощущается</string>
+    <string name="details.text.pressure_desc">давление</string>
+    <string name="details.text.wind_speed_desc">скорость ветра</string>
+    <string name="details.text.wind_dir">%d° %s</string>
+    <string name="details.text.wind_dir_desc">направление</string>
+    <string name="details.text.visibility">%.2f км</string>
+    <string name="details.text.visibility_desc">видимость</string>
+    <string name="details.text.clouds">%d %%</string>
+    <string name="details.text.clouds_desc">облачность</string>
+    <string name="details.text.humidity">%d %%</string>
+    <string name="details.text.humidity_desc">влажность</string>
+    <string name="details.text.precip">%.2f мм/ч</string>
+    <string name="details.text.precip_desc">осадки</string>
+    <string name="details.text.snow">%.2f мм/ч</string>
+    <string name="details.text.snow_desc">снегопад</string>
+    <string name="details.text.uv_desc">UV индекс</string>
+    <string name="details.text.weather_code_desc">код погоды</string>
+    <string name="details.text.station_desc">станция</string>
+
+    <!-- CITIES ADAPTER -->
+    <string name="cities_adapter.text.query">%s, %s</string>
+    <string name="current.btn.more_details">Подробнее</string>
+</resources>

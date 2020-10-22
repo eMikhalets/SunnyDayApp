@@ -1,5 +1,6 @@
 package com.emikhalets.sunnydayapp.ui.weather
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.emikhalets.sunnydayapp.R
@@ -34,6 +36,11 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
     private val weatherViewModel: WeatherViewModel by viewModels()
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
+    private lateinit var pref: SharedPreferences
+    private lateinit var prefTemp: String
+    private lateinit var prefPressure: String
+    private lateinit var prefSpeed: String
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,6 +52,10 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        prefTemp = pref.getString(getString(R.string.pref_key_temp), "C")!!
+        prefPressure = pref.getString(getString(R.string.pref_key_press), "mb")!!
+        prefSpeed = pref.getString(getString(R.string.pref_key_speed), "ms")!!
         implementObserversAndListeners()
     }
 
@@ -88,16 +99,19 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
                         .into(binding.imageWeatherIcon)
                     with(binding) {
                         textCityName.text = weather.cityName
-                        textDate.text = formatDate(weather.timestamp, weather.timezone)
-                        textTemp.text =
-                            getString(R.string.current_text_temp, weather.temperature.toInt())
+                        textDate.text = formatDate(weather.timestamp)
+                        AppHelper.setTempUnit(
+                            requireContext(), textTemp, weather.temperature, prefTemp
+                        )
                         textDesc.text = weather.weather.description
-                        textWind.text =
-                            getString(R.string.current_text_wind_speed, weather.windSpeed)
+                        AppHelper.setSpeedUnit(
+                            requireContext(), textWind, weather.windSpeed, prefSpeed
+                        )
                         textHumidity.text =
                             getString(R.string.current_text_humidity, weather.humidity.toInt())
-                        textPressure.text =
-                            getString(R.string.current_text_pressure, weather.pressure)
+                        AppHelper.setPressureUnit(
+                            requireContext(), textPressure, weather.pressure, prefPressure
+                        )
                     }
                 }
                 WeatherResource.Status.ERROR -> {
@@ -114,7 +128,8 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
                     pagerViewModel.updateTimezone(it.data!!.timezone)
                     val forecast = it.data.data
                     Timber.d("Forecast daily has been loaded: ($forecast)")
-                    val forecastAdapter = DailyAdapter(it.data.timezone, this)
+                    val forecastAdapter =
+                        DailyAdapter(requireContext(), it.data.timezone, this)
                     val forecastLm = LinearLayoutManager(requireContext())
                     val divider = DividerItemDecoration(requireContext(), forecastLm.orientation)
                     binding.listForecastDaily.run {
@@ -147,7 +162,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
         }
     }
 
-    private fun formatDate(timestamp: Long, timezone: String): String {
+    private fun formatDate(timestamp: Long): String {
         val date = LocalDateTime.ofInstant(
             Instant.ofEpochMilli(timestamp * 1000),
             ZoneId.systemDefault()
@@ -190,7 +205,6 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
     }
 
     override fun onDailyForecastClick(dailyForecast: DataDaily) {
-        super.onDailyForecastClick(dailyForecast)
         Timber.d("Clicked on forecast weather details")
         Timber.d("Navigate to forecast weather details")
         val args = Bundle()

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pref_query_lang">
-        <item>English</item>
-        <item>Русский</item>
+        <item>@string/pref_pager.lang_en</item>
+        <item>@string/pref_pager.lang_ru</item>
     </string-array>
 
     <string-array name="pref_query_lang_values">
@@ -11,9 +11,9 @@
     </string-array>
 
     <string-array name="pref_units_temp">
-        <item>Цельсий</item>
-        <item>Фаренгейт </item>
-        <item>Кельвин</item>
+        <item>@string/pref_pager.unit_temp_c</item>
+        <item>@string/pref_pager.unit_temp_f</item>
+        <item>@string/pref_pager.unit_temp_k</item>
     </string-array>
 
     <string-array name="pref_units_temp_values">
@@ -23,22 +23,20 @@
     </string-array>
 
     <string-array name="pref_units_pressure">
-        <item>Атмосфера</item>
-        <item>Миллибар</item>
-        <item>Паскаль</item>
-        <item>Ньютон на кв. см</item>
+        <item>@string/pref_pager.unit_press_mb</item>
+        <item>@string/pref_pager.unit_press_atm</item>
+        <item>@string/pref_pager.unit_press_pa</item>
     </string-array>
 
     <string-array name="pref_units_pressure_values">
-        <item>atm</item>
         <item>mb</item>
+        <item>atm</item>
         <item>pa</item>
-        <item>nsm</item>
     </string-array>
 
     <string-array name="pref_units_speed">
-        <item>Метр в секунду</item>
-        <item>Киломерт в час</item>
+        <item>@string/pref_pager.unit_speed_ms</item>
+        <item>@string/pref_pager.unit_speed_kmh</item>
     </string-array>
 
     <string-array name="pref_units_speed_values">

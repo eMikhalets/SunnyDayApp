@@ -1,101 +1,96 @@
 <resources>
     <string name="app_name">SunnyDayApp</string>
 
-    <!-- QUERY PARAMETERS -->
-    <string name="query_lang_english">en</string>
-    <string name="query_lang_russian">ru</string>
-
     <!-- PREFERENCE LAYOUT -->
-    <string name="pref_pager.category_main">Общие настройки</string>
-    <string name="pref_pager.lang_label">Язык</string>
-    <string name="pref_pager.lang_sum">Русский</string>
-    <string name="pref_pager.dark_theme">Темная тема</string>
+    <string name="pref_pager.lang_en">English</string>
+    <string name="pref_pager.lang_ru">Russian</string>
+    <string name="pref_pager.unit_temp_c">Celsius</string>
+    <string name="pref_pager.unit_temp_f">Fahrenheit</string>
+    <string name="pref_pager.unit_temp_k">Kelvin</string>
+    <string name="pref_pager.unit_press_mb">Millibar</string>
+    <string name="pref_pager.unit_press_atm">Atmosphere</string>
+    <string name="pref_pager.unit_press_pa">Pascal</string>
+    <string name="pref_pager.unit_speed_ms">Meter per second</string>
+    <string name="pref_pager.unit_speed_kmh">Kilometer per hour</string>
 
-    <string name="pref_pager.category_units">Единицы измерения</string>
-    <string name="pref_pager.units_temp">Температура</string>
-    <string name="pref_pager.units_temp_sum">Цельсий</string>
-    <string name="pref_pager.units_pressure">Давление</string>
-    <string name="pref_pager.units_pressure_sum">Миллибар</string>
-    <string name="pref_pager.units_speed">Скорость</string>
-    <string name="pref_pager.units_speed_sum">Метр в секунду</string>
+    <string name="pref_pager.category_main">General settings</string>
+    <string name="pref_pager.lang_label">Language</string>
+    <string name="pref_pager.dark_theme">Dark theme</string>
 
-    <string name="pref_pager.category_api">Статистика API</string>
-    <string name="pref_pager.api_calls_count">Сделано запросов</string>
-    <string name="pref_pager.api_calls_remaining">Осталось запросов</string>
-    <string name="pref_pager.api_calls_reset_ts">Время сброса запросов</string>
-    <string name="pref_pager.api_historical_calls_count">Сделано запросов прогноза</string>
-    <string name="pref_pager.api_historical_calls_remaining">Осталось запросов прогноза</string>
-    <string name="pref_pager.api_historical_calls_reset_ts">Время сброса прогноза</string>
+    <string name="pref_pager.category_units">Units</string>
+    <string name="pref_pager.units_temp">Temperature</string>
+    <string name="pref_pager.units_pressure">Pressure</string>
+    <string name="pref_pager.units_speed">Speed</string>
+
+    <string name="pref_pager.category_api">API Statistics</string>
+    <string name="pref_pager.api_calls_count">Requests made</string>
+    <string name="pref_pager.api_calls_remaining">Remaining requests</string>
+    <string name="pref_pager.api_calls_reset_ts">Request reset time</string>
+    <string name="pref_pager.api_historical_calls_count">Prediction requests made</string>
+    <string name="pref_pager.api_historical_calls_remaining">Remaining prediction requests</string>
+    <string name="pref_pager.api_historical_calls_reset_ts">Forecast reset time</string>
 
     <!-- TAB LAYOUT -->
-    <string name="tab_title.city_list">Города</string>
-    <string name="tab_title.current">Погода</string>
+    <string name="tab_title.city_list">Cities</string>
+    <string name="tab_title.current">Weather</string>
 
     <!-- TOOLBAR LAYOUT -->
-    <string name="toolbar.menu.pref_title">Настройки</string>
-    <string name="toolbar.subtitle">Город</string>
+    <string name="toolbar.menu.pref_title">Settings</string>
+    <string name="toolbar.subtitle">City</string>
 
     <!-- IMAGE DESCRIPTION -->
-    <string name="image.description">Иконка погоды</string>
-    <string name="image.pressure">Иконка давления</string>
-    <string name="image.humidity">Иконка влажности</string>
-    <string name="image.wind_speed">Иконка скорости ветра</string>
-    <string name="image.wind_dir">Иконка направления ветра</string>
-    <string name="image.sunrise">Иконка рассвета</string>
-    <string name="image.sunset">Иконка заката</string>
-    <string name="image.feelslike">Иконка температуры</string>
-    <string name="image.visibility">Иконка видимости</string>
-    <string name="image.clouds">Иконка облачности</string>
-    <string name="image.precip">Иконка осадков</string>
-    <string name="image.snowfall">Иконка снегопада</string>
+    <string name="image.description">Icon description</string>
 
     <!-- VIEW PAGER LAYOUT -->
-    <string name="pager.text.error_location">Ошибка при определении местоположения</string>
-    <string name="menu.view_pager.db_creating">Создание базы данных городов</string>
+    <string name="pager.text.error_location">Error locating</string>
+    <string name="menu.view_pager.db_creating">Create a city database</string>
     <string name="menu.view_pager.search">Search</string>
 
     <!-- CITY LIST LAYOUT -->
-    <string name="city_list.text.empty_list">Список городов пуст\n\nДобавьте новый город через поиск</string>
-    <string name="city_list.text.location_not_determined">Геолокация не определена</string>
-    <string name="city_list.text.location_permissions_not_granted">Нет доступа к геолокации</string>
+    <string name="city_list.text.empty_list">The list of cities is empty\n\nAdd a new city via search</string>
+    <string name="city_list.text.location_not_determined">Geolocation not determined</string>
+    <string name="city_list.text.location_permissions_not_granted">No access to geolocation</string>
+
+    <!-- VARIABLE PARAMETERS -->
+    <string name="variable.text.temp">%d °C</string>
+    <string name="variable.text.temp_f">%d °F</string>
+    <string name="variable.text.temp_k">%d °K</string>
+    <string name="variable.text.pressure">%.2f mb</string>
+    <string name="variable.text.pressure_pa">%.2f Pa</string>
+    <string name="variable.text.pressure_atm">%.2f atm</string>
+    <string name="variable.text.wind_speed">%.2f m/s</string>
+    <string name="variable.text.wind_speed_kmh">%.2f km/h</string>
 
     <!-- WEATHER CURRENT LAYOUT -->
-    <string name="current.text.load_data">Загрузите погоду через поиск или включите GPS для определения местоположения</string>
-    <string name="current.text.temp">%d °С</string>
-    <string name="current.text.pressure">%.2f кПа</string>
-    <string name="current.text.wind_speed">%.2f м/с</string>
+    <string name="current.text.load_data">Load weather via search or turn on GPS to determine location</string>
     <string name="current.text.humidity">%d %%</string>
 
     <!-- FORECAST DAILY ITEM LAYOUT -->
-    <string name="forecast_daily.text.temp">%d °С</string>
-    <string name="forecast_daily.text.today">Сегодня</string>
-    <string name="forecast_daily.text.tomorrow">Завтра</string>
+    <string name="forecast_daily.text.today">Today</string>
+    <string name="forecast_daily.text.tomorrow">Tomorrow</string>
 
     <!-- DETAILS LAYOUT -->
     <string name="details.text.none">NONE</string>
-    <string name="details.text.temp">%d °C</string>
-    <string name="details.text.app_temp_desc">ощущается</string>
-    <string name="details.text.pressure">%.2f кПа</string>
-    <string name="details.text.pressure_desc">давление</string>
-    <string name="details.text.wind_speed">%.2f м/c</string>
-    <string name="details.text.wind_speed_desc">скорость ветра</string>
+    <string name="details.text.app_temp_desc">feeling</string>
+    <string name="details.text.pressure_desc">pressure</string>
+    <string name="details.text.wind_speed_desc">wind speed</string>
     <string name="details.text.wind_dir">%d° %s</string>
-    <string name="details.text.wind_dir_desc">направление</string>
-    <string name="details.text.visibility">%.2f км</string>
-    <string name="details.text.visibility_desc">видимость</string>
+    <string name="details.text.wind_dir_desc">direction</string>
+    <string name="details.text.visibility">%.2f km</string>
+    <string name="details.text.visibility_desc">visibility</string>
     <string name="details.text.clouds">%d %%</string>
-    <string name="details.text.clouds_desc">облачность</string>
+    <string name="details.text.clouds_desc">cloudy</string>
     <string name="details.text.humidity">%d %%</string>
-    <string name="details.text.humidity_desc">влажность</string>
-    <string name="details.text.precip">%.2f мм/ч</string>
-    <string name="details.text.precip_desc">осадки</string>
-    <string name="details.text.snow">%.2f мм/ч</string>
-    <string name="details.text.snow_desc">снегопад</string>
-    <string name="details.text.uv_desc">UV индекс</string>
-    <string name="details.text.weather_code_desc">код погоды</string>
-    <string name="details.text.station_desc">станция</string>
+    <string name="details.text.humidity_desc">humidity</string>
+    <string name="details.text.precip">%.2f mm/h</string>
+    <string name="details.text.precip_desc">precipitation</string>
+    <string name="details.text.snow">%.2f mm/h</string>
+    <string name="details.text.snow_desc">snowfall</string>
+    <string name="details.text.uv_desc">UV Index</string>
+    <string name="details.text.weather_code_desc">weather code</string>
+    <string name="details.text.station_desc">station</string>
 
     <!-- CITIES ADAPTER -->
     <string name="cities_adapter.text.query">%s, %s</string>
-    <string name="current.btn.more_details">Подробнее</string>
+    <string name="current.btn.more_details">More details</string>
 </resources>

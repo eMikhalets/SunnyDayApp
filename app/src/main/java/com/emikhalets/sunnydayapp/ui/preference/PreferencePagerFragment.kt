@@ -2,12 +2,8 @@ package com.emikhalets.sunnydayapp.ui.preference
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.preference.EditTextPreference
-import androidx.preference.ListPreference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
+import androidx.preference.*
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.utils.ToastBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,6 +11,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 @AndroidEntryPoint
 class PreferencePagerFragment : PreferenceFragmentCompat() {
@@ -33,9 +30,58 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
 
     private val prefViewModel: PreferenceViewModel by viewModels()
 
+    // TODO: change language in dates and api requests
+    // TODO: save language pref after close app
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.pref_pager, rootKey)
+        addPreferencesFromResource(R.xml.pref_pager)
+        initViews()
 
+        language.summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
+            when (preference.value) {
+                "ru" -> {
+                    setLocale("ru")
+                    prefViewModel.currentLang = "ru"
+                    getString(R.string.pref_pager_lang_ru)
+                }
+                else -> {
+                    setLocale("en")
+                    prefViewModel.currentLang = "en"
+                    getString(R.string.pref_pager_lang_en)
+                }
+            }
+        }
+
+        temperature.summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
+            when (preference.value) {
+                "F" -> getString(R.string.pref_pager_unit_temp_f)
+                "K" -> getString(R.string.pref_pager_unit_temp_k)
+                else -> getString(R.string.pref_pager_unit_temp_c)
+            }
+        }
+
+        pressure.summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
+            when (preference.value) {
+                "atm" -> getString(R.string.pref_pager_unit_press_atm)
+                "pa" -> getString(R.string.pref_pager_unit_press_pa)
+                else -> getString(R.string.pref_pager_unit_press_mb)
+            }
+        }
+
+        speed.summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
+            when (preference.value) {
+                "ms" -> getString(R.string.pref_pager_unit_speed_ms)
+                else -> getString(R.string.pref_pager_unit_speed_kmh)
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initObservers()
+        prefViewModel.getApiStatistics()
+    }
+
+    private fun initViews() {
         language = findPreference(getString(R.string.pref_key_lang))!!
         theme = findPreference(getString(R.string.pref_key_theme))!!
         temperature = findPreference(getString(R.string.pref_key_temp))!!
@@ -47,32 +93,9 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         historical = findPreference(getString(R.string.pref_key_hist))!!
         historicalRem = findPreference(getString(R.string.pref_key_hist_rem))!!
         historicalTs = findPreference(getString(R.string.pref_key_hist_ts))!!
-
-//        prefLang?.summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
-//            when (preference.value) {
-//                "en" -> "English"
-//                "ru" -> "Русский"
-//                else -> "English"
-//            }
-//        }
-//
-//        prefUnits?.summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
-//            when (preference.value) {
-//                "M" -> "Metric"
-//                "S" -> "Scientific"
-//                "F" -> "Fahrenheit"
-//                else -> "Metric"
-//            }
-//        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        implementObservers()
-        prefViewModel.getApiStatistics()
-    }
-
-    private fun implementObservers() {
+    private fun initObservers() {
         prefViewModel.apiStatistics.observe(viewLifecycleOwner, {
             calls.summary = it.callsCount.toString()
             callsRem.summary = it.callsRemaining.toString()
@@ -94,5 +117,13 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         )
         val formatter = DateTimeFormatter.ofPattern("d L y H:m")
         return date.format(formatter)
+    }
+
+    private fun setLocale(localeCode: String) {
+        val res = resources
+        val dm = res.displayMetrics
+        val config = res.configuration
+        config.setLocale(Locale(localeCode.toLowerCase()))
+        res.updateConfiguration(config, dm)
     }
 }

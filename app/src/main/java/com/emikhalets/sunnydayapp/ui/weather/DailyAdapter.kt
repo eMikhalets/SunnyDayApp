@@ -1,12 +1,15 @@
 package com.emikhalets.sunnydayapp.ui.weather
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
-import com.emikhalets.sunnydayapp.databinding.ItemForecastDailyBinding
 import com.emikhalets.sunnydayapp.data.model.DataDaily
+import com.emikhalets.sunnydayapp.databinding.ItemForecastDailyBinding
 import com.emikhalets.sunnydayapp.utils.AppHelper
 import com.squareup.picasso.Picasso
 import java.time.Instant
@@ -14,12 +17,18 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class DailyAdapter(private val timezone: String, private val dailyClick: DailyForecastItemClick) :
+class DailyAdapter(
+    private val context: Context,
+    private val timezone: String,
+    private val dailyClick: DailyForecastItemClick
+) :
     ListAdapter<DataDaily, DailyAdapter.ViewHolder>(DailyDiffCallback()) {
 
+    private val pref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private val prefTemp = pref.getString(context.getString(R.string.pref_key_temp), "C")!!
+
     interface DailyForecastItemClick {
-        fun onDailyForecastClick(dailyForecast: DataDaily) {
-        }
+        fun onDailyForecastClick(dailyForecast: DataDaily)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,7 +41,7 @@ class DailyAdapter(private val timezone: String, private val dailyClick: DailyFo
         holder.bind(getItem(position), timezone, dailyClick)
     }
 
-    class ViewHolder(private val binding: ItemForecastDailyBinding) :
+    inner class ViewHolder(private val binding: ItemForecastDailyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DataDaily, timezone: String, dailyClick: DailyForecastItemClick) {
@@ -40,16 +49,8 @@ class DailyAdapter(private val timezone: String, private val dailyClick: DailyFo
 
             with(binding) {
                 textDate.text = formatDate(item.timestamp, timezone)
-                textTempMax.text =
-                    root.context.getString(
-                        R.string.forecast_daily_text_temp,
-                        item.temperatureMax.toInt()
-                    )
-                textTempMin.text =
-                    root.context.getString(
-                        R.string.forecast_daily_text_temp,
-                        item.temperatureMin.toInt()
-                    )
+                AppHelper.setTempUnit(root.context, textTempMax, item.temperatureMax, prefTemp)
+                AppHelper.setTempUnit(root.context, textTempMin, item.temperatureMin, prefTemp)
 
                 root.setOnClickListener { dailyClick.onDailyForecastClick(item) }
             }

@@ -9,14 +9,18 @@ import com.emikhalets.sunnydayapp.data.model.ResponseUsage
 import com.emikhalets.sunnydayapp.data.repository.PreferenceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 class PreferenceViewModel @ViewModelInject constructor(private val repository: PreferenceRepository) :
     ViewModel() {
 
     val apiStatistics = MutableLiveData<ResponseUsage>()
 
+    // TODO: create pref status like a weather and viewpager. remove notice livedata
     private var _notice = MutableLiveData<String>()
     val notice get() = _notice
+
+    var currentLang: String = Locale.getDefault().language
 
     fun getApiStatistics() {
         viewModelScope.launch(Dispatchers.IO) {
