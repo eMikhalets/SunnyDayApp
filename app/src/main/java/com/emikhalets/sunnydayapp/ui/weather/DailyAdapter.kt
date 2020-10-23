@@ -16,19 +16,25 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
-class DailyAdapter(
-    private val context: Context,
-    private val timezone: String,
+class DailyAdapter @Inject constructor(
+    context: Context,
     private val dailyClick: DailyForecastItemClick
 ) :
     ListAdapter<DataDaily, DailyAdapter.ViewHolder>(DailyDiffCallback()) {
 
+    interface DailyForecastItemClick {
+        fun onDailyForecastClick(dailyForecast: DataDaily)
+    }
+
+    private lateinit var timezone: String
+
     private val pref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val prefTemp = pref.getString(context.getString(R.string.pref_key_temp), "C")!!
 
-    interface DailyForecastItemClick {
-        fun onDailyForecastClick(dailyForecast: DataDaily)
+    fun updateTimeZone(tz: String) {
+        timezone = tz
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

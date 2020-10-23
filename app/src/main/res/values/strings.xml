@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">SunnyDayApp</string>
 
+    <!-- KEYS -->
+    <string name="key_dialog_delete_city">key_dialog_delete_city</string>
+
+    <!-- DIALOG DELETE CITY -->
+    <string name="dialog.delete_city.message">Delete city %s?</string>
+    <string name="dialog.delete_city.positive">Delete</string>
+    <string name="dialog.delete_city.negative">Cancel</string>
+
     <!-- PREFERENCE LAYOUT -->
     <string name="pref_pager.lang_en">English</string>
     <string name="pref_pager.lang_ru">Russian</string>

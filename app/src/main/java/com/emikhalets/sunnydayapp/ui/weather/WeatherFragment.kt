@@ -36,6 +36,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
     private val weatherViewModel: WeatherViewModel by viewModels()
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
+    private lateinit var forecastAdapter: DailyAdapter
     private lateinit var pref: SharedPreferences
     private lateinit var prefTemp: String
     private lateinit var prefPressure: String
@@ -52,11 +53,10 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        prefTemp = pref.getString(getString(R.string.pref_key_temp), "C")!!
-        prefPressure = pref.getString(getString(R.string.pref_key_press), "mb")!!
-        prefSpeed = pref.getString(getString(R.string.pref_key_speed), "ms")!!
-        implementObserversAndListeners()
+        initForecastAdapter()
+        initPreferences()
+        initObservers()
+        initListeners()
     }
 
     override fun onDestroy() {
@@ -64,7 +64,25 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
         _binding = null
     }
 
-    private fun implementObserversAndListeners() {
+    private fun initForecastAdapter() {
+        forecastAdapter = DailyAdapter(requireContext(),this)
+        val forecastLm = LinearLayoutManager(requireContext())
+        val divider = DividerItemDecoration(requireContext(), forecastLm.orientation)
+        binding.listForecastDaily.run {
+            layoutManager = forecastLm
+            addItemDecoration(divider)
+            adapter = forecastAdapter
+        }
+    }
+
+    private fun initPreferences() {
+        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        prefTemp = pref.getString(getString(R.string.pref_key_temp), "C")!!
+        prefPressure = pref.getString(getString(R.string.pref_key_press), "mb")!!
+        prefSpeed = pref.getString(getString(R.string.pref_key_speed), "ms")!!
+    }
+
+    private fun initObservers() {
         pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
             if (!pagerViewModel.isWeatherLoaded) {
                 Timber.d("Query has been updated: ($it)")
@@ -126,17 +144,9 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
             when (it.status) {
                 WeatherResource.Status.WEATHER -> {
                     pagerViewModel.updateTimezone(it.data!!.timezone)
+                    forecastAdapter.updateTimeZone(it.data.timezone)
                     val forecast = it.data.data
                     Timber.d("Forecast daily has been loaded: ($forecast)")
-                    val forecastAdapter =
-                        DailyAdapter(requireContext(), it.data.timezone, this)
-                    val forecastLm = LinearLayoutManager(requireContext())
-                    val divider = DividerItemDecoration(requireContext(), forecastLm.orientation)
-                    binding.listForecastDaily.run {
-                        layoutManager = forecastLm
-                        addItemDecoration(divider)
-                        adapter = forecastAdapter
-                    }
                     forecastAdapter.submitList(forecast)
                 }
                 WeatherResource.Status.ERROR -> {
@@ -146,7 +156,9 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
             }
             setVisibilityMode(it.status)
         })
+    }
 
+    private fun initListeners() {
         binding.btnDetails.setOnClickListener {
             Timber.d("Clicked on current weather details")
             weatherViewModel.currentWeather.value?.data?.let {

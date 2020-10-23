@@ -19,13 +19,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class CityListFragment : Fragment(), CitiesAdapter.CityClick {
+class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.DeleteCityListener {
 
     private var _binding: FragmentCityListBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: CityListViewModel by viewModels()
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
+
+    private lateinit var citiesAdapter: CitiesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +41,8 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObservers()
-        setClickListeners()
+        setListeners()
+        initCitiesAdapter()
         viewModel.getAddedCities()
         binding.textLocationCity.text = getString(R.string.city_list_text_location_not_determined)
     }
@@ -51,18 +54,7 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
 
     private fun setObservers() {
         viewModel.addedCities.observe(viewLifecycleOwner, {
-            if (it.status == CitiesResource.Status.CITIES) {
-                val citiesAdapter = CitiesAdapter(this)
-                val citiesLayoutManager = LinearLayoutManager(requireContext())
-                val divider =
-                    DividerItemDecoration(requireContext(), citiesLayoutManager.orientation)
-                binding.listCities.run {
-                    layoutManager = citiesLayoutManager
-                    addItemDecoration(divider)
-                    adapter = citiesAdapter
-                }
-                citiesAdapter.submitList(it.data)
-            }
+            if (it.status == CitiesResource.Status.CITIES) citiesAdapter.submitList(it.data)
             setVisibilityMode(it.status)
         })
 
@@ -77,9 +69,9 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
         })
     }
 
-    private fun setClickListeners() {
+    private fun setListeners() {
         binding.textLocationCity.setOnClickListener {
-            // TODO: change page to weather fragment when clicked
+            // TODO: change fragment to weather fragment when clicked
             Timber.d("Clicked the current location in the list of cities")
             val lat = pagerViewModel.location.value?.get(0)
             val lon = pagerViewModel.location.value?.get(1)
@@ -94,6 +86,18 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
         }
     }
 
+    private fun initCitiesAdapter() {
+        citiesAdapter = CitiesAdapter(this)
+        val citiesLayoutManager = LinearLayoutManager(requireContext())
+        val divider =
+            DividerItemDecoration(requireContext(), citiesLayoutManager.orientation)
+        binding.listCities.run {
+            layoutManager = citiesLayoutManager
+            addItemDecoration(divider)
+            adapter = citiesAdapter
+        }
+    }
+
     override fun onCityClick(city: City) {
         Timber.d("Clicked ($city) in the list of cities")
         pagerViewModel.isWeatherLoaded = false
@@ -101,10 +105,16 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick {
     }
 
     override fun onCityLongClick(city: City) {
-        // TODO: Add dialog for delete or implement itemTouchListener
         Timber.d("Delete ($city)")
+        val dialog = DeleteCityDialog(city, this)
+        dialog.show(
+            requireActivity().supportFragmentManager,
+            getString(R.string.key_dialog_delete_city)
+        )
+    }
+
+    override fun onDeleteCity(city: City) {
         viewModel.deleteCity(city)
-        updateCitiesList()
     }
 
     private fun updateCitiesList() {
