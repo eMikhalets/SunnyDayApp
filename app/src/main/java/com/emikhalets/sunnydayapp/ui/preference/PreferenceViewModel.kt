@@ -1,6 +1,7 @@
 package com.emikhalets.sunnydayapp.ui.preference
 
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,11 +15,11 @@ import java.util.*
 class PreferenceViewModel @ViewModelInject constructor(private val repository: PreferenceRepository) :
     ViewModel() {
 
-    val apiStatistics = MutableLiveData<ResponseUsage>()
+    private val _apiStatistics = MutableLiveData<ResponseUsage>()
+    val apiStatistics: LiveData<ResponseUsage> get() = _apiStatistics
 
-    // TODO: create pref status like a weather and viewpager. remove notice livedata
     private var _notice = MutableLiveData<String>()
-    val notice get() = _notice
+    val notice: LiveData<String> get() = _notice
 
     var currentLang: String = Locale.getDefault().language
 
@@ -26,7 +27,7 @@ class PreferenceViewModel @ViewModelInject constructor(private val repository: P
         viewModelScope.launch(Dispatchers.IO) {
             when (val data = repository.requestApiUsage()) {
                 is AppResponse.Success ->
-                    apiStatistics.postValue(data.response)
+                    _apiStatistics.postValue(data.response)
                 is AppResponse.Error ->
                     _notice.postValue("Code: ${data.code}, Data: ${data.error?.error}")
                 is AppResponse.NetworkError ->

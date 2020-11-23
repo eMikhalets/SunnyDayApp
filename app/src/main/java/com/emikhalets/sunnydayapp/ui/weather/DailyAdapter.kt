@@ -63,25 +63,13 @@ class DailyAdapter @Inject constructor(
         }
 
         private fun formatDate(timestamp: Long, timezone: String): String {
-            val dateNow = LocalDateTime.now()
-            val dateTomorrow = dateNow.plusDays(1)
             val date = LocalDateTime.ofInstant(
                 Instant.ofEpochMilli(timestamp * 1000),
                 ZoneId.of(timezone)
             )
             val formatter = DateTimeFormatter.ofPattern("E, d")
 
-            return when {
-                dateNow.format(formatter) == date.format(formatter) -> {
-                    binding.root.context.getString(R.string.forecast_daily_text_today)
-                }
-                dateTomorrow.format(formatter) == date.format(formatter) -> {
-                    binding.root.context.getString(R.string.forecast_daily_text_tomorrow)
-                }
-                else -> {
-                    date.format(formatter)
-                }
-            }
+            return date.format(formatter)
         }
     }
 }

@@ -30,8 +30,6 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
 
     private val prefViewModel: PreferenceViewModel by viewModels()
 
-    // TODO: change language in dates and api requests
-    // TODO: save language pref after close app
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.pref_pager)
         initViews()

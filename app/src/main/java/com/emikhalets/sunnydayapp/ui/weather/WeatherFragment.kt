@@ -17,7 +17,7 @@ import com.emikhalets.sunnydayapp.data.model.DataDaily
 import com.emikhalets.sunnydayapp.databinding.FragmentCurrentBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import com.emikhalets.sunnydayapp.utils.AppHelper
-import com.emikhalets.sunnydayapp.utils.status.WeatherResource
+import com.emikhalets.sunnydayapp.utils.status.WeatherState
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -86,7 +86,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
         pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
             if (!pagerViewModel.isWeatherLoaded) {
                 Timber.d("Query has been updated: ($it)")
-                setVisibilityMode(WeatherResource.Status.LOADING)
+                setUiState(WeatherState.Status.LOADING)
                 weatherViewModel.run {
                     requestCurrent(it)
                     requestForecastDaily(it)
@@ -98,7 +98,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
         pagerViewModel.location.observe(viewLifecycleOwner, {
             if (!pagerViewModel.isWeatherLoaded) {
                 Timber.d("Location coordinates is updated.")
-                setVisibilityMode(WeatherResource.Status.LOADING)
+                setUiState(WeatherState.Status.LOADING)
                 weatherViewModel.run {
                     requestCurrent(it[0], it[1])
                     requestForecastDaily(it[0], it[1])
@@ -109,7 +109,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
 
         weatherViewModel.currentWeather.observe(viewLifecycleOwner, {
             when (it.status) {
-                WeatherResource.Status.WEATHER -> {
+                WeatherState.Status.WEATHER -> {
                     pagerViewModel.updateTimezone(it.data!!.data.first().timezone)
                     val weather = it.data.data.first()
                     Timber.d("Current weather has been loaded: ($weather)")
@@ -132,29 +132,23 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
                         )
                     }
                 }
-                WeatherResource.Status.ERROR -> {
-                    Timber.d("Error when sending a request to the server")
-                    binding.textNotice.text = it.message
-                }
+                WeatherState.Status.ERROR -> binding.textNotice.text = it.message
             }
-            setVisibilityMode(it.status)
+            setUiState(it.status)
         })
 
         weatherViewModel.forecastDaily.observe(viewLifecycleOwner, {
             when (it.status) {
-                WeatherResource.Status.WEATHER -> {
+                WeatherState.Status.WEATHER -> {
                     pagerViewModel.updateTimezone(it.data!!.timezone)
                     forecastAdapter.updateTimeZone(it.data.timezone)
                     val forecast = it.data.data
                     Timber.d("Forecast daily has been loaded: ($forecast)")
                     forecastAdapter.submitList(forecast)
                 }
-                WeatherResource.Status.ERROR -> {
-                    Timber.d("Error when sending a request to the server")
-                    binding.textNotice.text = it.message
-                }
+                WeatherState.Status.ERROR -> binding.textNotice.text = it.message
             }
-            setVisibilityMode(it.status)
+            setUiState(it.status)
         })
     }
 
@@ -183,10 +177,10 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
         return date.format(formatter)
     }
 
-    private fun setVisibilityMode(status: WeatherResource.Status) {
+    private fun setUiState(status: WeatherState.Status) {
         val duration = 500L
         when (status) {
-            WeatherResource.Status.WEATHER -> {
+            WeatherState.Status.WEATHER -> {
                 with(binding) {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingCurrent.animate().alpha(0f).setDuration(duration).start()
@@ -195,7 +189,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
                     listForecastDaily.animate().alpha(1f).setDuration(duration).start()
                 }
             }
-            WeatherResource.Status.LOADING -> {
+            WeatherState.Status.LOADING -> {
                 with(binding) {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingCurrent.animate().alpha(1f).setDuration(duration).start()
@@ -204,7 +198,7 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
                     listForecastDaily.animate().alpha(0f).setDuration(duration).start()
                 }
             }
-            WeatherResource.Status.ERROR -> {
+            WeatherState.Status.ERROR -> {
                 with(binding) {
                     textNotice.animate().alpha(1f).setDuration(duration).start()
                     pbLoadingCurrent.animate().alpha(0f).setDuration(duration).start()

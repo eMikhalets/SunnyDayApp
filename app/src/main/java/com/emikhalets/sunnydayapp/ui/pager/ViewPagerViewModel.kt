@@ -10,6 +10,7 @@ import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.database.City
@@ -32,35 +33,50 @@ class ViewPagerViewModel @ViewModelInject constructor(
 
     private val citiesToDB = mutableListOf<City>()
 
-    val timezone = MutableLiveData<String>()
-    val addedCity = MutableLiveData<String>()
-    val currentQuery = MutableLiveData<String>()
-    val locationQuery = MutableLiveData<String>()
-    val dbStatus = MutableLiveData<PagerStatus>()
-    val location = MutableLiveData<List<Double>>()
-    val currentLocation = MutableLiveData<Location>()
+    private val _timezone = MutableLiveData<String>()
+    val timezone: LiveData<String> get() = _timezone
+
+    private val _addedCity = MutableLiveData<String>()
+    val addedCity: LiveData<String> get() = _addedCity
+
+    private val _currentQuery = MutableLiveData<String>()
+    val currentQuery: LiveData<String> get() = _currentQuery
+
+    private val _locationQuery = MutableLiveData<String>()
+    val locationQuery: LiveData<String> get() = _locationQuery
+
+    private val _dbStatus = MutableLiveData<PagerStatus>()
+    val dbStatus: LiveData<PagerStatus> get() = _dbStatus
+
+    private val _location = MutableLiveData<List<Double>>()
+    val location: LiveData<List<Double>> get() = _location
+
+    private val _currentLocation = MutableLiveData<Location>()
+    val currentLocation: LiveData<Location> get() = _currentLocation
 
     //    val citiesList = MutableLiveData<List<City>>()
-    val searchingCities = MutableLiveData<Array<String>>()
+
+    private val _searchingCities = MutableLiveData<Array<String>>()
+    val searchingCities: LiveData<Array<String>> get() = _searchingCities
 
     private var isLocation = false
     var isWeatherLoaded = false
 
     fun updateCurrentQuery(query: String) {
         Timber.d("Query has been updated: ($query)")
-        currentQuery.value = query
+        _currentQuery.value = query
         changeIsAddedCity(query)
     }
 
     fun updateTimezone(timezone: String) {
-        this.timezone.value = timezone
+        this._timezone.value = timezone
     }
 
     fun updateLocation(lat: Double, lon: Double, query: String) {
         Timber.d("Location query has been updated: (lat=$lat, lon=$lon)")
-        location.value = listOf(lat, lon)
+        _location.value = listOf(lat, lon)
         Timber.d("Location has been updated: ($query)")
-        locationQuery.value = query
+        _locationQuery.value = query
     }
 
     fun getCitiesByName(name: String) {
@@ -70,7 +86,7 @@ class ViewPagerViewModel @ViewModelInject constructor(
             list.forEach { Timber.d(it.toString()) }
             val searchList = Array(list.size) { i -> "${list[i].cityName}, ${list[i].countryFull}" }
             Timber.d("Search query has been updated")
-            searchingCities.postValue(searchList)
+            _searchingCities.postValue(searchList)
         }
     }
 
@@ -83,7 +99,7 @@ class ViewPagerViewModel @ViewModelInject constructor(
                 city.isAdded = true
                 repository.updateCity(city)
                 Timber.d("The isAdded field updated: $city")
-                addedCity.postValue(query)
+                _addedCity.postValue(query)
             } else {
                 Timber.d("The isAdded field is already true")
             }
@@ -120,7 +136,7 @@ class ViewPagerViewModel @ViewModelInject constructor(
 
             repository.insertAllCities(citiesToDB)
             Timber.d("Parsed list of cities added to the database")
-            dbStatus.postValue(PagerStatus.DB_CREATED)
+            _dbStatus.postValue(PagerStatus.DB_CREATED)
         }
     }
 
@@ -162,7 +178,7 @@ class ViewPagerViewModel @ViewModelInject constructor(
     private fun locationCallback() = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
             super.onLocationResult(locationResult)
-            locationResult?.let { currentLocation.value = locationResult.locations.first() }
+            locationResult?.let { _currentLocation.value = locationResult.locations.first() }
         }
     }
 }

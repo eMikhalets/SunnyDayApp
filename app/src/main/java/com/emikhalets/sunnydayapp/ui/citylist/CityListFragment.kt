@@ -14,7 +14,7 @@ import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import com.emikhalets.sunnydayapp.utils.ToastBuilder
-import com.emikhalets.sunnydayapp.utils.status.CitiesResource
+import com.emikhalets.sunnydayapp.utils.status.CitiesState
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -54,7 +54,7 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
 
     private fun setObservers() {
         viewModel.addedCities.observe(viewLifecycleOwner, {
-            if (it.status == CitiesResource.Status.CITIES) citiesAdapter.submitList(it.data)
+            if (it.status == CitiesState.Status.CITIES) citiesAdapter.submitList(it.data)
             setVisibilityMode(it.status)
         })
 
@@ -71,7 +71,6 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
 
     private fun setListeners() {
         binding.textLocationCity.setOnClickListener {
-            // TODO: change fragment to weather fragment when clicked
             Timber.d("Clicked the current location in the list of cities")
             val lat = pagerViewModel.location.value?.get(0)
             val lon = pagerViewModel.location.value?.get(1)
@@ -118,24 +117,24 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
     }
 
     private fun updateCitiesList() {
-        setVisibilityMode(CitiesResource.Status.LOADING)
+        setVisibilityMode(CitiesState.Status.LOADING)
         viewModel.getAddedCities()
     }
 
-    private fun setVisibilityMode(status: CitiesResource.Status) {
+    private fun setVisibilityMode(status: CitiesState.Status) {
         val durationMills = 500L
         when (status) {
-            CitiesResource.Status.CITIES -> {
+            CitiesState.Status.CITIES -> {
                 binding.textNotice.animate().alpha(0f).setDuration(durationMills).start()
                 binding.pbLoadingCities.animate().alpha(0f).setDuration(durationMills).start()
                 binding.listCities.animate().alpha(1f).setDuration(durationMills).start()
             }
-            CitiesResource.Status.LOADING -> {
+            CitiesState.Status.LOADING -> {
                 binding.textNotice.animate().alpha(0f).setDuration(durationMills).start()
                 binding.pbLoadingCities.animate().alpha(1f).setDuration(durationMills).start()
                 binding.listCities.animate().alpha(0f).setDuration(durationMills).start()
             }
-            CitiesResource.Status.EMPTY -> {
+            CitiesState.Status.EMPTY -> {
                 binding.textNotice.animate().alpha(1f).setDuration(durationMills).start()
                 binding.pbLoadingCities.animate().alpha(0f).setDuration(durationMills).start()
                 binding.listCities.animate().alpha(0f).setDuration(durationMills).start()
