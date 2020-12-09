@@ -16,6 +16,7 @@ import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import com.emikhalets.sunnydayapp.utils.AppHelper
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_details.*
 import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDateTime
@@ -38,21 +39,17 @@ class DetailsFragment : Fragment() {
     private lateinit var prefSpeed: String
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        prefTemp = pref.getString(getString(R.string.pref_key_temp), "C")!!
-        prefPressure = pref.getString(getString(R.string.pref_key_press), "mb")!!
-        prefSpeed = pref.getString(getString(R.string.pref_key_speed), "ms")!!
-        fetchArgs()
+
+        initPreferences()
+        getNavArguments()
     }
 
     override fun onDestroy() {
@@ -60,7 +57,14 @@ class DetailsFragment : Fragment() {
         _binding = null
     }
 
-    private fun fetchArgs() {
+    private fun initPreferences() {
+        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        prefTemp = pref.getString(getString(R.string.pref_key_temp), "C")!!
+        prefPressure = pref.getString(getString(R.string.pref_key_press), "mb")!!
+        prefSpeed = pref.getString(getString(R.string.pref_key_speed), "ms")!!
+    }
+
+    private fun getNavArguments() {
         arguments?.let {
             if (it.containsKey(getString(R.string.args_current_weather))) {
                 val currentWeather =
@@ -123,6 +127,7 @@ class DetailsFragment : Fragment() {
                 textStation.text = getString(R.string.details_text_none)
             }
         }
+        details_container.transitionToEnd()
     }
 
     private fun formatTime(time: String): String {

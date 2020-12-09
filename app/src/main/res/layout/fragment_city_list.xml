@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/text_notice"
-        style="@style/TextCitiesList"
+        style="@style/CitiesListText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/city_list.text.empty_list"
@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/text_location_city"
-        style="@style/TextCitiesList"
+        style="@style/CitiesListText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#caf0f8"

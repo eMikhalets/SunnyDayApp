@@ -29,9 +29,7 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
     private lateinit var citiesAdapter: CitiesAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCityListBinding.inflate(inflater, container, false)
         return binding.root

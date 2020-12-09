@@ -15,9 +15,29 @@
         <item name="android:theme">?attr/actionBarTheme</item>
     </style>
 
-    <style name="TextCitiesList">
+    <style name="CitiesListText">
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="DetailsIcon">
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+
+    <style name="DetailsText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="DetailsTextDesc">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>
