@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.data.repository.CityListRepository
-import com.emikhalets.sunnydayapp.utils.status.CitiesState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber

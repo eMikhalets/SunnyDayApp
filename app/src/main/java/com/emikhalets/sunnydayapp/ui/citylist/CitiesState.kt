@@ -1,11 +1,10 @@
-package com.emikhalets.sunnydayapp.utils.status
+package com.emikhalets.sunnydayapp.ui.citylist
 
 data class CitiesState<out T>(val status: Status, val data: T?, val message: String?) {
 
     enum class Status {
         CITIES,
-        EMPTY,
-        LOADING
+        EMPTY
     }
 
     companion object {

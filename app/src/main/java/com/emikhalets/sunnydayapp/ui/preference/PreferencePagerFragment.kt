@@ -2,10 +2,10 @@ package com.emikhalets.sunnydayapp.ui.preference
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.preference.*
 import com.emikhalets.sunnydayapp.R
-import com.emikhalets.sunnydayapp.utils.ToastBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
 import java.time.LocalDateTime
@@ -104,7 +104,7 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         })
 
         prefViewModel.notice.observe(viewLifecycleOwner, {
-            ToastBuilder.build(it)
+            showToast(it)
         })
     }
 
@@ -123,5 +123,9 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         val config = res.configuration
         config.setLocale(Locale(localeCode.toLowerCase()))
         res.updateConfiguration(config, dm)
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -13,8 +14,6 @@ import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
-import com.emikhalets.sunnydayapp.utils.ToastBuilder
-import com.emikhalets.sunnydayapp.utils.status.CitiesState
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -24,7 +23,7 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
     private var _binding: FragmentCityListBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: CityListViewModel by viewModels()
+    private val cityListViewModel: CityListViewModel by viewModels()
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
     private lateinit var citiesAdapter: CitiesAdapter
@@ -33,18 +32,22 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentCityListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setObservers()
-        setListeners()
+
+        initObservers()
         initCitiesAdapter()
-        viewModel.getAddedCities()
-        binding.textLocationCity.text = getString(R.string.city_list_text_location_not_determined)
+
+        if (savedInstanceState == null) {
+            cityListViewModel.getAddedCities()
+            binding.textLocationCity.text =
+                getString(R.string.city_list_text_location_not_determined)
+        }
     }
 
     override fun onDestroy() {
@@ -52,24 +55,31 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
         _binding = null
     }
 
-    private fun setObservers() {
-        viewModel.addedCities.observe(viewLifecycleOwner, {
-            if (it.status == CitiesState.Status.CITIES) citiesAdapter.submitList(it.data)
-            setVisibilityMode(it.status)
-        })
-
-        pagerViewModel.addedCity.observe(viewLifecycleOwner, {
-            Timber.d("($it) added to the list")
-            updateCitiesList()
-        })
-
-        pagerViewModel.locationQuery.observe(viewLifecycleOwner, {
-            Timber.d("Location query has been updated: ($it)")
-            binding.textLocationCity.text = it
-        })
+    private fun initCitiesAdapter() {
+        citiesAdapter = CitiesAdapter(this)
+        val divider = DividerItemDecoration(requireContext(), LinearLayoutManager.HORIZONTAL)
+        binding.listCities.run {
+            addItemDecoration(divider)
+            adapter = citiesAdapter
+        }
     }
 
-    private fun setListeners() {
+    private fun initObservers() {
+        cityListViewModel.addedCities.observe(viewLifecycleOwner, {
+            if (it.status == CitiesState.Status.CITIES) citiesAdapter.submitList(it.data)
+            setVisibilityState(it.status)
+        })
+
+        pagerViewModel.addedCity.observe(viewLifecycleOwner, { cityName ->
+            Timber.d("($cityName) added to the list")
+            cityListViewModel.getAddedCities()
+        })
+
+        pagerViewModel.locationQuery.observe(viewLifecycleOwner, { cityName ->
+            Timber.d("Location query has been updated: ($cityName)")
+            binding.textLocationCity.text = cityName
+        })
+
         binding.textLocationCity.setOnClickListener {
             Timber.d("Clicked the current location in the list of cities")
             val lat = pagerViewModel.location.value?.get(0)
@@ -80,29 +90,23 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
                 Timber.d("Location query has been updated: ($query)")
                 pagerViewModel.updateLocation(lat, lon, query)
             } else {
-                ToastBuilder.build(getString(R.string.city_list_text_location_not_determined))
+                showToast(getString(R.string.city_list_text_location_not_determined))
             }
         }
     }
 
-    private fun initCitiesAdapter() {
-        citiesAdapter = CitiesAdapter(this)
-        val citiesLayoutManager = LinearLayoutManager(requireContext())
-        val divider =
-            DividerItemDecoration(requireContext(), citiesLayoutManager.orientation)
-        binding.listCities.run {
-            layoutManager = citiesLayoutManager
-            addItemDecoration(divider)
-            adapter = citiesAdapter
-        }
-    }
-
+    /**
+     * CitiesAdapter item click listener
+     */
     override fun onCityClick(city: City) {
         Timber.d("Clicked ($city) in the list of cities")
         pagerViewModel.isWeatherLoaded = false
         pagerViewModel.updateCurrentQuery(city.getQuery())
     }
 
+    /**
+     * CitiesAdapter item long click listener
+     */
     override fun onCityLongClick(city: City) {
         Timber.d("Delete ($city)")
         val dialog = DeleteCityDialog(city, this)
@@ -112,33 +116,27 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
         )
     }
 
+    /**
+     * Delete dialog click listener
+     */
     override fun onDeleteCity(city: City) {
-        viewModel.deleteCity(city)
+        cityListViewModel.deleteCity(city)
     }
 
-    private fun updateCitiesList() {
-        setVisibilityMode(CitiesState.Status.LOADING)
-        viewModel.getAddedCities()
-    }
-
-    private fun setVisibilityMode(status: CitiesState.Status) {
-        val durationMills = 500L
+    private fun setVisibilityState(status: CitiesState.Status) {
         when (status) {
             CitiesState.Status.CITIES -> {
-                binding.textNotice.animate().alpha(0f).setDuration(durationMills).start()
-                binding.pbLoadingCities.animate().alpha(0f).setDuration(durationMills).start()
-                binding.listCities.animate().alpha(1f).setDuration(durationMills).start()
-            }
-            CitiesState.Status.LOADING -> {
-                binding.textNotice.animate().alpha(0f).setDuration(durationMills).start()
-                binding.pbLoadingCities.animate().alpha(1f).setDuration(durationMills).start()
-                binding.listCities.animate().alpha(0f).setDuration(durationMills).start()
+                binding.textNotice.visibility = View.INVISIBLE
+                binding.listCities.visibility = View.VISIBLE
             }
             CitiesState.Status.EMPTY -> {
-                binding.textNotice.animate().alpha(1f).setDuration(durationMills).start()
-                binding.pbLoadingCities.animate().alpha(0f).setDuration(durationMills).start()
-                binding.listCities.animate().alpha(0f).setDuration(durationMills).start()
+                binding.textNotice.visibility = View.VISIBLE
+                binding.listCities.visibility = View.INVISIBLE
             }
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

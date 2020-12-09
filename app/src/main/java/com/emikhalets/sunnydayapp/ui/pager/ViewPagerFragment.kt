@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
+import android.widget.Toast
 import androidx.datastore.preferences.createDataStore
 import androidx.datastore.preferences.edit
 import androidx.datastore.preferences.preferencesKey
@@ -23,7 +24,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
-import com.emikhalets.sunnydayapp.utils.ToastBuilder
 import com.emikhalets.sunnydayapp.utils.status.PagerStatus
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -283,9 +283,13 @@ class ViewPagerFragment : Fragment() {
                     pagerViewModel.requestLocation(fusedLocationClient)
                 } else {
                     Timber.d("Location permissions have not been granted")
-                    ToastBuilder.build(getString(R.string.city_list_text_location_permissions_not_granted))
+                    showToast(getString(R.string.city_list_text_location_permissions_not_granted))
                 }
             }
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }
