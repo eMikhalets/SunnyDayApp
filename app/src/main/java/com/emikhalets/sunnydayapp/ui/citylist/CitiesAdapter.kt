@@ -12,11 +12,6 @@ import com.emikhalets.sunnydayapp.databinding.ItemCityBinding
 class CitiesAdapter(private val click: CityClick) :
     ListAdapter<City, CitiesAdapter.ViewHolder>(CitiesDiffCallback()) {
 
-    interface CityClick {
-        fun onCityClick(city: City)
-        fun onCityLongClick(city: City)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCityBinding.inflate(inflater, parent, false)
@@ -48,5 +43,10 @@ class CitiesAdapter(private val click: CityClick) :
                 }
             }
         }
+    }
+
+    interface CityClick {
+        fun onCityClick(city: City)
+        fun onCityLongClick(city: City)
     }
 }

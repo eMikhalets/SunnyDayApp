@@ -63,33 +63,55 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
     }
 
     private fun initObservers() {
-        cityListViewModel.addedCities.observe(viewLifecycleOwner, {
-            if (it.status == CitiesState.Status.CITIES) citiesAdapter.submitList(it.data)
-            setVisibilityState(it.status)
-        })
+        cityListViewModel.addedCities.observe(viewLifecycleOwner, { addedCitiesObserver(it) })
+        pagerViewModel.addedCity.observe(viewLifecycleOwner, { addedCityObserver(it) })
+        pagerViewModel.locationQuery.observe(viewLifecycleOwner, { locationQueryObserver(it) })
 
-        pagerViewModel.addedCity.observe(viewLifecycleOwner, { cityName ->
-            Timber.d("($cityName) added to the list")
-            cityListViewModel.getAddedCities()
-        })
+        binding.textLocationCity.setOnClickListener { onTextLocationClick() }
+    }
 
-        pagerViewModel.locationQuery.observe(viewLifecycleOwner, { cityName ->
-            Timber.d("Location query has been updated: ($cityName)")
-            binding.textLocationCity.text = cityName
-        })
+    // LiveData observers
 
-        binding.textLocationCity.setOnClickListener {
-            Timber.d("Clicked the current location in the list of cities")
-            val lat = pagerViewModel.location.value?.get(0)
-            val lon = pagerViewModel.location.value?.get(1)
-
-            if (lat != null && lon != null) {
-                val query = pagerViewModel.getCityAndCountry(lat, lon)
-                Timber.d("Location query has been updated: ($query)")
-                pagerViewModel.updateLocation(lat, lon, query)
-            } else {
-                showToast(getString(R.string.city_list_text_location_not_determined))
+    private fun addedCitiesObserver(state: CitiesState<List<City>>) {
+        when (state.status) {
+            CitiesState.Status.LOADING -> {
             }
+            CitiesState.Status.EMPTY -> {
+            }
+            CitiesState.Status.CITIES -> {
+                citiesAdapter.submitList(state.data)
+            }
+            CitiesState.Status.ERROR -> {
+                binding.textNotice.text = state.error
+            }
+        }
+
+        setVisibilityState(state.status)
+    }
+
+    private fun addedCityObserver(name: String) {
+        Timber.d("($name) added to the list")
+        cityListViewModel.getAddedCities()
+    }
+
+    private fun locationQueryObserver(name: String) {
+        Timber.d("Location query has been updated: ($name)")
+        binding.textLocationCity.text = name
+    }
+
+    // Click listeners
+
+    private fun onTextLocationClick() {
+        Timber.d("Clicked the current location in the list of cities")
+        val lat = pagerViewModel.location.value?.get(0)
+        val lon = pagerViewModel.location.value?.get(1)
+
+        if (lat != null && lon != null) {
+            val query = pagerViewModel.getCityAndCountry(lat, lon)
+            Timber.d("Location query has been updated: ($query)")
+            pagerViewModel.updateLocation(lat, lon, query)
+        } else {
+            showToast(getString(R.string.city_list_text_location_not_determined))
         }
     }
 
@@ -123,13 +145,24 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
 
     private fun setVisibilityState(status: CitiesState.Status) {
         when (status) {
-            CitiesState.Status.CITIES -> {
-                binding.textNotice.visibility = View.INVISIBLE
-                binding.listCities.visibility = View.VISIBLE
+            CitiesState.Status.LOADING -> {
+                with(binding) {
+                    textNotice.visibility = View.INVISIBLE
+                    listCities.visibility = View.INVISIBLE
+                    pbLoadingCities.visibility = View.VISIBLE
+                }
             }
-            CitiesState.Status.EMPTY -> {
-                binding.textNotice.visibility = View.VISIBLE
-                binding.listCities.visibility = View.INVISIBLE
+            CitiesState.Status.EMPTY, CitiesState.Status.ERROR -> {
+                with(binding) {
+                    pbLoadingCities.visibility = View.INVISIBLE
+                    textNotice.visibility = View.VISIBLE
+                }
+            }
+            CitiesState.Status.CITIES -> {
+                with(binding) {
+                    pbLoadingCities.visibility = View.INVISIBLE
+                    listCities.visibility = View.VISIBLE
+                }
             }
         }
     }
