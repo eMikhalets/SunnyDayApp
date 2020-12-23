@@ -14,10 +14,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.DataDaily
+import com.emikhalets.sunnydayapp.data.model.ResponseCurrent
+import com.emikhalets.sunnydayapp.data.model.ResponseDaily
 import com.emikhalets.sunnydayapp.databinding.FragmentCurrentBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import com.emikhalets.sunnydayapp.utils.AppHelper
-import com.emikhalets.sunnydayapp.utils.status.WeatherState
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -28,7 +29,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
-class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
+class WeatherFragment : Fragment(), DailyAdapter.ForecastItemClick {
 
     private var _binding: FragmentCurrentBinding? = null
     private val binding get() = _binding!!
@@ -43,10 +44,8 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
     private lateinit var prefSpeed: String
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentCurrentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -56,7 +55,6 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
         initForecastAdapter()
         initPreferences()
         initObservers()
-        initListeners()
     }
 
     override fun onDestroy() {
@@ -65,11 +63,9 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
     }
 
     private fun initForecastAdapter() {
-        forecastAdapter = DailyAdapter(requireContext(),this)
-        val forecastLm = LinearLayoutManager(requireContext())
-        val divider = DividerItemDecoration(requireContext(), forecastLm.orientation)
+        forecastAdapter = DailyAdapter(requireContext(), this)
+        val divider = DividerItemDecoration(requireContext(), LinearLayoutManager.HORIZONTAL)
         binding.listForecastDaily.run {
-            layoutManager = forecastLm
             addItemDecoration(divider)
             adapter = forecastAdapter
         }
@@ -83,89 +79,112 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
     }
 
     private fun initObservers() {
-        pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
-            if (!pagerViewModel.isWeatherLoaded) {
-                Timber.d("Query has been updated: ($it)")
-                setUiState(WeatherState.Status.LOADING)
-                weatherViewModel.run {
-                    requestCurrent(it)
-                    requestForecastDaily(it)
-                }
-                pagerViewModel.isWeatherLoaded = true
-            }
-        })
+        pagerViewModel.currentQuery.observe(viewLifecycleOwner, { currentQueryObserver(it) })
+        pagerViewModel.location.observe(viewLifecycleOwner, { locationObserver(it) })
+        weatherViewModel.currentWeather.observe(viewLifecycleOwner, { weatherObserver(it) })
+        weatherViewModel.forecastDaily.observe(viewLifecycleOwner, { forecastObserver(it) })
 
-        pagerViewModel.location.observe(viewLifecycleOwner, {
-            if (!pagerViewModel.isWeatherLoaded) {
-                Timber.d("Location coordinates is updated.")
-                setUiState(WeatherState.Status.LOADING)
-                weatherViewModel.run {
-                    requestCurrent(it[0], it[1])
-                    requestForecastDaily(it[0], it[1])
-                }
-                pagerViewModel.isWeatherLoaded = true
-            }
-        })
-
-        weatherViewModel.currentWeather.observe(viewLifecycleOwner, {
-            when (it.status) {
-                WeatherState.Status.WEATHER -> {
-                    pagerViewModel.updateTimezone(it.data!!.data.first().timezone)
-                    val weather = it.data.data.first()
-                    Timber.d("Current weather has been loaded: ($weather)")
-                    Picasso.get().load(AppHelper.buildIconUrl(weather.weather.icon))
-                        .into(binding.imageWeatherIcon)
-                    with(binding) {
-                        textCityName.text = weather.cityName
-                        textDate.text = formatDate(weather.timestamp)
-                        AppHelper.setTempUnit(
-                            requireContext(), textTemp, weather.temperature, prefTemp
-                        )
-                        textDesc.text = weather.weather.description
-                        AppHelper.setSpeedUnit(
-                            requireContext(), textWind, weather.windSpeed, prefSpeed
-                        )
-                        textHumidity.text =
-                            getString(R.string.current_text_humidity, weather.humidity.toInt())
-                        AppHelper.setPressureUnit(
-                            requireContext(), textPressure, weather.pressure, prefPressure
-                        )
-                    }
-                }
-                WeatherState.Status.ERROR -> binding.textNotice.text = it.message
-            }
-            setUiState(it.status)
-        })
-
-        weatherViewModel.forecastDaily.observe(viewLifecycleOwner, {
-            when (it.status) {
-                WeatherState.Status.WEATHER -> {
-                    pagerViewModel.updateTimezone(it.data!!.timezone)
-                    forecastAdapter.updateTimeZone(it.data.timezone)
-                    val forecast = it.data.data
-                    Timber.d("Forecast daily has been loaded: ($forecast)")
-                    forecastAdapter.submitList(forecast)
-                }
-                WeatherState.Status.ERROR -> binding.textNotice.text = it.message
-            }
-            setUiState(it.status)
-        })
+        binding.btnDetails.setOnClickListener { onDetailsClickListener() }
     }
 
-    private fun initListeners() {
-        binding.btnDetails.setOnClickListener {
-            Timber.d("Clicked on current weather details")
-            weatherViewModel.currentWeather.value?.data?.let {
-                Timber.d("Navigate to current weather details")
-                val args = Bundle()
-                args.putSerializable(
-                    getString(R.string.args_current_weather),
-                    it.data.first() as Serializable
-                )
-                Navigation.findNavController(binding.root)
-                    .navigate(R.id.action_viewPagerFragment_to_detailsFragment, args)
+    private fun currentQueryObserver(query: String) {
+        if (!pagerViewModel.isWeatherLoaded) {
+            Timber.d("Query has been updated: ($query)")
+            weatherViewModel.run {
+                requestCurrent(query)
+                requestForecastDaily(query)
+            }
+            pagerViewModel.isWeatherLoaded = true
+        }
+    }
+
+    private fun locationObserver(location: List<Double>) {
+        if (!pagerViewModel.isWeatherLoaded) {
+            Timber.d("Location coordinates is updated.")
+            updateWeatherUi(WeatherState.Status.LOADING)
+            updateForecastUi(WeatherState.Status.LOADING)
+            weatherViewModel.run {
+                requestCurrent(location[0], location[1])
+                requestForecastDaily(location[0], location[1])
+            }
+            pagerViewModel.isWeatherLoaded = true
+        }
+    }
+
+    private fun weatherObserver(state: WeatherState<ResponseCurrent>) {
+        when (state.status) {
+            WeatherState.Status.LOADING -> {
+            }
+            WeatherState.Status.WEATHER -> {
+                pagerViewModel.updateTimezone(state.data!!.data.first().timezone)
+                val weather = state.data.data.first()
+                Timber.d("Current weather has been loaded: ($weather)")
+                Picasso.get().load(AppHelper.buildIconUrl(weather.weather.icon))
+                    .into(binding.imageWeatherIcon)
+                with(binding) {
+                    textCityName.text = weather.cityName
+                    textDate.text = formatDate(weather.timestamp)
+                    AppHelper.setTempUnit(
+                        requireContext(), textTemp, weather.temperature, prefTemp
+                    )
+                    textDesc.text = weather.weather.description
+                    AppHelper.setSpeedUnit(
+                        requireContext(), textWind, weather.windSpeed, prefSpeed
+                    )
+                    textHumidity.text =
+                        getString(R.string.current_text_humidity, weather.humidity.toInt())
+                    AppHelper.setPressureUnit(
+                        requireContext(), textPressure, weather.pressure, prefPressure
+                    )
+                }
+            }
+            WeatherState.Status.ERROR -> {
+                binding.textWeatherError.text = state.error
             }
         }
+
+        updateWeatherUi(state.status)
+    }
+
+    private fun forecastObserver(state: WeatherState<ResponseDaily>) {
+        when (state.status) {
+            WeatherState.Status.LOADING -> {
+            }
+            WeatherState.Status.WEATHER -> {
+                pagerViewModel.updateTimezone(state.data!!.timezone)
+                forecastAdapter.updateTimeZone(state.data.timezone)
+                val forecast = state.data.data
+                Timber.d("Forecast daily has been loaded: ($forecast)")
+                forecastAdapter.submitList(forecast)
+            }
+            WeatherState.Status.ERROR -> {
+                binding.textForecastError.text = state.error
+            }
+        }
+        updateForecastUi(state.status)
+    }
+
+    private fun onDetailsClickListener() {
+        Timber.d("Clicked on current weather details")
+        weatherViewModel.currentWeather.value?.data?.let {
+            Timber.d("Navigate to current weather details")
+            val args = Bundle()
+            args.putSerializable(
+                getString(R.string.args_current_weather),
+                it.data.first() as Serializable
+            )
+            Navigation.findNavController(binding.root)
+                .navigate(R.id.action_viewPagerFragment_to_detailsFragment, args)
+        }
+    }
+
+    override fun onDailyForecastClick(dailyForecast: DataDaily) {
+        Timber.d("Clicked on forecast weather details")
+        Timber.d("Navigate to forecast weather details")
+        val args = Bundle()
+        args.putSerializable(getString(R.string.args_daily_forecast), dailyForecast as Serializable)
+        Navigation.findNavController(binding.root)
+            .navigate(R.id.action_viewPagerFragment_to_detailsFragment, args)
     }
 
     private fun formatDate(timestamp: Long): String {
@@ -177,45 +196,53 @@ class WeatherFragment : Fragment(), DailyAdapter.DailyForecastItemClick {
         return date.format(formatter)
     }
 
-    private fun setUiState(status: WeatherState.Status) {
-        val duration = 500L
+    private fun updateWeatherUi(status: WeatherState.Status) {
         when (status) {
-            WeatherState.Status.WEATHER -> {
-                with(binding) {
-                    textNotice.animate().alpha(0f).setDuration(duration).start()
-                    pbLoadingCurrent.animate().alpha(0f).setDuration(duration).start()
-                    pbLoadingDaily.animate().alpha(0f).setDuration(duration).start()
-                    layoutWeatherCurrent.animate().alpha(1f).setDuration(duration).start()
-                    listForecastDaily.animate().alpha(1f).setDuration(duration).start()
-                }
-            }
             WeatherState.Status.LOADING -> {
                 with(binding) {
-                    textNotice.animate().alpha(0f).setDuration(duration).start()
-                    pbLoadingCurrent.animate().alpha(1f).setDuration(duration).start()
-                    pbLoadingDaily.animate().alpha(1f).setDuration(duration).start()
-                    layoutWeatherCurrent.animate().alpha(0f).setDuration(duration).start()
-                    listForecastDaily.animate().alpha(0f).setDuration(duration).start()
+                    textNotice.visibility = View.INVISIBLE
+                    textWeatherError.visibility = View.INVISIBLE
+                    layoutWeatherCurrent.visibility = View.INVISIBLE
+                    pbLoadingCurrent.visibility = View.VISIBLE
+                }
+            }
+            WeatherState.Status.WEATHER -> {
+                with(binding) {
+                    pbLoadingCurrent.visibility = View.INVISIBLE
+                    layoutWeatherCurrent.visibility = View.VISIBLE
                 }
             }
             WeatherState.Status.ERROR -> {
                 with(binding) {
-                    textNotice.animate().alpha(1f).setDuration(duration).start()
-                    pbLoadingCurrent.animate().alpha(0f).setDuration(duration).start()
-                    pbLoadingDaily.animate().alpha(0f).setDuration(duration).start()
-                    layoutWeatherCurrent.animate().alpha(0f).setDuration(duration).start()
-                    listForecastDaily.animate().alpha(0f).setDuration(duration).start()
+                    pbLoadingCurrent.visibility = View.INVISIBLE
+                    textWeatherError.visibility = View.VISIBLE
                 }
             }
         }
     }
 
-    override fun onDailyForecastClick(dailyForecast: DataDaily) {
-        Timber.d("Clicked on forecast weather details")
-        Timber.d("Navigate to forecast weather details")
-        val args = Bundle()
-        args.putSerializable(getString(R.string.args_daily_forecast), dailyForecast as Serializable)
-        Navigation.findNavController(binding.root)
-            .navigate(R.id.action_viewPagerFragment_to_detailsFragment, args)
+    private fun updateForecastUi(status: WeatherState.Status) {
+        when (status) {
+            WeatherState.Status.LOADING -> {
+                with(binding) {
+                    textNotice.visibility = View.INVISIBLE
+                    textForecastError.visibility = View.INVISIBLE
+                    listForecastDaily.visibility = View.INVISIBLE
+                    pbLoadingDaily.visibility = View.VISIBLE
+                }
+            }
+            WeatherState.Status.WEATHER -> {
+                with(binding) {
+                    pbLoadingDaily.visibility = View.INVISIBLE
+                    listForecastDaily.visibility = View.VISIBLE
+                }
+            }
+            WeatherState.Status.ERROR -> {
+                with(binding) {
+                    pbLoadingDaily.visibility = View.INVISIBLE
+                    textForecastError.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 }

@@ -20,13 +20,8 @@ import javax.inject.Inject
 
 class DailyAdapter @Inject constructor(
     context: Context,
-    private val dailyClick: DailyForecastItemClick
-) :
-    ListAdapter<DataDaily, DailyAdapter.ViewHolder>(DailyDiffCallback()) {
-
-    interface DailyForecastItemClick {
-        fun onDailyForecastClick(dailyForecast: DataDaily)
-    }
+    private val forecastClick: ForecastItemClick
+) : ListAdapter<DataDaily, DailyAdapter.ViewHolder>(DailyDiffCallback()) {
 
     private lateinit var timezone: String
 
@@ -44,13 +39,13 @@ class DailyAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), timezone, dailyClick)
+        holder.bind(getItem(position), timezone, forecastClick)
     }
 
     inner class ViewHolder(private val binding: ItemForecastDailyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: DataDaily, timezone: String, dailyClick: DailyForecastItemClick) {
+        fun bind(item: DataDaily, timezone: String, click: ForecastItemClick) {
             Picasso.get().load(AppHelper.buildIconUrl(item.weather.icon)).into(binding.imageIcon)
 
             with(binding) {
@@ -58,7 +53,7 @@ class DailyAdapter @Inject constructor(
                 AppHelper.setTempUnit(root.context, textTempMax, item.temperatureMax, prefTemp)
                 AppHelper.setTempUnit(root.context, textTempMin, item.temperatureMin, prefTemp)
 
-                root.setOnClickListener { dailyClick.onDailyForecastClick(item) }
+                root.setOnClickListener { click.onDailyForecastClick(item) }
             }
         }
 
@@ -71,5 +66,9 @@ class DailyAdapter @Inject constructor(
 
             return date.format(formatter)
         }
+    }
+
+    interface ForecastItemClick {
+        fun onDailyForecastClick(dailyForecast: DataDaily)
     }
 }

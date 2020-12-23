@@ -9,11 +9,39 @@
         android:id="@+id/layout_weather_current"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:alpha="0"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:alpha="1">
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/text_weather_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Exception"
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/pb_loading_current"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/text_city_name"
@@ -161,31 +189,33 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_details" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ProgressBar
-        android:id="@+id/pb_loading_current"
-        style="?android:attr/progressBarStyle"
+    <TextView
+        android:id="@+id/text_forecast_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:alpha="0"
-        app:layout_constraintBottom_toBottomOf="@+id/layout_weather_current"
-        app:layout_constraintEnd_toEndOf="@+id/layout_weather_current"
-        app:layout_constraintStart_toStartOf="@+id/layout_weather_current"
-        app:layout_constraintTop_toTopOf="@+id/layout_weather_current"
-        tools:alpha="1" />
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_weather_current"
+        tools:text="Exception"
+        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_forecast_daily"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:alpha="0"
         android:scrollbars="vertical"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_weather_current"
-        tools:alpha="1"
-        tools:listitem="@layout/item_forecast_daily" />
+        tools:listitem="@layout/item_forecast_daily"
+        tools:visibility="visible" />
 
     <ProgressBar
         android:id="@+id/pb_loading_daily"
@@ -193,12 +223,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:alpha="0"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_weather_current"
-        tools:alpha="1" />
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/text_notice"
