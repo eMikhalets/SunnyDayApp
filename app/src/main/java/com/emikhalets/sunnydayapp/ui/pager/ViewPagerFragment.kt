@@ -2,10 +2,12 @@ package com.emikhalets.sunnydayapp.ui.pager
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.view.LayoutInflater
@@ -15,24 +17,23 @@ import android.widget.CursorAdapter
 import android.widget.SearchView
 import android.widget.SimpleCursorAdapter
 import android.widget.Toast
-import androidx.datastore.preferences.createDataStore
-import androidx.datastore.preferences.edit
-import androidx.datastore.preferences.preferencesKey
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
-import com.emikhalets.sunnydayapp.utils.status.PagerStatus
+import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
+import com.emikhalets.sunnydayapp.ui.weather.WeatherFragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 
@@ -51,20 +52,16 @@ class ViewPagerFragment : Fragment() {
 
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
-    private val colCityName = "city_name"
-
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentPagerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        savedInstanceState ?: checkExistingCitiesTable()
+        savedInstanceState ?: checkCitiesTableState()
         initObservers()
         initSearchView()
         initViewPager()
@@ -76,84 +73,43 @@ class ViewPagerFragment : Fragment() {
         _binding = null
     }
 
-    private fun checkExistingCitiesTable() {
-        val dataStore = requireContext().createDataStore(getString(R.string.ds_file_name))
-        val isDbCreatedKey = preferencesKey<Boolean>(getString(R.string.ds_is_db_created))
-        val isDbCreatedFlow: Flow<Boolean> = dataStore.data.map { it[isDbCreatedKey] ?: false }
+    private fun checkCitiesTableState() {
+        val sp = requireActivity().getSharedPreferences(SP_FILE_NAME, Context.MODE_PRIVATE)
+        val isDbCreated = sp.getBoolean(SP_IS_DB_CREATED, false)
+
         lifecycleScope.launch {
-            isDbCreatedFlow.collect { isDbCreated ->
-                if (!isDbCreated) {
-                    Timber.d("Cities table not exist")
-                    setVisibility(PagerStatus.DB_CREATING)
-                    convertCitiesToDB()
-                    dataStore.edit { it[isDbCreatedKey] = true }
-                } else {
-                    Timber.d("Cities table in database was created")
-                    setVisibility(PagerStatus.DB_CREATED)
+            if (isDbCreated) {
+                Timber.d("Cities table in database was created")
+                updateInterface(PagerState.Status.DB_CREATED)
+            } else {
+                Timber.d("Cities table not exist")
+                updateInterface(PagerState.Status.DB_CREATING)
+                val job = lifecycleScope.async { parseAssetCities() }
+                lifecycleScope.launch {
+                    job.await()
+                    with(sp.edit()) {
+                        putBoolean(SP_IS_DB_CREATED, true)
+                        apply()
+                    }
+                    updateInterface(PagerState.Status.DB_CREATED)
                 }
             }
         }
     }
 
-    private fun convertCitiesToDB() {
-        requireContext().assets.open("cities_20000.json").bufferedReader()
-            .use { bufferReader ->
-                val json = bufferReader.use { it.readText() }
-                pagerViewModel.parseAndInsertToDB(json)
-            }
+    private suspend fun parseAssetCities() = withContext(Dispatchers.IO) {
+        val stream = requireContext().assets.open(CITIES_JSON)
+        pagerViewModel.parseAndInsertToDB(stream.bufferedReader().readText())
     }
 
     private fun initObservers() {
-        pagerViewModel.searchingCities.observe(viewLifecycleOwner, {
-            val cursor = MatrixCursor(arrayOf(BaseColumns._ID, "city_name"))
-            for (i in it.indices) cursor.addRow(arrayOf(i, it[i]))
-            searchAdapter.changeCursor(cursor)
-            searchView.suggestionsAdapter = searchAdapter
-        })
-
-        pagerViewModel.currentQuery.observe(viewLifecycleOwner, {
-            Timber.d("Query has been updated: ($it)")
-            with(binding) {
-                toolbar.subtitle = it
-                viewPager.setCurrentItem(1, true)
-            }
-        })
-
-        pagerViewModel.locationQuery.observe(viewLifecycleOwner, {
-            Timber.d("Location query has been updated: ($it)")
-            binding.toolbar.subtitle = it
-        })
-
-        pagerViewModel.dbStatus.observe(viewLifecycleOwner, {
-            when (it) {
-                PagerStatus.DB_CREATED -> {
-                    Timber.d("Cities table in database has been created")
-                    setVisibility(it)
-                }
-                PagerStatus.DB_DELETED -> {
-                    Timber.d("Cities table has been deleted")
-                    convertCitiesToDB()
-                }
-            }
-        })
-
-        pagerViewModel.currentLocation.observe(viewLifecycleOwner, {
-            it?.let {
-                Timber.d("Location has been updated: $it")
-                val lat = it.latitude
-                val lon = it.longitude
-                val geo = Geocoder(requireContext(), Locale.getDefault())
-                val address = geo.getFromLocation(lat, lon, 1).first()
-                val query = "${address.locality}, ${address.countryName}"
-                Timber.d("Location query has been updated: ($query)")
-                pagerViewModel.updateLocation(lat, lon, query)
-            }
-        })
+        pagerViewModel.searchingCities.observe(viewLifecycleOwner, { searchingObserver(it) })
+        pagerViewModel.currentQuery.observe(viewLifecycleOwner, { currentQueryObserver(it) })
+        pagerViewModel.locationQuery.observe(viewLifecycleOwner, { locationQueryObserver(it) })
+        pagerViewModel.currentLocation.observe(viewLifecycleOwner, { locationObserver(it) })
 
         binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
-            Timber.d("Settings Click")
-            Navigation.findNavController(binding.root)
-                .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
+            onSettingsClick()
         }
 
 //        binding.toolbar.findViewById<View>(R.id.menu_pager_recreate_db).setOnClickListener {
@@ -179,25 +135,66 @@ class ViewPagerFragment : Fragment() {
         }.attach()
     }
 
-    private fun setVisibility(status: PagerStatus) {
+    private fun searchingObserver(results: Array<String>) {
+        val cursor = MatrixCursor(arrayOf(BaseColumns._ID, "city_name"))
+        for (i in results.indices) cursor.addRow(arrayOf(i, results[i]))
+        searchAdapter.changeCursor(cursor)
+        searchView.suggestionsAdapter = searchAdapter
+    }
+
+    private fun currentQueryObserver(query: String) {
+        Timber.d("Query has been updated: ($query)")
+        with(binding) {
+            toolbar.subtitle = query
+            viewPager.setCurrentItem(1, true)
+        }
+    }
+
+    private fun locationQueryObserver(query: String) {
+        Timber.d("Location query has been updated: ($query)")
+        binding.toolbar.subtitle = query
+    }
+
+    private fun locationObserver(location: Location) {
+        Timber.d("Location has been updated: $location")
+        val lat = location.latitude
+        val lon = location.longitude
+        val geo = Geocoder(requireContext(), Locale.getDefault())
+        val address = geo.getFromLocation(lat, lon, 1).first()
+        val query = "${address.locality}, ${address.countryName}"
+        Timber.d("Location query has been updated: ($query)")
+        pagerViewModel.updateLocation(lat, lon, query)
+    }
+
+    private fun onSettingsClick() {
+        Timber.d("Settings Click")
+        Navigation.findNavController(binding.root)
+            .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun updateInterface(status: PagerState.Status) {
         when (status) {
-            PagerStatus.DB_CREATING -> {
-                Timber.d("Showing progressbar, notice. Hiding viewpager, tabs")
+            PagerState.Status.DB_CREATING -> {
                 with(binding) {
-                    tabLayout.visibility = View.INVISIBLE
                     viewPager.visibility = View.INVISIBLE
+                    tabLayout.visibility = View.INVISIBLE
                     textNotice.visibility = View.VISIBLE
                     pbDbCreating.visibility = View.VISIBLE
                 }
             }
-            PagerStatus.DB_CREATED -> {
-                Timber.d("Hiding progressbar, notice. Showing viewpager, tabs")
+            PagerState.Status.DB_CREATED -> {
                 with(binding) {
-                    viewPager.visibility = View.VISIBLE
-                    tabLayout.visibility = View.VISIBLE
                     textNotice.visibility = View.INVISIBLE
                     pbDbCreating.visibility = View.INVISIBLE
+                    viewPager.visibility = View.VISIBLE
+                    tabLayout.visibility = View.VISIBLE
                 }
+            }
+            PagerState.Status.DB_DELETED -> {
             }
         }
     }
@@ -234,7 +231,7 @@ class ViewPagerFragment : Fragment() {
         override fun onSuggestionSelect(id: Int): Boolean = false
         override fun onSuggestionClick(id: Int): Boolean {
             val cursor = searchView.suggestionsAdapter.getItem(id) as Cursor
-            val name = cursor.getString(cursor.getColumnIndex(colCityName))
+            val name = cursor.getString(cursor.getColumnIndex(COL_CITY_NAME))
             binding.toolbar.subtitle = name
             cursor.close()
             searchAdapter.changeCursor(null)
@@ -289,7 +286,20 @@ class ViewPagerFragment : Fragment() {
         }
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    companion object {
+        private const val CITIES_JSON = "cities_20000.json"
+        private const val COL_CITY_NAME = "city_name"
+        private const val SP_FILE_NAME = "sp_file_name"
+        private const val SP_IS_DB_CREATED = "sp_is_database_created"
+    }
+
+    private inner class ViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+
+        override fun createFragment(position: Int): Fragment = when (position) {
+            0 -> CityListFragment()
+            else -> WeatherFragment()
+        }
+
+        override fun getItemCount(): Int = 2
     }
 }

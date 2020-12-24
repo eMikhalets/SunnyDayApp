@@ -17,12 +17,12 @@ import com.emikhalets.sunnydayapp.data.model.DataDaily
 import com.emikhalets.sunnydayapp.data.model.ResponseCurrent
 import com.emikhalets.sunnydayapp.data.model.ResponseDaily
 import com.emikhalets.sunnydayapp.databinding.FragmentCurrentBinding
+import com.emikhalets.sunnydayapp.ui.pager.ViewPagerFragmentDirections
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import com.emikhalets.sunnydayapp.utils.AppHelper
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import java.io.Serializable
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -165,26 +165,19 @@ class WeatherFragment : Fragment(), DailyAdapter.ForecastItemClick {
     }
 
     private fun onDetailsClickListener() {
-        Timber.d("Clicked on current weather details")
         weatherViewModel.currentWeather.value?.data?.let {
             Timber.d("Navigate to current weather details")
-            val args = Bundle()
-            args.putSerializable(
-                getString(R.string.args_current_weather),
-                it.data.first() as Serializable
-            )
-            Navigation.findNavController(binding.root)
-                .navigate(R.id.action_viewPagerFragment_to_detailsFragment, args)
+            val action = ViewPagerFragmentDirections
+                .actionViewPagerFragmentToDetailsFragment(it.data.first(), null)
+            Navigation.findNavController(binding.root).navigate(action)
         }
     }
 
     override fun onDailyForecastClick(dailyForecast: DataDaily) {
-        Timber.d("Clicked on forecast weather details")
         Timber.d("Navigate to forecast weather details")
-        val args = Bundle()
-        args.putSerializable(getString(R.string.args_daily_forecast), dailyForecast as Serializable)
-        Navigation.findNavController(binding.root)
-            .navigate(R.id.action_viewPagerFragment_to_detailsFragment, args)
+        val action = ViewPagerFragmentDirections
+            .actionViewPagerFragmentToDetailsFragment(null, dailyForecast)
+        Navigation.findNavController(binding.root).navigate(action)
     }
 
     private fun formatDate(timestamp: Long): String {

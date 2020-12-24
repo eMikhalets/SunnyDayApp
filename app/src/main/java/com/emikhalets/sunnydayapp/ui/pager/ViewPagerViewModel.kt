@@ -15,7 +15,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.data.repository.PagerRepository
-import com.emikhalets.sunnydayapp.utils.status.PagerStatus
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -44,9 +43,6 @@ class ViewPagerViewModel @ViewModelInject constructor(
 
     private val _locationQuery = MutableLiveData<String>()
     val locationQuery: LiveData<String> get() = _locationQuery
-
-    private val _dbStatus = MutableLiveData<PagerStatus>()
-    val dbStatus: LiveData<PagerStatus> get() = _dbStatus
 
     private val _location = MutableLiveData<List<Double>>()
     val location: LiveData<List<Double>> get() = _location
@@ -136,7 +132,6 @@ class ViewPagerViewModel @ViewModelInject constructor(
 
             repository.insertAllCities(citiesToDB)
             Timber.d("Parsed list of cities added to the database")
-            _dbStatus.postValue(PagerStatus.DB_CREATED)
         }
     }
 

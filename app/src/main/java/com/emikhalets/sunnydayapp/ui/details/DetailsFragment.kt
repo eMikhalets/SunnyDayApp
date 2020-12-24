@@ -66,66 +66,64 @@ class DetailsFragment : Fragment() {
 
     private fun getNavArguments() {
         arguments?.let {
-            if (it.containsKey(getString(R.string.args_current_weather))) {
-                val currentWeather =
-                    it.getSerializable(getString(R.string.args_current_weather)) as DataCurrent
-                setWeatherData(currentWeather, null)
-            } else if (it.containsKey(getString(R.string.args_daily_forecast))) {
-                val forecastWeather =
-                    it.getSerializable(getString(R.string.args_daily_forecast)) as DataDaily
-                setWeatherData(null, forecastWeather)
-            }
+            DetailsFragmentArgs.fromBundle(it).weather?.let { weather -> setWeatherData(weather) }
+            DetailsFragmentArgs.fromBundle(it).forecast?.let { forecast -> setForecastData(forecast) }
         }
     }
 
-    private fun setWeatherData(currentWeather: DataCurrent?, forecastWeather: DataDaily?) {
-        Timber.d("Set weather data")
-        currentWeather?.let {
-            Timber.d("Set current weather data")
-            Picasso.get().load(AppHelper.buildIconUrl(it.weather.icon))
-                .into(binding.imageWeatherIcon)
-            with(binding) {
-                AppHelper.setTempUnit(requireContext(), textTemp, it.temperature, prefTemp)
-                AppHelper.setTempUnit(requireContext(), textAppTemp, it.tempFeelsLike, prefTemp)
-                textSunset.text = formatTime(it.sunset)
-                textSunrise.text = formatTime(it.sunrise)
-                AppHelper.setPressureUnit(requireContext(), textPressure, it.pressure, prefPressure)
-                AppHelper.setSpeedUnit(requireContext(), textWindSpeed, it.windSpeed, prefSpeed)
-                textWindDir.text =
-                    getString(R.string.details_text_wind_dir, it.windDir.toInt(), it.windDirFull)
-                textVisibility.text = getString(R.string.details_text_visibility, it.visibility)
-                textClouds.text = getString(R.string.details_text_clouds, it.clouds.toInt())
-                textHumidity.text = getString(R.string.details_text_humidity, it.humidity.toInt())
-                textPrecip.text = getString(R.string.details_text_precip, it.precipitation)
-                textSnow.text = getString(R.string.details_text_snow, it.snowfall)
-                textUv.text = it.uvIndex.toString()
-                textWeatherCode.text = it.weather.code
-                textStation.text = it.station
-            }
+    private fun setWeatherData(weather: DataCurrent) {
+        Timber.d("Set current weather data")
+        Picasso.get().load(AppHelper.buildIconUrl(weather.weather.icon))
+            .into(binding.imageWeatherIcon)
+        with(binding) {
+            AppHelper.setTempUnit(requireContext(), textTemp, weather.temperature, prefTemp)
+            AppHelper.setTempUnit(requireContext(), textAppTemp, weather.tempFeelsLike, prefTemp)
+            textSunset.text = formatTime(weather.sunset)
+            textSunrise.text = formatTime(weather.sunrise)
+            AppHelper.setPressureUnit(
+                requireContext(), textPressure, weather.pressure, prefPressure
+            )
+            AppHelper.setSpeedUnit(requireContext(), textWindSpeed, weather.windSpeed, prefSpeed)
+            textWindDir.text = getString(
+                R.string.details_text_wind_dir, weather.windDir.toInt(), weather.windDirFull
+            )
+            textVisibility.text = getString(R.string.details_text_visibility, weather.visibility)
+            textClouds.text = getString(R.string.details_text_clouds, weather.clouds.toInt())
+            textHumidity.text = getString(R.string.details_text_humidity, weather.humidity.toInt())
+            textPrecip.text = getString(R.string.details_text_precip, weather.precipitation)
+            textSnow.text = getString(R.string.details_text_snow, weather.snowfall)
+            textUv.text = weather.uvIndex.toString()
+            textWeatherCode.text = weather.weather.code
+            textStation.text = weather.station
         }
-        forecastWeather?.let {
-            Timber.d("Set forecast weather data")
-            val appTemp = (it.tempFeelsLikeMax + it.tempFeelsLikeMin) / 2
-            Picasso.get().load(AppHelper.buildIconUrl(it.weather.icon))
-                .into(binding.imageWeatherIcon)
-            with(binding) {
-                AppHelper.setTempUnit(requireContext(), textTemp, it.temperature, prefTemp)
-                AppHelper.setTempUnit(requireContext(), textAppTemp, appTemp, prefTemp)
-                textSunset.text = formatTime(it.sunsetTime)
-                textSunrise.text = formatTime(it.sunriseTime)
-                AppHelper.setPressureUnit(requireContext(), textPressure, it.pressure, prefPressure)
-                AppHelper.setSpeedUnit(requireContext(), textWindSpeed, it.windSpeed, prefSpeed)
-                textWindDir.text =
-                    getString(R.string.details_text_wind_dir, it.windDir.toInt(), it.windDirFull)
-                textVisibility.text = getString(R.string.details_text_visibility, it.visibility)
-                textClouds.text = getString(R.string.details_text_clouds, it.clouds.toInt())
-                textHumidity.text = getString(R.string.details_text_humidity, it.humidity.toInt())
-                textPrecip.text = getString(R.string.details_text_precip, it.precip)
-                textSnow.text = getString(R.string.details_text_snow, it.snowfall)
-                textUv.text = it.uvIndex.toString()
-                textWeatherCode.text = it.weather.code.toString()
-                textStation.text = getString(R.string.details_text_none)
-            }
+        details_container.transitionToEnd()
+    }
+
+    private fun setForecastData(forecast: DataDaily) {
+        Timber.d("Set forecast weather data")
+        val appTemp = (forecast.tempFeelsLikeMax + forecast.tempFeelsLikeMin) / 2
+        Picasso.get().load(AppHelper.buildIconUrl(forecast.weather.icon))
+            .into(binding.imageWeatherIcon)
+        with(binding) {
+            AppHelper.setTempUnit(requireContext(), textTemp, forecast.temperature, prefTemp)
+            AppHelper.setTempUnit(requireContext(), textAppTemp, appTemp, prefTemp)
+            textSunset.text = formatTime(forecast.sunsetTime)
+            textSunrise.text = formatTime(forecast.sunriseTime)
+            AppHelper.setPressureUnit(
+                requireContext(), textPressure, forecast.pressure, prefPressure
+            )
+            AppHelper.setSpeedUnit(requireContext(), textWindSpeed, forecast.windSpeed, prefSpeed)
+            textWindDir.text = getString(
+                R.string.details_text_wind_dir, forecast.windDir.toInt(), forecast.windDirFull
+            )
+            textVisibility.text = getString(R.string.details_text_visibility, forecast.visibility)
+            textClouds.text = getString(R.string.details_text_clouds, forecast.clouds.toInt())
+            textHumidity.text = getString(R.string.details_text_humidity, forecast.humidity.toInt())
+            textPrecip.text = getString(R.string.details_text_precip, forecast.precip)
+            textSnow.text = getString(R.string.details_text_snow, forecast.snowfall)
+            textUv.text = forecast.uvIndex.toString()
+            textWeatherCode.text = forecast.weather.code.toString()
+            textStation.text = getString(R.string.details_text_none)
         }
         details_container.transitionToEnd()
     }

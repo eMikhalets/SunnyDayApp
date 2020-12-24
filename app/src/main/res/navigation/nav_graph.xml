@@ -33,12 +33,20 @@
         android:id="@+id/currentFragment"
         android:name="com.emikhalets.sunnydayapp.ui.weather.WeatherFragment"
         android:label="CurrentFragment"
-        tools:layout="@layout/fragment_current" >
-    </fragment>
+        tools:layout="@layout/fragment_current"></fragment>
 
     <fragment
         android:id="@+id/detailsFragment"
         android:name="com.emikhalets.sunnydayapp.ui.details.DetailsFragment"
         android:label="DetailsFragment"
-        tools:layout="@layout/fragment_details" />
+        tools:layout="@layout/fragment_details">
+        <argument
+            android:name="weather"
+            app:argType="com.emikhalets.sunnydayapp.data.model.DataCurrent"
+            app:nullable="true" />
+        <argument
+            android:name="forecast"
+            app:argType="com.emikhalets.sunnydayapp.data.model.DataDaily"
+            app:nullable="true" />
+    </fragment>
 </navigation>
