@@ -121,7 +121,8 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         val res = resources
         val dm = res.displayMetrics
         val config = res.configuration
-        config.setLocale(Locale(localeCode.toLowerCase()))
+        config.setLocale(Locale(localeCode.toLowerCase(Locale.getDefault())))
+        // TODO(): Deprecated
         res.updateConfiguration(config, dm)
     }
 
