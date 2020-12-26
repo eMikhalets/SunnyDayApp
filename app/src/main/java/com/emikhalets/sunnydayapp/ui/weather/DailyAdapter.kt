@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.DataDaily
 import com.emikhalets.sunnydayapp.databinding.ItemForecastDailyBinding
-import com.emikhalets.sunnydayapp.utils.AppHelper
+import com.emikhalets.sunnydayapp.utils.buildIconUrl
+import com.emikhalets.sunnydayapp.utils.setTempUnit
 import com.squareup.picasso.Picasso
 import java.time.Instant
 import java.time.LocalDateTime
@@ -46,12 +47,12 @@ class DailyAdapter @Inject constructor(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: DataDaily, timezone: String, click: ForecastItemClick) {
-            Picasso.get().load(AppHelper.buildIconUrl(item.weather.icon)).into(binding.imageIcon)
+            Picasso.get().load(buildIconUrl(item.weather.icon)).into(binding.imageIcon)
 
             with(binding) {
                 textDate.text = formatDate(item.timestamp, timezone)
-                AppHelper.setTempUnit(root.context, textTempMax, item.temperatureMax, prefTemp)
-                AppHelper.setTempUnit(root.context, textTempMin, item.temperatureMin, prefTemp)
+                setTempUnit(root.context, textTempMax, item.temperatureMax, prefTemp)
+                setTempUnit(root.context, textTempMin, item.temperatureMin, prefTemp)
 
                 root.setOnClickListener { click.onDailyForecastClick(item) }
             }

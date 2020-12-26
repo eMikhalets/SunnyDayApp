@@ -13,7 +13,10 @@ import com.emikhalets.sunnydayapp.data.model.DataCurrent
 import com.emikhalets.sunnydayapp.data.model.DataDaily
 import com.emikhalets.sunnydayapp.databinding.FragmentDetailsBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
-import com.emikhalets.sunnydayapp.utils.AppHelper
+import com.emikhalets.sunnydayapp.utils.buildIconUrl
+import com.emikhalets.sunnydayapp.utils.setPressureUnit
+import com.emikhalets.sunnydayapp.utils.setSpeedUnit
+import com.emikhalets.sunnydayapp.utils.setTempUnit
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_details.*
@@ -73,17 +76,15 @@ class DetailsFragment : Fragment() {
 
     private fun setWeatherData(weather: DataCurrent) {
         Timber.d("Set current weather data")
-        Picasso.get().load(AppHelper.buildIconUrl(weather.weather.icon))
+        Picasso.get().load(buildIconUrl(weather.weather.icon))
             .into(binding.imageWeatherIcon)
         with(binding) {
-            AppHelper.setTempUnit(requireContext(), textTemp, weather.temperature, prefTemp)
-            AppHelper.setTempUnit(requireContext(), textAppTemp, weather.tempFeelsLike, prefTemp)
+            setTempUnit(requireContext(), textTemp, weather.temperature, prefTemp)
+            setTempUnit(requireContext(), textAppTemp, weather.tempFeelsLike, prefTemp)
             textSunset.text = formatTime(weather.sunset)
             textSunrise.text = formatTime(weather.sunrise)
-            AppHelper.setPressureUnit(
-                requireContext(), textPressure, weather.pressure, prefPressure
-            )
-            AppHelper.setSpeedUnit(requireContext(), textWindSpeed, weather.windSpeed, prefSpeed)
+            setPressureUnit(requireContext(), textPressure, weather.pressure, prefPressure)
+            setSpeedUnit(requireContext(), textWindSpeed, weather.windSpeed, prefSpeed)
             textWindDir.text = getString(
                 R.string.details_text_wind_dir, weather.windDir.toInt(), weather.windDirFull
             )
@@ -102,17 +103,15 @@ class DetailsFragment : Fragment() {
     private fun setForecastData(forecast: DataDaily) {
         Timber.d("Set forecast weather data")
         val appTemp = (forecast.tempFeelsLikeMax + forecast.tempFeelsLikeMin) / 2
-        Picasso.get().load(AppHelper.buildIconUrl(forecast.weather.icon))
+        Picasso.get().load(buildIconUrl(forecast.weather.icon))
             .into(binding.imageWeatherIcon)
         with(binding) {
-            AppHelper.setTempUnit(requireContext(), textTemp, forecast.temperature, prefTemp)
-            AppHelper.setTempUnit(requireContext(), textAppTemp, appTemp, prefTemp)
+            setTempUnit(requireContext(), textTemp, forecast.temperature, prefTemp)
+            setTempUnit(requireContext(), textAppTemp, appTemp, prefTemp)
             textSunset.text = formatTime(forecast.sunsetTime)
             textSunrise.text = formatTime(forecast.sunriseTime)
-            AppHelper.setPressureUnit(
-                requireContext(), textPressure, forecast.pressure, prefPressure
-            )
-            AppHelper.setSpeedUnit(requireContext(), textWindSpeed, forecast.windSpeed, prefSpeed)
+            setPressureUnit(requireContext(), textPressure, forecast.pressure, prefPressure)
+            setSpeedUnit(requireContext(), textWindSpeed, forecast.windSpeed, prefSpeed)
             textWindDir.text = getString(
                 R.string.details_text_wind_dir, forecast.windDir.toInt(), forecast.windDirFull
             )

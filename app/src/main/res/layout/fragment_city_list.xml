@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray">
 
     <TextView
         android:id="@+id/text_notice"
@@ -33,7 +34,8 @@
         style="@style/CitiesListText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#caf0f8"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_city_item"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,6 +46,7 @@
         android:id="@+id/list_cities"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:padding="4dp"
         android:visibility="invisible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"

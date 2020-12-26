@@ -19,7 +19,10 @@ import com.emikhalets.sunnydayapp.data.model.ResponseDaily
 import com.emikhalets.sunnydayapp.databinding.FragmentCurrentBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerFragmentDirections
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
-import com.emikhalets.sunnydayapp.utils.AppHelper
+import com.emikhalets.sunnydayapp.utils.buildIconUrl
+import com.emikhalets.sunnydayapp.utils.setPressureUnit
+import com.emikhalets.sunnydayapp.utils.setSpeedUnit
+import com.emikhalets.sunnydayapp.utils.setTempUnit
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -119,23 +122,17 @@ class WeatherFragment : Fragment(), DailyAdapter.ForecastItemClick {
                 pagerViewModel.updateTimezone(state.data!!.data.first().timezone)
                 val weather = state.data.data.first()
                 Timber.d("Current weather has been loaded: ($weather)")
-                Picasso.get().load(AppHelper.buildIconUrl(weather.weather.icon))
+                Picasso.get().load(buildIconUrl(weather.weather.icon))
                     .into(binding.imageWeatherIcon)
                 with(binding) {
                     textCityName.text = weather.cityName
                     textDate.text = formatDate(weather.timestamp)
-                    AppHelper.setTempUnit(
-                        requireContext(), textTemp, weather.temperature, prefTemp
-                    )
+                    setTempUnit(requireContext(), textTemp, weather.temperature, prefTemp)
                     textDesc.text = weather.weather.description
-                    AppHelper.setSpeedUnit(
-                        requireContext(), textWind, weather.windSpeed, prefSpeed
-                    )
+                    setSpeedUnit(requireContext(), textWind, weather.windSpeed, prefSpeed)
                     textHumidity.text =
                         getString(R.string.current_text_humidity, weather.humidity.toInt())
-                    AppHelper.setPressureUnit(
-                        requireContext(), textPressure, weather.pressure, prefPressure
-                    )
+                    setPressureUnit(requireContext(), textPressure, weather.pressure, prefPressure)
                 }
             }
             WeatherState.Status.ERROR -> {
