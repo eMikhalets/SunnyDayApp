@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_viewPagerFragment_to_preferencePagerFragment"
             app:destination="@id/preferencePagerFragment" />
-        <action
-            android:id="@+id/action_viewPagerFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
     </fragment>
 
     <fragment
@@ -30,23 +27,14 @@
         tools:layout="@layout/fragment_city_list" />
 
     <fragment
-        android:id="@+id/currentFragment"
+        android:id="@+id/weatherFragment"
         android:name="com.emikhalets.sunnydayapp.ui.weather.WeatherFragment"
-        android:label="CurrentFragment"
-        tools:layout="@layout/fragment_weather"></fragment>
+        android:label="WeatherFragment"
+        tools:layout="@layout/fragment_weather" />
 
     <fragment
-        android:id="@+id/detailsFragment"
-        android:name="com.emikhalets.sunnydayapp.ui.details.DetailsFragment"
-        android:label="DetailsFragment"
-        tools:layout="@layout/fragment_details">
-        <argument
-            android:name="weather"
-            app:argType="com.emikhalets.sunnydayapp.data.model.DataCurrent"
-            app:nullable="true" />
-        <argument
-            android:name="forecast"
-            app:argType="com.emikhalets.sunnydayapp.data.model.DataDaily"
-            app:nullable="true" />
-    </fragment>
+        android:id="@+id/forecastFragment"
+        android:name="com.emikhalets.sunnydayapp.ui.forecast.ForecastFragment"
+        android:label="ForecastFragment"
+        tools:layout="@layout/fragment_forecast" />
 </navigation>

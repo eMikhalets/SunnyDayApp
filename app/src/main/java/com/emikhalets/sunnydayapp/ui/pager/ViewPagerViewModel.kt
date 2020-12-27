@@ -41,29 +41,23 @@ class ViewPagerViewModel @ViewModelInject constructor(
     private val _weather = MutableLiveData<Response>()
     val weather: LiveData<Response> get() = _weather
 
+    private val _userLocation = MutableLiveData<Location>()
+    val userLocation: LiveData<Location> get() = _userLocation
+
+    private val _searchingCities = MutableLiveData<List<City>>()
+    val searchingCities: LiveData<List<City>> get() = _searchingCities
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
+//    private val _location = MutableLiveData<List<Double>>()
+//    val location: LiveData<List<Double>> get() = _location
+//
+//    private val _currentLocation = MutableLiveData<Location>()
+//    val currentLocation: LiveData<Location> get() = _currentLocation
 
-    private val _timezone = MutableLiveData<String>()
-    val timezone: LiveData<String> get() = _timezone
+//    private var isLocation = false
 
-    private val _currentQuery = MutableLiveData<String>()
-    val currentQuery: LiveData<String> get() = _currentQuery
-
-    private val _locationQuery = MutableLiveData<String>()
-    val locationQuery: LiveData<String> get() = _locationQuery
-
-    private val _location = MutableLiveData<List<Double>>()
-    val location: LiveData<List<Double>> get() = _location
-
-    private val _currentLocation = MutableLiveData<Location>()
-    val currentLocation: LiveData<Location> get() = _currentLocation
-
-    private val _searchingCities = MutableLiveData<Array<String>>()
-    val searchingCities: LiveData<Array<String>> get() = _searchingCities
-
-    private var isLocation = false
     var isWeatherLoaded = false
     lateinit var currentCity: City
 
@@ -82,26 +76,10 @@ class ViewPagerViewModel @ViewModelInject constructor(
         }
     }
 
-
-
-
-
-
-    fun updateLocation(lat: Double, lon: Double, query: String) {
-        Timber.d("Location query has been updated: (lat=$lat, lon=$lon)")
-        _location.value = listOf(lat, lon)
-        Timber.d("Location has been updated: ($query)")
-        _locationQuery.value = query
-    }
-
-    fun getCitiesByName(name: String) {
+    fun searchCitiesInDb(name: String) {
         viewModelScope.launch(coroutineContext) {
-            val list = repository.getCitiesByName(name)
-            Timber.d("The list of cities by name has been updated")
-            list.forEach { Timber.d(it.toString()) }
-            val searchList = Array(list.size) { i -> "${list[i].cityName}, ${list[i].countryFull}" }
-            Timber.d("Search query has been updated")
-            _searchingCities.postValue(searchList)
+            val cities = repository.getCitiesByName(name)
+            _searchingCities.postValue(cities)
         }
     }
 
@@ -145,43 +123,43 @@ class ViewPagerViewModel @ViewModelInject constructor(
 
     // Location
 
-    fun getCityAndCountry(lat: Double, lon: Double): String {
-        val address = Geocoder(getApplication(), Locale.getDefault())
-            .getFromLocation(lat, lon, 1).first()
-        return "${address.locality}, ${address.countryName}"
-    }
-
-    fun checkLocationPermissions(): Boolean =
-        ContextCompat.checkSelfPermission(
-            getApplication(),
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-            getApplication(),
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-    @SuppressLint("MissingPermission")
-    fun requestLocation(fusedLocationClient: FusedLocationProviderClient) {
-        if (!isLocation) {
-            isLocation = true
-            val locationRequest = LocationRequest.create()?.apply {
-                interval = 1000 * 60 * 10
-                fastestInterval = interval / 2
-                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-                smallestDisplacement = 1000f
-            }
-            fusedLocationClient.requestLocationUpdates(
-                locationRequest,
-                locationCallback(),
-                Looper.getMainLooper()
-            )
-        }
-    }
-
-    private fun locationCallback() = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult?) {
-            super.onLocationResult(locationResult)
-            locationResult?.let { _currentLocation.value = locationResult.locations.first() }
-        }
-    }
+//    fun getCityAndCountry(lat: Double, lon: Double): String {
+//        val address = Geocoder(getApplication(), Locale.getDefault())
+//            .getFromLocation(lat, lon, 1).first()
+//        return "${address.locality}, ${address.countryName}"
+//    }
+//
+//    fun checkLocationPermissions(): Boolean =
+//        ContextCompat.checkSelfPermission(
+//            getApplication(),
+//            Manifest.permission.ACCESS_COARSE_LOCATION
+//        ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+//            getApplication(),
+//            Manifest.permission.ACCESS_FINE_LOCATION
+//        ) == PackageManager.PERMISSION_GRANTED
+//
+//    @SuppressLint("MissingPermission")
+//    fun requestLocation(fusedLocationClient: FusedLocationProviderClient) {
+//        if (!isLocation) {
+//            isLocation = true
+//            val locationRequest = LocationRequest.create()?.apply {
+//                interval = 1000 * 60 * 10
+//                fastestInterval = interval / 2
+//                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+//                smallestDisplacement = 1000f
+//            }
+//            fusedLocationClient.requestLocationUpdates(
+//                locationRequest,
+//                locationCallback(),
+//                Looper.getMainLooper()
+//            )
+//        }
+//    }
+//
+//    private fun locationCallback() = object : LocationCallback() {
+//        override fun onLocationResult(locationResult: LocationResult?) {
+//            super.onLocationResult(locationResult)
+//            locationResult?.let { _currentLocation.value = locationResult.locations.first() }
+//        }
+//    }
 }

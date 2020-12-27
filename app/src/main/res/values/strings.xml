@@ -71,12 +71,14 @@
 
     <!-- WEATHER -->
     <string name="weather_text_header">%s in %s</string>
-    <string name="weather_text_temp_night">night\n%d</string>
+    <string name="weather_text_temp_night">night\n%d °C</string>
     <string name="weather_text_desc">%s: %s</string>
     <string name="weather_text_cloud">%d %%</string>
     <string name="weather_text_humidity">%d %%</string>
     <string name="weather_text_wind">%d m/s</string>
     <string name="weather_text_pressure">%d kPa</string>
+    <string name="weather_text_temp">%d °C</string>
+    <string name="weather_text_feels_like">%d °C</string>
 
     <!-- FORECAST -->
     <string name="forecast_text_temp_day">day\n%d °C</string>

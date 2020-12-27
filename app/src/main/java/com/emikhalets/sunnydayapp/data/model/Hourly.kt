@@ -3,7 +3,7 @@ package com.emikhalets.sunnydayapp.data.model
 data class Hourly(
     val dt: Long,
     val temp: Double,
-    val feels_like: FellsLike,
+    val feels_like: Double,
     val pressure: Double,
     val humidity: Double,
     val dew_point: Double,

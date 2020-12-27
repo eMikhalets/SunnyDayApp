@@ -19,7 +19,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class CityListFragment : Fragment(), CitiesAdapter.OnCityClick, DeleteCityDialog.DeleteCityListener {
+class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
+    DeleteCityDialog.DeleteCityListener {
 
     private var _binding: FragmentCityListBinding? = null
     private val binding get() = _binding!!
@@ -44,8 +45,9 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick, DeleteCityDialog
 
         if (savedInstanceState == null) {
             cityListViewModel.getSearchedCities()
-            binding.textLocationCity.text =
-                getString(R.string.city_list_text_location_not_determined)
+            binding.textLocationCity.text = getString(
+                R.string.city_list_text_location_not_determined
+            )
         }
     }
 
@@ -64,12 +66,13 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick, DeleteCityDialog
     }
 
     private fun initObservers() {
-        cityListViewModel.searchedCities.observe(viewLifecycleOwner, { addedCitiesObserver(it) })
+        cityListViewModel.searchedCities.observe(viewLifecycleOwner, { searchedCitiesObserver(it) })
 
+        pagerViewModel.searchingCities.observe(viewLifecycleOwner, { })
         pagerViewModel.weather.observe(viewLifecycleOwner, { weatherObserver(it) })
-        pagerViewModel.locationQuery.observe(viewLifecycleOwner, { locationQueryObserver(it) })
+//        pagerViewModel.locationQuery.observe(viewLifecycleOwner, { locationQueryObserver(it) })
 
-        binding.textLocationCity.setOnClickListener { onTextLocationClick() }
+//        binding.textLocationCity.setOnClickListener { onTextLocationClick() }
     }
 
     // LiveData observers
@@ -78,7 +81,11 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick, DeleteCityDialog
         cityListViewModel.checkIsSearched(pagerViewModel.currentCity)
     }
 
-    private fun addedCitiesObserver(state: CitiesState<List<City>>) {
+
+    /**
+     * Cities that were once searched for in a toolbar
+     */
+    private fun searchedCitiesObserver(state: CitiesState<List<City>>) {
         when (state.status) {
             CitiesState.Status.LOADING -> {
             }
@@ -95,6 +102,17 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick, DeleteCityDialog
         setVisibilityState(state.status)
     }
 
+    /**
+     * Cities that are searched for in the toolbar
+     */
+    private fun searchingCitiesObserver(cities: List<City>) {
+        if (cities.isEmpty()) {
+            citiesAdapter.submitList(cityListViewModel.searchedCities.value?.data)
+        } else {
+            citiesAdapter.submitList(cities)
+        }
+    }
+
     private fun locationQueryObserver(name: String) {
         Timber.d("Location query has been updated: ($name)")
         binding.textLocationCity.text = name
@@ -102,19 +120,19 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick, DeleteCityDialog
 
     // Click listeners
 
-    private fun onTextLocationClick() {
-        Timber.d("Clicked the current location in the list of cities")
-        val lat = pagerViewModel.location.value?.get(0)
-        val lon = pagerViewModel.location.value?.get(1)
-
-        if (lat != null && lon != null) {
-            val query = pagerViewModel.getCityAndCountry(lat, lon)
-            Timber.d("Location query has been updated: ($query)")
-            pagerViewModel.updateLocation(lat, lon, query)
-        } else {
-            showToast(getString(R.string.city_list_text_location_not_determined))
-        }
-    }
+//    private fun onTextLocationClick() {
+//        Timber.d("Clicked the current location in the list of cities")
+//        val lat = pagerViewModel.location.value?.get(0)
+//        val lon = pagerViewModel.location.value?.get(1)
+//
+//        if (lat != null && lon != null) {
+//            val query = pagerViewModel.getCityAndCountry(lat, lon)
+//            Timber.d("Location query has been updated: ($query)")
+//            pagerViewModel.updateLocation(lat, lon, query)
+//        } else {
+//            showToast(getString(R.string.city_list_text_location_not_determined))
+//        }
+//    }
 
     /**
      * CitiesAdapter item click listener

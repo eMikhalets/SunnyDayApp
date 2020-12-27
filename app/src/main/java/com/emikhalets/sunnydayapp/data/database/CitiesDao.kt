@@ -14,14 +14,14 @@ interface CitiesDao {
     /**
      * Get cities from database that appear in the cities list, that user looking for
      */
-    @Query("SELECT * FROM cities WHERE is_city_added = 1")
+    @Query("SELECT * FROM cities WHERE isSearched = 1")
     suspend fun getAddedCities(): List<City>
 
     /**
      * Get cities that contains string from search
      * @param name part of name or full name of the city
      */
-    @Query("SELECT * FROM cities WHERE city_name LIKE '%' || :name || '%'")
+    @Query("SELECT * FROM cities WHERE name LIKE '%' || :name || '%'")
     suspend fun getCitiesByName(name: String): List<City>
 
     /**
@@ -29,7 +29,7 @@ interface CitiesDao {
      * @param name city name
      * @param country city country
      */
-    @Query("SELECT * FROM cities WHERE city_name = :name AND country_full = :country")
+    @Query("SELECT * FROM cities WHERE name = :name AND country = :country")
     suspend fun getCityByName(name: String, country: String): City
 
     /**

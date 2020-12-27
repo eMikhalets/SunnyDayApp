@@ -13,9 +13,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/menu_view_pager"
         app:subtitle="@string/toolbar.subtitle"
-        app:subtitleTextColor="@android:color/white"
+        app:subtitleTextColor="@android:color/black"
         app:title="@string/app_name"
-        app:titleTextColor="@android:color/white"
+        app:titleTextColor="@android:color/black"
         tools:menu="@menu/menu_view_pager" />
 
     <ProgressBar
@@ -57,10 +57,12 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#eee"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:tabTextColor="@android:color/black"
         tools:visibility="visible">
 
         <com.google.android.material.tabs.TabItem

@@ -18,7 +18,7 @@
         tools:text="Fri, 25 Aug in Moscow" />
 
     <ImageView
-        android:id="@+id/image_weather_icon"
+        android:id="@+id/image_icon"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginEnd="8dp"
@@ -40,7 +40,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/image_weather_icon"
+        app:layout_constraintStart_toEndOf="@+id/image_icon"
         app:layout_constraintTop_toBottomOf="@+id/text_header"
         tools:text="30" />
 
@@ -53,17 +53,6 @@
         app:layout_constraintStart_toEndOf="@+id/text_temp"
         app:layout_constraintTop_toTopOf="@+id/text_temp"
         tools:text="°С" />
-
-    <TextView
-        android:id="@+id/text_temp_night"
-        style="@style/WeatherTextNight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/text_temp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_temp"
-        tools:text="night\n10" />
 
     <TextView
         android:id="@+id/text_desc"
