@@ -13,9 +13,6 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.emikhalets.sunnydayapp.R
-import com.emikhalets.sunnydayapp.data.model.DataDaily
-import com.emikhalets.sunnydayapp.data.model.ResponseCurrent
-import com.emikhalets.sunnydayapp.data.model.ResponseDaily
 import com.emikhalets.sunnydayapp.databinding.FragmentCurrentBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerFragmentDirections
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel

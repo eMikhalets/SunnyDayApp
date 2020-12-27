@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.TextView
 import com.emikhalets.sunnydayapp.R
 
-fun buildIconUrl(icon: String) = "https://www.weatherbit.io/static/img/icons/$icon.png"
+fun buildIconUrl(icon: String) = "http://openweathermap.org/img/wn/$icon@2x.png"
 
 fun setTempUnit(context: Context, view: TextView, value: Double, unit: String) {
     when (unit) {

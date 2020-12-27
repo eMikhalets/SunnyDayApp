@@ -14,14 +14,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.database.City
+import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.data.repository.PagerRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONArray
+import org.json.JSONObject
 import timber.log.Timber
 import java.util.*
 
@@ -30,7 +33,14 @@ class ViewPagerViewModel @ViewModelInject constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private val citiesToDB = mutableListOf<City>()
+    private val coroutineContext = Dispatchers.IO + SupervisorJob()
+
+    private val _dbCreating = MutableLiveData<Boolean>()
+    val dbCreating: LiveData<Boolean> get() = _dbCreating
+
+    private val _weather = MutableLiveData<Response>()
+    val weather: LiveData<Response> get() = _weather
+
 
     private val _timezone = MutableLiveData<String>()
     val timezone: LiveData<String> get() = _timezone
@@ -49,8 +59,6 @@ class ViewPagerViewModel @ViewModelInject constructor(
 
     private val _currentLocation = MutableLiveData<Location>()
     val currentLocation: LiveData<Location> get() = _currentLocation
-
-    //    val citiesList = MutableLiveData<List<City>>()
 
     private val _searchingCities = MutableLiveData<Array<String>>()
     val searchingCities: LiveData<Array<String>> get() = _searchingCities
@@ -76,7 +84,7 @@ class ViewPagerViewModel @ViewModelInject constructor(
     }
 
     fun getCitiesByName(name: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineContext) {
             val list = repository.getCitiesByName(name)
             Timber.d("The list of cities by name has been updated")
             list.forEach { Timber.d(it.toString()) }
@@ -87,52 +95,57 @@ class ViewPagerViewModel @ViewModelInject constructor(
     }
 
     private fun changeIsAddedCity(query: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineContext) {
             val array = query.split(", ")
             val city = repository.getCityByName(array[0], array[1])
             Timber.d("Loaded city by name")
-            if (!city.isAdded) {
-                city.isAdded = true
+            if (!city.isSearched) {
+                city.isSearched = true
                 repository.updateCity(city)
-                Timber.d("The isAdded field updated: $city")
+                Timber.d("The isSearched status updated: $city")
                 _addedCity.postValue(query)
             } else {
-                Timber.d("The isAdded field is already true")
+                Timber.d("The isSearched status is already true")
             }
         }
     }
 
-//    fun deleteCitiesTable() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            Timber.d("Deleting cities database")
-//            repository.deleteAllCities()
-//            dbStatus.postValue(PagerStatus.DB_DELETED)
-//        }
-//    }
+    fun deleteCitiesTable() {
+        viewModelScope.launch(coroutineContext) {
+            Timber.d("Deleting cities database")
+            repository.deleteAllCities()
+            _dbCreating.postValue(false)
+        }
+    }
+
+    // Parsing cities
 
     fun parseAndInsertToDB(string: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineContext) {
             val array = JSONArray(string)
+            val cities = mutableListOf<City>()
             Timber.d("Data parsed into JSON array")
-            for (i in 0 until array.length()) {
-                val json = array.getJSONObject(i)
-                val city = City(
-                    cityId = json.getInt("city_id"),
-                    cityName = json.getString("city_name"),
-                    stateCode = json.getString("state_code"),
-                    countryCode = json.getString("country_code"),
-                    countryFull = json.getString("country_full"),
-                    lat = json.getDouble("lat"),
-                    lon = json.getDouble("lon"),
-                    isAdded = false
-                )
-                citiesToDB.add(city)
-            }
-            Timber.d("Number of cities in the list: (${citiesToDB.size})")
 
-            repository.insertAllCities(citiesToDB)
+            for (i in 0 until array.length()) {
+                cities.add(parseItem(array.getJSONObject(i)))
+            }
+
+            Timber.d("Number of cities in the list: (${cities.size})")
+            repository.insertAllCities(cities)
             Timber.d("Parsed list of cities added to the database")
+            _dbCreating.postValue(true)
         }
+    }
+
+    private fun parseItem(json: JSONObject): City {
+        return City(
+            id = json.getInt("city_id"),
+            name = json.getString("city_name"),
+            state = json.getString("state_code"),
+            country = json.getString("country_code"),
+            lon = json.getDouble("lon"),
+            lat = json.getDouble("lat")
+        )
     }
 
     // Location

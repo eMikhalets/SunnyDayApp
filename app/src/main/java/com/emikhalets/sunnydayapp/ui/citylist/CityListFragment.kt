@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.DeleteCityListener {
+class CityListFragment : Fragment(), DailyAdapter.CityClick, DeleteCityDialog.DeleteCityListener {
 
     private var _binding: FragmentCityListBinding? = null
     private val binding get() = _binding!!
@@ -26,7 +26,7 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
     private val cityListViewModel: CityListViewModel by viewModels()
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
-    private lateinit var citiesAdapter: CitiesAdapter
+    private lateinit var citiesAdapter: DailyAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -54,7 +54,7 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
     }
 
     private fun initCitiesAdapter() {
-        citiesAdapter = CitiesAdapter(this)
+        citiesAdapter = DailyAdapter(this)
         val divider = DividerItemDecoration(requireContext(), LinearLayoutManager.HORIZONTAL)
         binding.listCities.run {
             addItemDecoration(divider)
@@ -72,16 +72,16 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
 
     // LiveData observers
 
-    private fun addedCitiesObserver(state: CitiesState<List<City>>) {
+    private fun addedCitiesObserver(state: ForecastState<List<City>>) {
         when (state.status) {
-            CitiesState.Status.LOADING -> {
+            ForecastState.Status.LOADING -> {
             }
-            CitiesState.Status.EMPTY -> {
+            ForecastState.Status.EMPTY -> {
             }
-            CitiesState.Status.CITIES -> {
+            ForecastState.Status.CITIES -> {
                 citiesAdapter.submitList(state.data)
             }
-            CitiesState.Status.ERROR -> {
+            ForecastState.Status.ERROR -> {
                 binding.textNotice.text = state.error
             }
         }
@@ -143,22 +143,22 @@ class CityListFragment : Fragment(), CitiesAdapter.CityClick, DeleteCityDialog.D
         cityListViewModel.deleteCity(city)
     }
 
-    private fun setVisibilityState(status: CitiesState.Status) {
+    private fun setVisibilityState(status: ForecastState.Status) {
         when (status) {
-            CitiesState.Status.LOADING -> {
+            ForecastState.Status.LOADING -> {
                 with(binding) {
                     textNotice.visibility = View.INVISIBLE
                     listCities.visibility = View.INVISIBLE
                     pbLoadingCities.visibility = View.VISIBLE
                 }
             }
-            CitiesState.Status.EMPTY, CitiesState.Status.ERROR -> {
+            ForecastState.Status.EMPTY, ForecastState.Status.ERROR -> {
                 with(binding) {
                     pbLoadingCities.visibility = View.INVISIBLE
                     textNotice.visibility = View.VISIBLE
                 }
             }
-            CitiesState.Status.CITIES -> {
+            ForecastState.Status.CITIES -> {
                 with(binding) {
                     pbLoadingCities.visibility = View.INVISIBLE
                     listCities.visibility = View.VISIBLE

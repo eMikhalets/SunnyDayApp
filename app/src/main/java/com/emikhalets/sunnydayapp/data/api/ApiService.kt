@@ -1,8 +1,6 @@
 package com.emikhalets.sunnydayapp.data.api
 
-import com.emikhalets.sunnydayapp.data.model.ResponseCurrent
-import com.emikhalets.sunnydayapp.data.model.ResponseDaily
-import com.emikhalets.sunnydayapp.data.model.ResponseUsage
+import com.emikhalets.sunnydayapp.data.model.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -10,50 +8,18 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @GET("current")
-    suspend fun currentWeather(
-        @Query("key") apiKey: String,
-        @Query("city") cityName: String,
-        @Query("country") country: String,
-        @Query("lang") lang: String,
-        @Query("units") units: String
-    ): ResponseCurrent
-
-    @GET("current")
-    suspend fun currentWeather(
-        @Query("key") apiKey: String,
-        @Query("lat") lat: Double,
-        @Query("lon") lon: Double,
-        @Query("lang") lang: String,
-        @Query("units") units: String
-    ): ResponseCurrent
-
-    @GET("forecast/daily")
-    suspend fun forecastDaily(
-        @Query("key") apiKey: String,
-        @Query("city") cityName: String,
-        @Query("country") country: String,
-        @Query("lang") lang: String,
-        @Query("units") units: String
-    ): ResponseDaily
-
-    @GET("forecast/daily")
-    suspend fun forecastDaily(
-        @Query("key") apiKey: String,
-        @Query("lat") lat: Double,
-        @Query("lon") lon: Double,
-        @Query("lang") lang: String,
-        @Query("units") units: String
-    ): ResponseDaily
-
-    @GET("subscription/usage")
-    suspend fun apiUsage(
-        @Query("key") apiKey: String
-    ): ResponseUsage
+    @GET("onecall")
+    suspend fun weather(
+        @Query("lat") lat: Int,
+        @Query("lon") lon: Int,
+        @Query("appid") apiKey: String,
+        @Query("units") units: String,
+        @Query("lang") lang: String
+    ): Response
 
     companion object {
 
-        private const val BASE_URL = "https://api.weatherbit.io/v2.0/"
+        private const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
 
         fun create(): ApiService = Retrofit.Builder()
             .baseUrl(BASE_URL)

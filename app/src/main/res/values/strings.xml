@@ -73,10 +73,6 @@
     <string name="current.text.load_data">Load weather via search or turn on GPS to determine location</string>
     <string name="current.text.humidity">%d %%</string>
 
-    <!-- FORECAST DAILY ITEM LAYOUT -->
-    <string name="forecast_daily.text.today">Today</string>
-    <string name="forecast_daily.text.tomorrow">Tomorrow</string>
-
     <!-- DETAILS LAYOUT -->
     <string name="details.text.none">NONE</string>
     <string name="details.text.app_temp_desc">feeling</string>
@@ -101,4 +97,12 @@
     <!-- CITIES ADAPTER -->
     <string name="cities_adapter.text.query">%s, %s</string>
     <string name="current.btn.more_details">More details</string>
+
+    <!-- FORECAST -->
+    <string name="forecast_text_temp_day">day\n%d °C</string>
+    <string name="forecast_text_temp_night">night\n%d °C</string>
+    <string name="forecast_text_feels_like">feels like\n%d °C</string>
+    <string name="forecast_text_pressure">%d hPa</string>
+    <string name="forecast_text_humidity">%d %%</string>
+    <string name="forecast_text_wind">%d m/s</string>
 </resources>

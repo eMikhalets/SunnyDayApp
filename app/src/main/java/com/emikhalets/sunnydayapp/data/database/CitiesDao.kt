@@ -43,13 +43,9 @@ interface CitiesDao {
      * Insert all cities in database. Used for create database from json file with cities.
      * @param cities created cities list from json asset
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertAll(cities: List<City>)
 
-    /**
-     * Update city in database. Used for update isAdded column
-     * @param city city for update
-     */
     @Update
     suspend fun update(city: City)
 }

@@ -10,7 +10,7 @@ import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.ItemCityBinding
 
 class CitiesAdapter(private val click: CityClick) :
-    ListAdapter<City, CitiesAdapter.ViewHolder>(CitiesDiffCallback()) {
+    ListAdapter<City, DailyAdapter.ViewHolder>(DailyDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

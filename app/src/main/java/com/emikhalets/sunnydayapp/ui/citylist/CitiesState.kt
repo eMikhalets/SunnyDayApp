@@ -10,9 +10,9 @@ data class CitiesState<out T>(val status: Status, val data: T?, val error: Strin
     }
 
     companion object {
-        fun <T> loading(): CitiesState<T> = CitiesState(Status.LOADING, null, null)
-        fun <T> empty(): CitiesState<T> = CitiesState(Status.EMPTY, null, null)
-        fun <T> cities(data: T?): CitiesState<T> = CitiesState(Status.CITIES, data, null)
-        fun <T> error(error: String?): CitiesState<T> = CitiesState(Status.ERROR, null, error)
+        fun <T> loading(): ForecastState<T> = ForecastState(Status.LOADING, null, null)
+        fun <T> empty(): ForecastState<T> = ForecastState(Status.EMPTY, null, null)
+        fun <T> cities(data: T?): ForecastState<T> = ForecastState(Status.CITIES, data, null)
+        fun <T> error(error: String?): ForecastState<T> = ForecastState(Status.ERROR, null, error)
     }
 }

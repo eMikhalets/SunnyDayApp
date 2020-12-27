@@ -30,10 +30,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 
@@ -82,27 +79,22 @@ class ViewPagerFragment : Fragment() {
                 Timber.d("Cities table in database was created")
                 updateInterface(PagerState.Status.DB_CREATED)
             } else {
-                Timber.d("Cities table not exist")
-                updateInterface(PagerState.Status.DB_CREATING)
-                val job = lifecycleScope.async { parseAssetCities() }
-                lifecycleScope.launch {
-                    job.await()
-                    with(sp.edit()) {
-                        putBoolean(SP_IS_DB_CREATED, true)
-                        apply()
-                    }
-                    updateInterface(PagerState.Status.DB_CREATED)
-                }
+                startParsingCities()
             }
         }
     }
 
-    private suspend fun parseAssetCities() = withContext(Dispatchers.IO) {
-        val stream = requireContext().assets.open(CITIES_JSON)
-        pagerViewModel.parseAndInsertToDB(stream.bufferedReader().readText())
+    private fun startParsingCities() {
+        Timber.d("Cities table not exist")
+        updateInterface(PagerState.Status.DB_CREATING)
+        lifecycleScope.launch {
+            val stream = requireContext().assets.open(CITIES_JSON)
+            pagerViewModel.parseAndInsertToDB(stream.bufferedReader().readText())
+        }
     }
 
     private fun initObservers() {
+        pagerViewModel.dbCreating.observe(viewLifecycleOwner, { dbCreatingObserver(it) })
         pagerViewModel.searchingCities.observe(viewLifecycleOwner, { searchingObserver(it) })
         pagerViewModel.currentQuery.observe(viewLifecycleOwner, { currentQueryObserver(it) })
         pagerViewModel.locationQuery.observe(viewLifecycleOwner, { locationQueryObserver(it) })
@@ -133,6 +125,21 @@ class ViewPagerFragment : Fragment() {
             }
             tab.select()
         }.attach()
+    }
+
+    private fun dbCreatingObserver(isCreated: Boolean) {
+        if (isCreated) {
+            lifecycleScope.launch {
+                val sp = requireActivity().getSharedPreferences(SP_FILE_NAME, Context.MODE_PRIVATE)
+                with(sp.edit()) {
+                    putBoolean(SP_IS_DB_CREATED, true)
+                    apply()
+                }
+                updateInterface(PagerState.Status.DB_CREATED)
+            }
+        } else {
+            startParsingCities()
+        }
     }
 
     private fun searchingObserver(results: Array<String>) {
@@ -287,7 +294,7 @@ class ViewPagerFragment : Fragment() {
     }
 
     companion object {
-        private const val CITIES_JSON = "cities_20000.json"
+        private const val CITIES_JSON = "city_list.json"
         private const val COL_CITY_NAME = "city_name"
         private const val SP_FILE_NAME = "sp_file_name"
         private const val SP_IS_DB_CREATED = "sp_is_database_created"

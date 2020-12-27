@@ -18,8 +18,8 @@ class CityListViewModel @ViewModelInject constructor(
 
     private val coroutineContext = Dispatchers.IO + SupervisorJob()
 
-    private val _addedCities = MutableLiveData<CitiesState<List<City>>>()
-    val addedCities: LiveData<CitiesState<List<City>>> get() = _addedCities
+    private val _addedCities = MutableLiveData<ForecastState<List<City>>>()
+    val addedCities: LiveData<ForecastState<List<City>>> get() = _addedCities
 
     fun getAddedCities() {
         viewModelScope.launch(coroutineContext) {
