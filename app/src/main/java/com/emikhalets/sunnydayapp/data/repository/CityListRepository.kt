@@ -8,7 +8,7 @@ class CityListRepository @Inject constructor(
     private val db: CitiesDao
 ) {
 
-    suspend fun getSearchedCities() = db.getAddedCities()
+    suspend fun getSearchedCities() = db.getSearchedCities()
     suspend fun getCity(id: Int) = db.getCityById(id)
     suspend fun updateCity(city: City) = db.update(city)
 }

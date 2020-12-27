@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/motion_cities"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:layoutDescription="@xml/fragment_city_list_scene">
 
     <TextView
         android:id="@+id/text_notice"
         style="@style/CitiesListText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/city_list.text.empty_list"
+        android:text="@string/cities_text_empty_list"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,12 +23,10 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_location_city"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/text_location_city" />
 
     <TextView
         android:id="@+id/text_location_city"
@@ -46,12 +46,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="4dp"
-        android:visibility="invisible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_location_city"
-        tools:listitem="@layout/item_city"
-        tools:visibility="visible" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        tools:listitem="@layout/item_city" />
+</androidx.constraintlayout.motion.widget.MotionLayout>

@@ -15,6 +15,7 @@ import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
+import com.emikhalets.sunnydayapp.utils.FragmentState
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -46,7 +47,7 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
         if (savedInstanceState == null) {
             cityListViewModel.getSearchedCities()
             binding.textLocationCity.text = getString(
-                R.string.city_list_text_location_not_determined
+                R.string.cities_text_location_not_determined
             )
         }
     }
@@ -68,7 +69,7 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
     private fun initObservers() {
         cityListViewModel.searchedCities.observe(viewLifecycleOwner, { searchedCitiesObserver(it) })
 
-        pagerViewModel.searchingCities.observe(viewLifecycleOwner, { })
+        pagerViewModel.searchingCities.observe(viewLifecycleOwner, { searchingCitiesObserver(it) })
         pagerViewModel.weather.observe(viewLifecycleOwner, { weatherObserver(it) })
 //        pagerViewModel.locationQuery.observe(viewLifecycleOwner, { locationQueryObserver(it) })
 
@@ -77,29 +78,17 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
 
     // LiveData observers
 
-    private fun weatherObserver(response: Response) {
-        cityListViewModel.checkIsSearched(pagerViewModel.currentCity)
+    private fun weatherObserver(state: FragmentState<Response>) {
+        if (state.status == FragmentState.Status.LOADED) {
+            cityListViewModel.checkIsSearched(pagerViewModel.currentCity)
+        }
     }
-
 
     /**
      * Cities that were once searched for in a toolbar
      */
-    private fun searchedCitiesObserver(state: CitiesState<List<City>>) {
-        when (state.status) {
-            CitiesState.Status.LOADING -> {
-            }
-            CitiesState.Status.EMPTY -> {
-            }
-            CitiesState.Status.CITIES -> {
-                citiesAdapter.submitList(state.data)
-            }
-            CitiesState.Status.ERROR -> {
-                binding.textNotice.text = state.error
-            }
-        }
-
-        setVisibilityState(state.status)
+    private fun searchedCitiesObserver(cities: List<City>) {
+        citiesAdapter.submitList(cities)
     }
 
     /**
@@ -107,8 +96,9 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
      */
     private fun searchingCitiesObserver(cities: List<City>) {
         if (cities.isEmpty()) {
-            citiesAdapter.submitList(cityListViewModel.searchedCities.value?.data)
+            citiesAdapter.submitList(cityListViewModel.searchedCities.value)
         } else {
+            cityListViewModel.isSearchingMode = true
             citiesAdapter.submitList(cities)
         }
     }
@@ -159,30 +149,6 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
      */
     override fun onDeleteCity(city: City) {
         cityListViewModel.removeCityFromSearched(city)
-    }
-
-    private fun setVisibilityState(status: CitiesState.Status) {
-        when (status) {
-            CitiesState.Status.LOADING -> {
-                with(binding) {
-                    textNotice.visibility = View.INVISIBLE
-                    listCities.visibility = View.INVISIBLE
-                    pbLoadingCities.visibility = View.VISIBLE
-                }
-            }
-            CitiesState.Status.EMPTY, CitiesState.Status.ERROR -> {
-                with(binding) {
-                    pbLoadingCities.visibility = View.INVISIBLE
-                    textNotice.visibility = View.VISIBLE
-                }
-            }
-            CitiesState.Status.CITIES -> {
-                with(binding) {
-                    pbLoadingCities.visibility = View.INVISIBLE
-                    listCities.visibility = View.VISIBLE
-                }
-            }
-        }
     }
 
     private fun showToast(message: String) {

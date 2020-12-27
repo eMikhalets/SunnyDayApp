@@ -8,5 +8,4 @@ class PreferenceRepository @Inject constructor(
     private val api: ApiService
 ) {
 
-    suspend fun requestApiUsage() = api.apiUsage(Keys.getApiKey())
 }

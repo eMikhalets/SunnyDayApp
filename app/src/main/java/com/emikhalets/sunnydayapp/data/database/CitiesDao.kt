@@ -15,7 +15,7 @@ interface CitiesDao {
      * Get cities from database that appear in the cities list, that user looking for
      */
     @Query("SELECT * FROM cities WHERE isSearched = 1")
-    suspend fun getAddedCities(): List<City>
+    suspend fun getSearchedCities(): List<City>
 
     /**
      * Get cities that contains string from search

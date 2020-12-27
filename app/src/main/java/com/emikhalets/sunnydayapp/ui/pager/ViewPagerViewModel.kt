@@ -1,13 +1,7 @@
 package com.emikhalets.sunnydayapp.ui.pager
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Application
-import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.location.Location
-import android.os.Looper
-import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -16,17 +10,13 @@ import androidx.lifecycle.viewModelScope
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.data.repository.PagerRepository
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.emikhalets.sunnydayapp.utils.FragmentState
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.json.JSONArray
-import org.json.JSONObject
 import timber.log.Timber
-import java.util.*
 
 class ViewPagerViewModel @ViewModelInject constructor(
     private val repository: PagerRepository,
@@ -38,8 +28,8 @@ class ViewPagerViewModel @ViewModelInject constructor(
     private val _dbCreating = MutableLiveData<Boolean>()
     val dbCreating: LiveData<Boolean> get() = _dbCreating
 
-    private val _weather = MutableLiveData<Response>()
-    val weather: LiveData<Response> get() = _weather
+    private val _weather = MutableLiveData<FragmentState<Response>>()
+    val weather: LiveData<FragmentState<Response>> get() = _weather
 
     private val _userLocation = MutableLiveData<Location>()
     val userLocation: LiveData<Location> get() = _userLocation
@@ -65,8 +55,9 @@ class ViewPagerViewModel @ViewModelInject constructor(
         viewModelScope.launch(coroutineContext) {
             try {
                 Timber.d("Query has been updated: (${city.name})")
+                _weather.postValue(FragmentState.loading())
                 val response = repository.weatherRequest(city.lat, city.lon, "metric", "en")
-                _weather.postValue(response)
+                _weather.postValue(FragmentState.loaded(response))
                 currentCity = city
                 isWeatherLoaded = true
             } catch (ex: Exception) {
@@ -79,6 +70,7 @@ class ViewPagerViewModel @ViewModelInject constructor(
     fun searchCitiesInDb(name: String) {
         viewModelScope.launch(coroutineContext) {
             val cities = repository.getCitiesByName(name)
+            Timber.d("Matching cities by search query: ${cities.size}")
             _searchingCities.postValue(cities)
         }
     }
@@ -93,32 +85,14 @@ class ViewPagerViewModel @ViewModelInject constructor(
 
     // Parsing cities
 
-    fun parseAndInsertToDB(string: String) {
+    fun parseAndInsertToDB(json: String) {
         viewModelScope.launch(coroutineContext) {
-            val array = JSONArray(string)
-            val cities = mutableListOf<City>()
-            Timber.d("Data parsed into JSON array")
-
-            for (i in 0 until array.length()) {
-                cities.add(parseItem(array.getJSONObject(i)))
-            }
-
+            val cities = Gson().fromJson<List<City>>(json, object : TypeToken<List<City>>() {}.type)
             Timber.d("Number of cities in the list: (${cities.size})")
             repository.insertAllCities(cities)
             Timber.d("Parsed list of cities added to the database")
             _dbCreating.postValue(true)
         }
-    }
-
-    private fun parseItem(json: JSONObject): City {
-        return City(
-            id = json.getInt("city_id"),
-            name = json.getString("city_name"),
-            state = json.getString("state_code"),
-            country = json.getString("country_code"),
-            lon = json.getDouble("lon"),
-            lat = json.getDouble("lat")
-        )
     }
 
     // Location

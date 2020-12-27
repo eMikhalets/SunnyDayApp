@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.preference.*
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import com.emikhalets.sunnydayapp.R
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
@@ -21,12 +24,6 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
     private lateinit var temperature: ListPreference
     private lateinit var pressure: ListPreference
     private lateinit var speed: ListPreference
-    private lateinit var calls: EditTextPreference
-    private lateinit var callsRem: EditTextPreference
-    private lateinit var callsTs: EditTextPreference
-    private lateinit var historical: EditTextPreference
-    private lateinit var historicalRem: EditTextPreference
-    private lateinit var historicalTs: EditTextPreference
 
     private val prefViewModel: PreferenceViewModel by viewModels()
 
@@ -76,7 +73,6 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
-        prefViewModel.getApiStatistics()
     }
 
     private fun initViews() {
@@ -85,27 +81,10 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         temperature = findPreference(getString(R.string.pref_key_temp))!!
         pressure = findPreference(getString(R.string.pref_key_press))!!
         speed = findPreference(getString(R.string.pref_key_speed))!!
-        calls = findPreference(getString(R.string.pref_key_calls))!!
-        callsRem = findPreference(getString(R.string.pref_key_calls_rem))!!
-        callsTs = findPreference(getString(R.string.pref_key_calls_ts))!!
-        historical = findPreference(getString(R.string.pref_key_hist))!!
-        historicalRem = findPreference(getString(R.string.pref_key_hist_rem))!!
-        historicalTs = findPreference(getString(R.string.pref_key_hist_ts))!!
     }
 
     private fun initObservers() {
-        prefViewModel.apiStatistics.observe(viewLifecycleOwner, {
-            calls.summary = it.callsCount.toString()
-            callsRem.summary = it.callsRemaining.toString()
-            callsTs.summary = formatDateTime(it.callsResetTs)
-            historical.summary = it.callsCount.toString()
-            historicalRem.summary = it.historicalCallsRemaining.toString()
-            historicalTs.summary = formatDateTime(it.historicalCallsResetTs)
-        })
-
-        prefViewModel.notice.observe(viewLifecycleOwner, {
-            showToast(it)
-        })
+        prefViewModel.notice.observe(viewLifecycleOwner, { showToast(it) })
     }
 
     private fun formatDateTime(ts: Long): String {

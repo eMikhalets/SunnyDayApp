@@ -6,14 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentWeatherBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
+import com.emikhalets.sunnydayapp.utils.FragmentState
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_weather.*
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -25,7 +26,6 @@ class WeatherFragment : Fragment() {
     private var _binding: FragmentWeatherBinding? = null
     private val binding get() = _binding!!
 
-    private val weatherViewModel: WeatherViewModel by viewModels()
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
     private lateinit var hourlyAdapter: HourlyAdapter
@@ -70,9 +70,37 @@ class WeatherFragment : Fragment() {
 //        pagerViewModel.location.observe(viewLifecycleOwner, { locationObserver(it) })
     }
 
-    private fun weatherObserver(response: Response) {
+    private fun weatherObserver(state: FragmentState<Response>) {
+        when (state.status) {
+            FragmentState.Status.LOADING -> {
+                motion_weather.setTransition(R.id.transition_loading)
+                motion_weather.transitionToEnd()
+            }
+            FragmentState.Status.LOADED -> {
+                setWeatherData(state.data!!)
+            }
+            FragmentState.Status.ERROR -> {
+            }
+        }
+    }
+
+//    private fun locationObserver(location: List<Double>) {
+//        if (!pagerViewModel.isWeatherLoaded) {
+//            Timber.d("Location coordinates is updated.")
+//            updateWeatherUi(WeatherState.Status.LOADING)
+//            updateForecastUi(WeatherState.Status.LOADING)
+//            weatherViewModel.run {
+//                requestCurrent(location[0], location[1])
+//                requestForecastDaily(location[0], location[1])
+//            }
+//            pagerViewModel.isWeatherLoaded = true
+//        }
+//    }
+
+    private fun setWeatherData(response: Response) {
         with(binding.layoutWeatherCurrent) {
-            Picasso.get().load(buildIconUrl(response.current.weather.first().icon)).into(imageIcon)
+            Picasso.get().load(buildIconUrl(response.current.weather.first().icon))
+                .into(imageIcon)
             textHeader.text = getString(
                 R.string.weather_text_header,
                 formatDate(response.current.dt, response.timezone),
@@ -104,29 +132,15 @@ class WeatherFragment : Fragment() {
                 response.current.pressure
             )
         }
-
         with(binding.layoutSunTime) {
             textSunrise.text = formatTime(response.current.sunrise, response.timezone)
             textSunset.text = formatTime(response.current.sunset, response.timezone)
         }
-
         hourlyAdapter.timezone = response.timezone
         hourlyAdapter.submitList(response.hourly)
-
+        motion_weather.setTransition(R.id.transition_weather)
+        motion_weather.transitionToEnd()
     }
-
-//    private fun locationObserver(location: List<Double>) {
-//        if (!pagerViewModel.isWeatherLoaded) {
-//            Timber.d("Location coordinates is updated.")
-//            updateWeatherUi(WeatherState.Status.LOADING)
-//            updateForecastUi(WeatherState.Status.LOADING)
-//            weatherViewModel.run {
-//                requestCurrent(location[0], location[1])
-//                requestForecastDaily(location[0], location[1])
-//            }
-//            pagerViewModel.isWeatherLoaded = true
-//        }
-//    }
 
     private fun formatDate(timestamp: Long, timezone: String): String {
         val date = LocalDateTime.ofInstant(

@@ -19,9 +19,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
 import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
+import com.emikhalets.sunnydayapp.ui.forecast.ForecastFragment
 import com.emikhalets.sunnydayapp.ui.weather.WeatherFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
@@ -71,17 +73,19 @@ class ViewPagerFragment : Fragment() {
                 Timber.d("Cities table in database was created")
                 updateInterface(PagerState.Status.DB_CREATED)
             } else {
+                Timber.d("Cities table not exist")
                 startParsingCities()
             }
         }
     }
 
     private fun startParsingCities() {
-        Timber.d("Cities table not exist")
-        updateInterface(PagerState.Status.DB_CREATING)
-        lifecycleScope.launch {
-            val stream = requireContext().assets.open(CITIES_JSON)
-            pagerViewModel.parseAndInsertToDB(stream.bufferedReader().readText())
+        lifecycleScope.launch(Dispatchers.IO) {
+            updateInterface(PagerState.Status.DB_CREATING)
+            requireContext().assets.open(CITIES_JSON).bufferedReader().use { reader ->
+                val json = reader.readText()
+                pagerViewModel.parseAndInsertToDB(json)
+            }
         }
     }
 
@@ -105,15 +109,13 @@ class ViewPagerFragment : Fragment() {
 
     private fun initViewPager() {
         pagerAdapter = ViewPagerAdapter(this)
-        binding.viewPager.run {
-            adapter = pagerAdapter
-            setCurrentItem(1, false)
-        }
+        binding.viewPager.adapter = pagerAdapter
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = getString(R.string.tab_title_city_list)
                 1 -> tab.text = getString(R.string.tab_title_current)
+                2 -> tab.text = getString(R.string.tab_title_forecast)
             }
             tab.select()
         }.attach()
@@ -285,19 +287,22 @@ class ViewPagerFragment : Fragment() {
 //    }
 
     companion object {
-        private const val CITIES_JSON = "city_list.json"
+        private const val CITIES_JSON = "city_list_min.json"
         private const val COL_CITY_NAME = "city_name"
         private const val SP_FILE_NAME = "sp_file_name"
         private const val SP_IS_DB_CREATED = "sp_is_database_created"
+        private const val FRAGMENTS_COUNT = 3
     }
 
     private inner class ViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
         override fun createFragment(position: Int): Fragment = when (position) {
             0 -> CityListFragment()
-            else -> WeatherFragment()
+            1 -> WeatherFragment()
+            2 -> ForecastFragment()
+            else -> CityListFragment()
         }
 
-        override fun getItemCount(): Int = 2
+        override fun getItemCount(): Int = FRAGMENTS_COUNT
     }
 }

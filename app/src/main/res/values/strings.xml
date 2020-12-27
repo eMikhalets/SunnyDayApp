@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SunnyDayApp</string>
-    <string name="weather_text_headfer">Load weather via search or turn on GPS to determine location</string>
+    <string name="app_text_empty_data">Load weather via search or turn on GPS to determine location</string>
 
     <!-- KEYS -->
     <string name="key_dialog_delete_city">key_dialog_delete_city</string>
@@ -26,17 +26,10 @@
     <string name="pref_pager.units_pressure">Pressure</string>
     <string name="pref_pager.units_speed">Speed</string>
 
-    <string name="pref_pager.category_api">API Statistics</string>
-    <string name="pref_pager.api_calls_count">Requests made</string>
-    <string name="pref_pager.api_calls_remaining">Remaining requests</string>
-    <string name="pref_pager.api_calls_reset_ts">Request reset time</string>
-    <string name="pref_pager.api_historical_calls_count">Prediction requests made</string>
-    <string name="pref_pager.api_historical_calls_remaining">Remaining prediction requests</string>
-    <string name="pref_pager.api_historical_calls_reset_ts">Forecast reset time</string>
-
     <!-- TAB LAYOUT -->
     <string name="tab_title.city_list">Cities</string>
     <string name="tab_title.current">Weather</string>
+    <string name="tab_title.forecast">Forecast</string>
 
     <!-- TOOLBAR LAYOUT -->
     <string name="toolbar.menu.pref_title">Settings</string>

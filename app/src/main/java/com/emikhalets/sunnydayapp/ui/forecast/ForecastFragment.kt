@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentForecastBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
+import com.emikhalets.sunnydayapp.utils.FragmentState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_forecast.*
 
 @AndroidEntryPoint
 class ForecastFragment : Fragment() {
@@ -46,8 +49,21 @@ class ForecastFragment : Fragment() {
         }
     }
 
-    private fun weatherObserver(response: Response) {
-        dailyAdapter.timezone = response.timezone
-        dailyAdapter.submitList(response.daily)
+    private fun weatherObserver(state: FragmentState<Response>) {
+        when (state.status) {
+            FragmentState.Status.LOADING -> {
+                motion_forecast.setTransition(R.id.transition_loading)
+                motion_forecast.transitionToEnd()
+            }
+            FragmentState.Status.LOADED -> {
+                val response = state.data!!
+                dailyAdapter.timezone = response.timezone
+                dailyAdapter.submitList(response.daily)
+                motion_forecast.setTransition(R.id.transition_forecast)
+                motion_forecast.transitionToEnd()
+            }
+            FragmentState.Status.ERROR -> {
+            }
+        }
     }
 }

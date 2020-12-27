@@ -18,8 +18,10 @@ class CityListViewModel @ViewModelInject constructor(
 
     private val coroutineContext = Dispatchers.IO + SupervisorJob()
 
-    private val _searchedCities = MutableLiveData<CitiesState<List<City>>>()
-    val searchedCities: LiveData<CitiesState<List<City>>> get() = _searchedCities
+    private val _searchedCities = MutableLiveData<List<City>>()
+    val searchedCities: LiveData<List<City>> get() = _searchedCities
+
+    var isSearchingMode = false
 
     fun checkIsSearched(city: City) {
         viewModelScope.launch(coroutineContext) {
@@ -40,14 +42,11 @@ class CityListViewModel @ViewModelInject constructor(
     fun getSearchedCities() {
         viewModelScope.launch(coroutineContext) {
             try {
-                _searchedCities.postValue(CitiesState.loading())
                 val result = repository.getSearchedCities()
                 Timber.d("The list of the added cities from the database is loaded")
-                if (result.isNotEmpty()) _searchedCities.postValue(CitiesState.cities(result))
-                else _searchedCities.postValue(CitiesState.empty())
+                if (result.isNotEmpty()) _searchedCities.postValue(result)
             } catch (ex: Exception) {
                 Timber.e(ex)
-                _searchedCities.postValue(CitiesState.error(ex.message))
             }
         }
     }

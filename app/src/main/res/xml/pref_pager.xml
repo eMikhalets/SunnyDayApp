@@ -46,49 +46,4 @@
             android:summary="@string/pref_pager.unit_speed_kmh"
             android:title="@string/pref_pager.units_speed" />
     </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/pref_pager.category_api">
-
-        <EditTextPreference
-            android:defaultValue="0"
-            android:key="@string/pref_key_calls"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_pager.api_calls_count" />
-
-        <EditTextPreference
-            android:defaultValue="0"
-            android:key="@string/pref_key_calls_rem"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_pager.api_calls_remaining" />
-
-        <EditTextPreference
-            android:defaultValue="0"
-            android:key="@string/pref_key_calls_ts"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_pager.api_calls_reset_ts" />
-
-        <EditTextPreference
-            android:defaultValue="0"
-            android:key="@string/pref_key_hist"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_pager.api_historical_calls_count" />
-
-        <EditTextPreference
-            android:defaultValue="0"
-            android:key="@string/pref_key_hist_rem"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_pager.api_historical_calls_remaining" />
-
-        <EditTextPreference
-            android:defaultValue="0"
-            android:key="@string/pref_key_hist_ts"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_pager.api_historical_calls_reset_ts" />
-    </PreferenceCategory>
 </PreferenceScreen>
