@@ -12,13 +12,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.database.City
+import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class CityListFragment : Fragment(), DailyAdapter.CityClick, DeleteCityDialog.DeleteCityListener {
+class CityListFragment : Fragment(), CitiesAdapter.OnCityClick, DeleteCityDialog.DeleteCityListener {
 
     private var _binding: FragmentCityListBinding? = null
     private val binding get() = _binding!!
@@ -26,7 +27,7 @@ class CityListFragment : Fragment(), DailyAdapter.CityClick, DeleteCityDialog.De
     private val cityListViewModel: CityListViewModel by viewModels()
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
-    private lateinit var citiesAdapter: DailyAdapter
+    private lateinit var citiesAdapter: CitiesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -42,7 +43,7 @@ class CityListFragment : Fragment(), DailyAdapter.CityClick, DeleteCityDialog.De
         initCitiesAdapter()
 
         if (savedInstanceState == null) {
-            cityListViewModel.getAddedCities()
+            cityListViewModel.getSearchedCities()
             binding.textLocationCity.text =
                 getString(R.string.city_list_text_location_not_determined)
         }
@@ -54,7 +55,7 @@ class CityListFragment : Fragment(), DailyAdapter.CityClick, DeleteCityDialog.De
     }
 
     private fun initCitiesAdapter() {
-        citiesAdapter = DailyAdapter(this)
+        citiesAdapter = CitiesAdapter(this)
         val divider = DividerItemDecoration(requireContext(), LinearLayoutManager.HORIZONTAL)
         binding.listCities.run {
             addItemDecoration(divider)
@@ -63,8 +64,9 @@ class CityListFragment : Fragment(), DailyAdapter.CityClick, DeleteCityDialog.De
     }
 
     private fun initObservers() {
-        cityListViewModel.addedCities.observe(viewLifecycleOwner, { addedCitiesObserver(it) })
-        pagerViewModel.addedCity.observe(viewLifecycleOwner, { addedCityObserver(it) })
+        cityListViewModel.searchedCities.observe(viewLifecycleOwner, { addedCitiesObserver(it) })
+
+        pagerViewModel.weather.observe(viewLifecycleOwner, { weatherObserver(it) })
         pagerViewModel.locationQuery.observe(viewLifecycleOwner, { locationQueryObserver(it) })
 
         binding.textLocationCity.setOnClickListener { onTextLocationClick() }
@@ -72,26 +74,25 @@ class CityListFragment : Fragment(), DailyAdapter.CityClick, DeleteCityDialog.De
 
     // LiveData observers
 
-    private fun addedCitiesObserver(state: ForecastState<List<City>>) {
+    private fun weatherObserver(response: Response) {
+        cityListViewModel.checkIsSearched(pagerViewModel.currentCity)
+    }
+
+    private fun addedCitiesObserver(state: CitiesState<List<City>>) {
         when (state.status) {
-            ForecastState.Status.LOADING -> {
+            CitiesState.Status.LOADING -> {
             }
-            ForecastState.Status.EMPTY -> {
+            CitiesState.Status.EMPTY -> {
             }
-            ForecastState.Status.CITIES -> {
+            CitiesState.Status.CITIES -> {
                 citiesAdapter.submitList(state.data)
             }
-            ForecastState.Status.ERROR -> {
+            CitiesState.Status.ERROR -> {
                 binding.textNotice.text = state.error
             }
         }
 
         setVisibilityState(state.status)
-    }
-
-    private fun addedCityObserver(name: String) {
-        Timber.d("($name) added to the list")
-        cityListViewModel.getAddedCities()
     }
 
     private fun locationQueryObserver(name: String) {
@@ -119,9 +120,8 @@ class CityListFragment : Fragment(), DailyAdapter.CityClick, DeleteCityDialog.De
      * CitiesAdapter item click listener
      */
     override fun onCityClick(city: City) {
-        Timber.d("Clicked ($city) in the list of cities")
-        pagerViewModel.isWeatherLoaded = false
-        pagerViewModel.updateCurrentQuery(city.getQuery())
+        Timber.d("Clicked (${city.name}) in the list of cities")
+        pagerViewModel.sendWeatherRequest(city)
     }
 
     /**
@@ -140,25 +140,25 @@ class CityListFragment : Fragment(), DailyAdapter.CityClick, DeleteCityDialog.De
      * Delete dialog click listener
      */
     override fun onDeleteCity(city: City) {
-        cityListViewModel.deleteCity(city)
+        cityListViewModel.removeCityFromSearched(city)
     }
 
-    private fun setVisibilityState(status: ForecastState.Status) {
+    private fun setVisibilityState(status: CitiesState.Status) {
         when (status) {
-            ForecastState.Status.LOADING -> {
+            CitiesState.Status.LOADING -> {
                 with(binding) {
                     textNotice.visibility = View.INVISIBLE
                     listCities.visibility = View.INVISIBLE
                     pbLoadingCities.visibility = View.VISIBLE
                 }
             }
-            ForecastState.Status.EMPTY, ForecastState.Status.ERROR -> {
+            CitiesState.Status.EMPTY, CitiesState.Status.ERROR -> {
                 with(binding) {
                     pbLoadingCities.visibility = View.INVISIBLE
                     textNotice.visibility = View.VISIBLE
                 }
             }
-            ForecastState.Status.CITIES -> {
+            CitiesState.Status.CITIES -> {
                 with(binding) {
                     pbLoadingCities.visibility = View.INVISIBLE
                     listCities.visibility = View.VISIBLE

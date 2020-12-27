@@ -1,16 +1,16 @@
 package com.emikhalets.sunnydayapp.ui.citylist
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.ItemCityBinding
 
-class CitiesAdapter(private val click: CityClick) :
-    ListAdapter<City, DailyAdapter.ViewHolder>(DailyDiffCallback()) {
+class CitiesAdapter(private val click: OnCityClick) :
+    ListAdapter<City, CitiesAdapter.ViewHolder>(CitiesDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -25,17 +25,13 @@ class CitiesAdapter(private val click: CityClick) :
     class ViewHolder(private val binding: ItemCityBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: City, click: CityClick) {
+        fun bind(item: City, click: OnCityClick) {
             with(binding) {
-                if (adapterPosition % 2 == 0) root.setBackgroundColor(Color.parseColor("#48cae4"))
-                else root.setBackgroundColor(Color.parseColor("#caf0f8"))
-
-                textName.text = binding.root.context.getString(
-                    R.string.cities_adapter_text_query,
-                    item.cityName,
-                    item.countryFull
+                textName.text = root.context.getString(
+                    R.string.cities_text_list_item,
+                    item.name,
+                    item.country
                 )
-
                 root.setOnClickListener { click.onCityClick(item) }
                 root.setOnLongClickListener {
                     click.onCityLongClick(item)
@@ -45,8 +41,17 @@ class CitiesAdapter(private val click: CityClick) :
         }
     }
 
-    interface CityClick {
+    interface OnCityClick {
         fun onCityClick(city: City)
         fun onCityLongClick(city: City)
+    }
+
+    private class CitiesDiffCallback : DiffUtil.ItemCallback<City>() {
+
+        override fun areItemsTheSame(oldItem: City, newItem: City) =
+            oldItem.hashCode() == newItem.hashCode()
+
+        override fun areContentsTheSame(oldItem: City, newItem: City) =
+            oldItem == newItem
     }
 }

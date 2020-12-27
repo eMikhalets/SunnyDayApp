@@ -1,13 +1,9 @@
 <resources>
     <string name="app_name">SunnyDayApp</string>
+    <string name="weather_text_headfer">Load weather via search or turn on GPS to determine location</string>
 
     <!-- KEYS -->
     <string name="key_dialog_delete_city">key_dialog_delete_city</string>
-
-    <!-- DIALOG DELETE CITY -->
-    <string name="dialog.delete_city.message">Delete city %s?</string>
-    <string name="dialog.delete_city.positive">Delete</string>
-    <string name="dialog.delete_city.negative">Cancel</string>
 
     <!-- PREFERENCE LAYOUT -->
     <string name="pref_pager.lang_en">English</string>
@@ -54,11 +50,6 @@
     <string name="menu.view_pager.db_creating">Create a city database</string>
     <string name="menu.view_pager.search">Search</string>
 
-    <!-- CITY LIST LAYOUT -->
-    <string name="city_list.text.empty_list">The list of cities is empty\n\nAdd a new city via search</string>
-    <string name="city_list.text.location_not_determined">Geolocation not determined</string>
-    <string name="city_list.text.location_permissions_not_granted">No access to geolocation</string>
-
     <!-- VARIABLE PARAMETERS -->
     <string name="variable.text.temp">%d °C</string>
     <string name="variable.text.temp_f">%d °F</string>
@@ -69,34 +60,23 @@
     <string name="variable.text.wind_speed">%.2f m/s</string>
     <string name="variable.text.wind_speed_kmh">%.2f km/h</string>
 
-    <!-- WEATHER CURRENT LAYOUT -->
-    <string name="current.text.load_data">Load weather via search or turn on GPS to determine location</string>
-    <string name="current.text.humidity">%d %%</string>
+    <!-- CITIES -->
+    <string name="cities_text_empty_list">The list of cities is empty\n\nAdd a new city via search</string>
+    <string name="cities_text_location_not_determined">Geolocation not determined</string>
+    <string name="cities_text_location_permissions_not_granted">No access to geolocation</string>
+    <string name="cities_text_list_item">%s, %s</string>
+    <string name="cities_dialog_message">Delete city %s, %s?</string>
+    <string name="cities_dialog_positive">Delete</string>
+    <string name="cities_dialog_negative">Cancel</string>
 
-    <!-- DETAILS LAYOUT -->
-    <string name="details.text.none">NONE</string>
-    <string name="details.text.app_temp_desc">feeling</string>
-    <string name="details.text.pressure_desc">pressure</string>
-    <string name="details.text.wind_speed_desc">wind speed</string>
-    <string name="details.text.wind_dir">%d° %s</string>
-    <string name="details.text.wind_dir_desc">direction</string>
-    <string name="details.text.visibility">%.2f km</string>
-    <string name="details.text.visibility_desc">visibility</string>
-    <string name="details.text.clouds">%d %%</string>
-    <string name="details.text.clouds_desc">cloudy</string>
-    <string name="details.text.humidity">%d %%</string>
-    <string name="details.text.humidity_desc">humidity</string>
-    <string name="details.text.precip">%.2f mm/h</string>
-    <string name="details.text.precip_desc">precipitation</string>
-    <string name="details.text.snow">%.2f mm/h</string>
-    <string name="details.text.snow_desc">snowfall</string>
-    <string name="details.text.uv_desc">UV Index</string>
-    <string name="details.text.weather_code_desc">weather code</string>
-    <string name="details.text.station_desc">station</string>
-
-    <!-- CITIES ADAPTER -->
-    <string name="cities_adapter.text.query">%s, %s</string>
-    <string name="current.btn.more_details">More details</string>
+    <!-- WEATHER -->
+    <string name="weather_text_header">%s in %s</string>
+    <string name="weather_text_temp_night">night\n%d</string>
+    <string name="weather_text_desc">%s: %s</string>
+    <string name="weather_text_cloud">%d %%</string>
+    <string name="weather_text_humidity">%d %%</string>
+    <string name="weather_text_wind">%d m/s</string>
+    <string name="weather_text_pressure">%d kPa</string>
 
     <!-- FORECAST -->
     <string name="forecast_text_temp_day">day\n%d °C</string>

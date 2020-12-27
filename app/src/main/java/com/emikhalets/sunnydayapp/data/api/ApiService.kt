@@ -10,8 +10,8 @@ interface ApiService {
 
     @GET("onecall")
     suspend fun weather(
-        @Query("lat") lat: Int,
-        @Query("lon") lon: Int,
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
         @Query("appid") apiKey: String,
         @Query("units") units: String,
         @Query("lang") lang: String

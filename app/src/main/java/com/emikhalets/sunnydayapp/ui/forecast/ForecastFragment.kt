@@ -40,7 +40,7 @@ class ForecastFragment : Fragment() {
 
     private fun initDailyAdapter() {
         dailyAdapter = DailyAdapter()
-        binding.listCities.apply {
+        binding.listForecast.apply {
             setHasFixedSize(true)
             adapter = dailyAdapter
         }

@@ -18,35 +18,50 @@ class CityListViewModel @ViewModelInject constructor(
 
     private val coroutineContext = Dispatchers.IO + SupervisorJob()
 
-    private val _addedCities = MutableLiveData<ForecastState<List<City>>>()
-    val addedCities: LiveData<ForecastState<List<City>>> get() = _addedCities
+    private val _searchedCities = MutableLiveData<CitiesState<List<City>>>()
+    val searchedCities: LiveData<CitiesState<List<City>>> get() = _searchedCities
 
-    fun getAddedCities() {
+    fun checkIsSearched(city: City) {
         viewModelScope.launch(coroutineContext) {
             try {
-                _addedCities.postValue(CitiesState.loading())
-                val result = repository.getAddedCities()
-                Timber.d("The list of the added cities from the database is loaded")
-                if (result.isNotEmpty()) _addedCities.postValue(CitiesState.cities(result))
-                else _addedCities.postValue(CitiesState.empty())
+                if (!city.isSearched) {
+                    city.isSearched = true
+                    repository.updateCity(city)
+                    getSearchedCities()
+                } else {
+                    Timber.d("The isSearched status is already true")
+                }
             } catch (ex: Exception) {
                 Timber.e(ex)
-                _addedCities.postValue(CitiesState.error(ex.message))
             }
         }
     }
 
-    fun deleteCity(city: City) {
+    fun getSearchedCities() {
         viewModelScope.launch(coroutineContext) {
             try {
-                val receivedCity = repository.getCity(city.id!!)
-                receivedCity.isAdded = false
-                repository.updateCity(receivedCity)
-                Timber.d("City removed from search history : (${city.getQuery()})")
-                getAddedCities()
+                _searchedCities.postValue(CitiesState.loading())
+                val result = repository.getSearchedCities()
+                Timber.d("The list of the added cities from the database is loaded")
+                if (result.isNotEmpty()) _searchedCities.postValue(CitiesState.cities(result))
+                else _searchedCities.postValue(CitiesState.empty())
             } catch (ex: Exception) {
                 Timber.e(ex)
-                _addedCities.postValue(CitiesState.error(ex.message))
+                _searchedCities.postValue(CitiesState.error(ex.message))
+            }
+        }
+    }
+
+    fun removeCityFromSearched(city: City) {
+        viewModelScope.launch(coroutineContext) {
+            try {
+                val receivedCity = repository.getCity(city.id)
+                receivedCity.isSearched = false
+                repository.updateCity(receivedCity)
+                Timber.d("City removed from search history : (${city.name})")
+                getSearchedCities()
+            } catch (ex: Exception) {
+                Timber.e(ex)
             }
         }
     }

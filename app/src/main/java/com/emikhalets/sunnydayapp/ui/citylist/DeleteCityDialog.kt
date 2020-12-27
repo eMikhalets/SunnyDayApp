@@ -19,7 +19,7 @@ class DeleteCityDialog @Inject constructor(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity)
-        builder.setMessage(getString(R.string.dialog_delete_city_message, city.getQuery()))
+        builder.setMessage(getString(R.string.dialog_delete_city_message, city.name, city.country))
             .setPositiveButton(getString(R.string.dialog_delete_city_positive)) { _, _ ->
                 listener.onDeleteCity(city)
             }

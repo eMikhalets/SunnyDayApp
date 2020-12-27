@@ -33,7 +33,7 @@
         android:id="@+id/currentFragment"
         android:name="com.emikhalets.sunnydayapp.ui.weather.WeatherFragment"
         android:label="CurrentFragment"
-        tools:layout="@layout/fragment_current"></fragment>
+        tools:layout="@layout/fragment_weather"></fragment>
 
     <fragment
         android:id="@+id/detailsFragment"

@@ -41,12 +41,12 @@ class ViewPagerViewModel @ViewModelInject constructor(
     private val _weather = MutableLiveData<Response>()
     val weather: LiveData<Response> get() = _weather
 
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> get() = _error
+
 
     private val _timezone = MutableLiveData<String>()
     val timezone: LiveData<String> get() = _timezone
-
-    private val _addedCity = MutableLiveData<String>()
-    val addedCity: LiveData<String> get() = _addedCity
 
     private val _currentQuery = MutableLiveData<String>()
     val currentQuery: LiveData<String> get() = _currentQuery
@@ -65,16 +65,27 @@ class ViewPagerViewModel @ViewModelInject constructor(
 
     private var isLocation = false
     var isWeatherLoaded = false
+    lateinit var currentCity: City
 
-    fun updateCurrentQuery(query: String) {
-        Timber.d("Query has been updated: ($query)")
-        _currentQuery.value = query
-        changeIsAddedCity(query)
+    fun sendWeatherRequest(city: City) {
+        viewModelScope.launch(coroutineContext) {
+            try {
+                Timber.d("Query has been updated: (${city.name})")
+                val response = repository.weatherRequest(city.lat, city.lon, "metric", "en")
+                _weather.postValue(response)
+                currentCity = city
+                isWeatherLoaded = true
+            } catch (ex: Exception) {
+                Timber.e(ex)
+                _error.postValue(ex.message)
+            }
+        }
     }
 
-    fun updateTimezone(timezone: String) {
-        this._timezone.value = timezone
-    }
+
+
+
+
 
     fun updateLocation(lat: Double, lon: Double, query: String) {
         Timber.d("Location query has been updated: (lat=$lat, lon=$lon)")
@@ -91,22 +102,6 @@ class ViewPagerViewModel @ViewModelInject constructor(
             val searchList = Array(list.size) { i -> "${list[i].cityName}, ${list[i].countryFull}" }
             Timber.d("Search query has been updated")
             _searchingCities.postValue(searchList)
-        }
-    }
-
-    private fun changeIsAddedCity(query: String) {
-        viewModelScope.launch(coroutineContext) {
-            val array = query.split(", ")
-            val city = repository.getCityByName(array[0], array[1])
-            Timber.d("Loaded city by name")
-            if (!city.isSearched) {
-                city.isSearched = true
-                repository.updateCity(city)
-                Timber.d("The isSearched status updated: $city")
-                _addedCity.postValue(query)
-            } else {
-                Timber.d("The isSearched status is already true")
-            }
         }
     }
 

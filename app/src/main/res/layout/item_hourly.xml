@@ -5,10 +5,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    android:background="@drawable/bg_city_item">
+    android:background="@drawable/bg_view_item">
 
     <TextView
         android:id="@+id/text_time"
+        style="@style/WeatherHourlyTextDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -30,6 +31,7 @@
 
     <TextView
         android:id="@+id/text_temp"
+        style="@style/WeatherHourlyTextDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -40,6 +42,7 @@
 
     <TextView
         android:id="@+id/text_feels_like"
+        style="@style/WeatherHourlyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
