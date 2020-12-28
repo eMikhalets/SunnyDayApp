@@ -49,10 +49,10 @@ class HourlyAdapter : ListAdapter<Hourly, HourlyAdapter.ViewHolder>(HourlyDiffCa
 
         private fun formatTime(timestamp: Long, timezone: String): String {
             val time = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(timestamp),
+                Instant.ofEpochMilli(timestamp * 1000),
                 ZoneId.of(timezone)
             )
-            return time.format(DateTimeFormatter.ofPattern("H:m"))
+            return time.format(DateTimeFormatter.ofPattern("HH:mm"))
         }
     }
 

@@ -52,15 +52,13 @@ class ForecastFragment : Fragment() {
     private fun weatherObserver(state: FragmentState<Response>) {
         when (state.status) {
             FragmentState.Status.LOADING -> {
-                motion_forecast.setTransition(R.id.transition_loading)
-                motion_forecast.transitionToEnd()
+                motion_forecast.transitionToState(R.id.state_loading)
             }
             FragmentState.Status.LOADED -> {
                 val response = state.data!!
                 dailyAdapter.timezone = response.timezone
                 dailyAdapter.submitList(response.daily)
-                motion_forecast.setTransition(R.id.transition_forecast)
-                motion_forecast.transitionToEnd()
+                motion_forecast.transitionToState(R.id.state_forecast)
             }
             FragmentState.Status.ERROR -> {
             }

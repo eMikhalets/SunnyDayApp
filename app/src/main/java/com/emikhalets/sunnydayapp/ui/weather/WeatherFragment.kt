@@ -73,11 +73,11 @@ class WeatherFragment : Fragment() {
     private fun weatherObserver(state: FragmentState<Response>) {
         when (state.status) {
             FragmentState.Status.LOADING -> {
-                motion_weather.setTransition(R.id.transition_loading)
-                motion_weather.transitionToEnd()
+                motion_weather.transitionToState(R.id.state_loading)
             }
             FragmentState.Status.LOADED -> {
                 setWeatherData(state.data!!)
+                motion_weather.transitionToState(R.id.state_weather)
             }
             FragmentState.Status.ERROR -> {
             }
@@ -138,23 +138,21 @@ class WeatherFragment : Fragment() {
         }
         hourlyAdapter.timezone = response.timezone
         hourlyAdapter.submitList(response.hourly)
-        motion_weather.setTransition(R.id.transition_weather)
-        motion_weather.transitionToEnd()
     }
 
     private fun formatDate(timestamp: Long, timezone: String): String {
         val date = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(timestamp),
+            Instant.ofEpochMilli(timestamp * 1000),
             ZoneId.of(timezone)
         )
-        return date.format(DateTimeFormatter.ofPattern("E, d M"))
+        return date.format(DateTimeFormatter.ofPattern("E, d MMM"))
     }
 
     private fun formatTime(timestamp: Long, timezone: String): String {
         val date = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(timestamp),
+            Instant.ofEpochMilli(timestamp * 1000),
             ZoneId.of(timezone)
         )
-        return date.format(DateTimeFormatter.ofPattern("E, d M"))
+        return date.format(DateTimeFormatter.ofPattern("HH:mm"))
     }
 }

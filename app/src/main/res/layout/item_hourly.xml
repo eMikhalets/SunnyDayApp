@@ -23,6 +23,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="8dp"
+        android:background="@drawable/bg_weather_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_time"

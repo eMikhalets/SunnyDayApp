@@ -9,8 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
@@ -59,11 +57,7 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
 
     private fun initCitiesAdapter() {
         citiesAdapter = CitiesAdapter(this)
-        val divider = DividerItemDecoration(requireContext(), LinearLayoutManager.HORIZONTAL)
-        binding.listCities.run {
-            addItemDecoration(divider)
-            adapter = citiesAdapter
-        }
+        binding.listCities.adapter = citiesAdapter
     }
 
     private fun initObservers() {
@@ -91,14 +85,14 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
     // с тестом "пустой список" не отобразится
     private fun searchingCitiesObserver(cities: List<City>) {
         if (cities.isNotEmpty()) {
+            citiesAdapter.isSearchingState = true
             motion_cities.transitionToEnd()
             citiesAdapter.submitList(cities)
-            citiesAdapter.isSearchingState = true
         } else {
+            citiesAdapter.isSearchingState = false
             val list: List<City>? = cityListViewModel.searchedCities.value
             if (list == null || list.isEmpty()) motion_cities.transitionToStart()
             citiesAdapter.submitList(list)
-            citiesAdapter.isSearchingState = false
         }
     }
 
@@ -118,21 +112,23 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
 
     /**
      * CitiesAdapter item click listener.
-     * Sets current city name for weather data.
+     * If searching state -> Checked searched state of city.
+     * Else-> Sets current city name for weather data.
      * Sending request. Inserting city in searched story.
      * Change cities list adapter searching state if need.
      */
     override fun onCityClick(city: City) {
         Timber.d("Clicked (${city.name}) in the list of cities")
-        cityListViewModel.checkIsSearched(city)
-        pagerViewModel.apply {
-            currentCity = "${city.name}, ${city.country}"
-            sendWeatherRequest(city.lat, city.lon)
-        }
+        Timber.d("Searching state is '${citiesAdapter.isSearchingState}'")
 
-        if (citiesAdapter.isSearchingState) {
-            citiesAdapter.submitList(cityListViewModel.searchedCities.value)
+        if (!citiesAdapter.isSearchingState) {
+            pagerViewModel.apply {
+                currentCity = "${city.name}, ${city.country}"
+                sendWeatherRequest(city.lat, city.lon)
+            }
             citiesAdapter.isSearchingState = false
+        } else {
+            cityListViewModel.checkIsSearched(city)
         }
     }
 

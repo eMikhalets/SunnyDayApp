@@ -6,7 +6,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- Toolbar -->
     <style name="AppToolBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -14,6 +13,16 @@
         <item name="android:minHeight">?attr/actionBarSize</item>
         <item name="android:theme">?attr/actionBarTheme</item>
     </style>
+
+    <style name="AppTabLayout">
+        <item name="tabBackground">@color/colorPrimary</item>
+        <item name="tabIndicatorGravity">center</item>
+        <item name="tabIndicatorHeight">?attr/actionBarSize</item>
+        <item name="tabIndicatorColor">@android:color/holo_blue_bright</item>
+        <item name="tabTextColor">@android:color/black</item>
+    </style>
+
+    <!-- CITIES LIST -->
 
     <style name="CitiesListText">
         <item name="android:textAlignment">center</item>

@@ -67,8 +67,11 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallba
         }
 
         private fun formatDate(timestamp: Long, timezone: String): String {
-            val date = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.of(timezone))
-            return date.format(DateTimeFormatter.ofPattern("E, d M y"))
+            val date = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(timestamp * 1000),
+                ZoneId.of(timezone)
+            )
+            return date.format(DateTimeFormatter.ofPattern("E, d MMM y"))
         }
 
         private fun averageFeelsLike(fl: FellsLike): Int =

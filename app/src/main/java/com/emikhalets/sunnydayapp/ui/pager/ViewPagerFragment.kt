@@ -131,12 +131,13 @@ class ViewPagerFragment : Fragment() {
     private fun weatherObserver(state: FragmentState<Response>) {
         when (state.status) {
             FragmentState.Status.LOADING -> {
-            }
-            FragmentState.Status.LOADED -> {
                 with(binding) {
+                    searchView.onActionViewCollapsed()
                     toolbar.subtitle = pagerViewModel.currentCity
                     viewPager.setCurrentItem(1, true)
                 }
+            }
+            FragmentState.Status.LOADED -> {
             }
             FragmentState.Status.ERROR -> {
             }
