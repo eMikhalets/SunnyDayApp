@@ -37,10 +37,12 @@ class HourlyAdapter : ListAdapter<Hourly, HourlyAdapter.ViewHolder>(HourlyDiffCa
 
             with(binding) {
                 textTime.text = formatTime(item.dt, timezone)
-                textTemp.text = root.context.getString(R.string.weather_text_temp, item.temp)
+                textTemp.text = root.context.getString(
+                    R.string.weather_text_temp, item.temp.toInt()
+                )
                 textFeelsLike.text = root.context.getString(
                     R.string.weather_text_feels_like,
-                    item.feels_like
+                    item.feels_like.toInt()
                 )
             }
         }

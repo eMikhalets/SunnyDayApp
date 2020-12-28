@@ -12,6 +12,8 @@ import com.emikhalets.sunnydayapp.databinding.ItemCityBinding
 class CitiesAdapter(private val click: OnCityClick) :
     ListAdapter<City, CitiesAdapter.ViewHolder>(CitiesDiffCallback()) {
 
+    var isSearchingState = false
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCityBinding.inflate(inflater, parent, false)

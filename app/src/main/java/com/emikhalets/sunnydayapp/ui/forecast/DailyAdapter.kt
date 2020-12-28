@@ -40,11 +40,11 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallba
                 textDate.text = formatDate(item.dt, timezone)
                 textTempDay.text = root.context.getString(
                     R.string.forecast_text_temp_day,
-                    item.temp.day
+                    item.temp.day.toInt()
                 )
                 textTempNight.text = root.context.getString(
                     R.string.forecast_text_temp_night,
-                    item.temp.night
+                    item.temp.night.toInt()
                 )
                 textFeelsLike.text = root.context.getString(
                     R.string.forecast_text_feels_like,
@@ -53,15 +53,15 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallba
                 textDesc.text = item.weather.first().description
                 textPressure.text = root.context.getString(
                     R.string.forecast_text_pressure,
-                    item.pressure
+                    item.pressure.toInt()
                 )
                 textHumidity.text = root.context.getString(
                     R.string.forecast_text_humidity,
-                    item.humidity
+                    item.humidity.toInt()
                 )
                 textWind.text = root.context.getString(
                     R.string.forecast_text_wind,
-                    item.wind_speed
+                    item.wind_speed.toInt()
                 )
             }
         }

@@ -14,7 +14,7 @@ import com.emikhalets.sunnydayapp.utils.FragmentState
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -23,7 +23,9 @@ class ViewPagerViewModel @ViewModelInject constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private val coroutineContext = Dispatchers.IO + SupervisorJob()
+    private val coroutineContext = Dispatchers.IO
+    private val searchingCoroutineContext = Dispatchers.IO
+    private var searchingJob: Job? = null
 
     private val _dbCreating = MutableLiveData<Boolean>()
     val dbCreating: LiveData<Boolean> get() = _dbCreating
@@ -49,16 +51,14 @@ class ViewPagerViewModel @ViewModelInject constructor(
 //    private var isLocation = false
 
     var isWeatherLoaded = false
-    lateinit var currentCity: City
+    lateinit var currentCity: String
 
-    fun sendWeatherRequest(city: City) {
+    fun sendWeatherRequest(lat: Double, lon: Double) {
         viewModelScope.launch(coroutineContext) {
             try {
-                Timber.d("Query has been updated: (${city.name})")
                 _weather.postValue(FragmentState.loading())
-                val response = repository.weatherRequest(city.lat, city.lon, "metric", "en")
+                val response = repository.weatherRequest(lat, lon, "metric", "en")
                 _weather.postValue(FragmentState.loaded(response))
-                currentCity = city
                 isWeatherLoaded = true
             } catch (ex: Exception) {
                 Timber.e(ex)
@@ -67,20 +67,22 @@ class ViewPagerViewModel @ViewModelInject constructor(
         }
     }
 
-    fun searchCitiesInDb(name: String) {
-        viewModelScope.launch(coroutineContext) {
-            val cities = repository.getCitiesByName(name)
-            Timber.d("Matching cities by search query: ${cities.size}")
+    fun searchCitiesInDb(query: String) {
+        searchingJob?.cancel()
+        searchingJob = viewModelScope.launch(searchingCoroutineContext) {
+            Timber.d("The searching query: '$query'")
+            val cities = mutableListOf<City>()
+            if (query.length >= 2) {
+                cities.addAll(repository.getCitiesByName(query))
+                Timber.d("Matching cities by search query: ${cities.size} items")
+            }
             _searchingCities.postValue(cities)
         }
     }
 
-    fun deleteCitiesTable() {
-        viewModelScope.launch(coroutineContext) {
-            Timber.d("Deleting cities database")
-            repository.deleteAllCities()
-            _dbCreating.postValue(false)
-        }
+    fun cancelSearchingCities() {
+        Timber.d("Cancel searching cities")
+        _searchingCities.postValue(mutableListOf())
     }
 
     // Parsing cities

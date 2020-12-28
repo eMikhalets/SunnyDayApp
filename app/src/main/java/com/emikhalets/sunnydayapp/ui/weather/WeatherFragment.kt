@@ -104,9 +104,9 @@ class WeatherFragment : Fragment() {
             textHeader.text = getString(
                 R.string.weather_text_header,
                 formatDate(response.current.dt, response.timezone),
-                pagerViewModel.currentCity.name
+                pagerViewModel.currentCity
             )
-            textTemp.text = response.current.temp.toString()
+            textTemp.text = response.current.temp.toInt().toString()
             textDesc.text = getString(
                 R.string.weather_text_header,
                 response.current.weather.first().main,
@@ -114,22 +114,22 @@ class WeatherFragment : Fragment() {
             )
             textCloud.text = getString(
                 R.string.weather_text_cloud,
-                response.current.clouds
+                response.current.clouds.toInt()
             )
             textHumidity.text = getString(
                 R.string.weather_text_humidity,
-                response.current.humidity
+                response.current.humidity.toInt()
             )
-            textFeelsLike.text = response.current.feels_like.toString()
+            textFeelsLike.text = response.current.feels_like.toInt().toString()
             textWind.text = getString(
                 R.string.weather_text_wind,
-                response.current.wind_speed
+                response.current.wind_speed.toInt()
             )
             // TODO(): create converter
-            textWindDir.text = response.current.wind_deg.toString()
+            textWindDir.text = response.current.wind_deg.toInt().toString()
             textPressure.text = getString(
                 R.string.weather_text_pressure,
-                response.current.pressure
+                response.current.pressure.toInt()
             )
         }
         with(binding.layoutSunTime) {

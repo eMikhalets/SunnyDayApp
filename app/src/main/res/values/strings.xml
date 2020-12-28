@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">SunnyDayApp</string>
     <string name="app_text_empty_data">Load weather via search or turn on GPS to determine location</string>
-
-    <!-- KEYS -->
-    <string name="key_dialog_delete_city">key_dialog_delete_city</string>
+    <string name="app_your_location">Your location</string>
 
     <!-- PREFERENCE LAYOUT -->
     <string name="pref_pager.lang_en">English</string>
@@ -26,21 +24,18 @@
     <string name="pref_pager.units_pressure">Pressure</string>
     <string name="pref_pager.units_speed">Speed</string>
 
-    <!-- TAB LAYOUT -->
+    <!-- TABS -->
     <string name="tab_title.city_list">Cities</string>
     <string name="tab_title.current">Weather</string>
     <string name="tab_title.forecast">Forecast</string>
 
-    <!-- TOOLBAR LAYOUT -->
+    <!-- TOOLBAR -->
     <string name="toolbar.menu.pref_title">Settings</string>
     <string name="toolbar.subtitle">City</string>
 
-    <!-- IMAGE DESCRIPTION -->
-    <string name="image.description">Icon description</string>
-
-    <!-- VIEW PAGER LAYOUT -->
+    <!-- VIEW PAGER -->
     <string name="pager.text.error_location">Error locating</string>
-    <string name="menu.view_pager.db_creating">Create a city database</string>
+    <string name="menu.view_pager.db_creating">Creating a cities database\nIt may take a minute</string>
     <string name="menu.view_pager.search">Search</string>
 
     <!-- VARIABLE PARAMETERS -->

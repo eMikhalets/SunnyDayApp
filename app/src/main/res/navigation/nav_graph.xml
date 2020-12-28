@@ -20,21 +20,4 @@
         android:name="com.emikhalets.sunnydayapp.ui.preference.PreferencePagerFragment"
         android:label="PreferencePagerFragment" />
 
-    <fragment
-        android:id="@+id/cityListFragment"
-        android:name="com.emikhalets.sunnydayapp.ui.citylist.CityListFragment"
-        android:label="CityListFragment"
-        tools:layout="@layout/fragment_city_list" />
-
-    <fragment
-        android:id="@+id/weatherFragment"
-        android:name="com.emikhalets.sunnydayapp.ui.weather.WeatherFragment"
-        android:label="WeatherFragment"
-        tools:layout="@layout/fragment_weather" />
-
-    <fragment
-        android:id="@+id/forecastFragment"
-        android:name="com.emikhalets.sunnydayapp.ui.forecast.ForecastFragment"
-        android:label="ForecastFragment"
-        tools:layout="@layout/fragment_forecast" />
 </navigation>

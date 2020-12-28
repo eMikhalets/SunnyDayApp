@@ -1,11 +1,9 @@
 package com.emikhalets.sunnydayapp.ui.pager
 
 import android.content.Context
-import android.database.MatrixCursor
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
-import android.provider.BaseColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +12,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
+import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
 import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
 import com.emikhalets.sunnydayapp.ui.forecast.ForecastFragment
 import com.emikhalets.sunnydayapp.ui.weather.WeatherFragment
+import com.emikhalets.sunnydayapp.utils.FragmentState
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -38,8 +39,7 @@ class ViewPagerFragment : Fragment() {
 
     private lateinit var searchView: SearchView
     private lateinit var pagerAdapter: ViewPagerAdapter
-//    private lateinit var searchAdapter: SimpleCursorAdapter
-//    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
@@ -91,20 +91,12 @@ class ViewPagerFragment : Fragment() {
 
     private fun initObservers() {
         pagerViewModel.dbCreating.observe(viewLifecycleOwner, { dbCreatingObserver(it) })
-//        pagerViewModel.currentQuery.observe(viewLifecycleOwner, { currentQueryObserver(it) })
-//        pagerViewModel.locationQuery.observe(viewLifecycleOwner, { locationQueryObserver(it) })
-//        pagerViewModel.currentLocation.observe(viewLifecycleOwner, { locationObserver(it) })
+        pagerViewModel.weather.observe(viewLifecycleOwner, { weatherObserver(it) })
         pagerViewModel.error.observe(viewLifecycleOwner, { showToast(it) })
 
         binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
             onSettingsClick()
         }
-
-//        binding.toolbar.findViewById<View>(R.id.menu_pager_recreate_db).setOnClickListener {
-//            Timber.d("Recreating database click")
-//            setVisibilityMode(CREATING)
-//            pagerViewModel.deleteCitiesTable()
-//        }
     }
 
     private fun initViewPager() {
@@ -136,24 +128,19 @@ class ViewPagerFragment : Fragment() {
         }
     }
 
-    private fun searchingObserver(results: Array<String>) {
-        val cursor = MatrixCursor(arrayOf(BaseColumns._ID, "city_name"))
-        for (i in results.indices) cursor.addRow(arrayOf(i, results[i]))
-//        searchAdapter.changeCursor(cursor)
-//        searchView.suggestionsAdapter = searchAdapter
-    }
-
-    private fun currentQueryObserver(query: String) {
-        Timber.d("Query has been updated: ($query)")
-        with(binding) {
-            toolbar.subtitle = query
-            viewPager.setCurrentItem(1, true)
+    private fun weatherObserver(state: FragmentState<Response>) {
+        when (state.status) {
+            FragmentState.Status.LOADING -> {
+            }
+            FragmentState.Status.LOADED -> {
+                with(binding) {
+                    toolbar.subtitle = pagerViewModel.currentCity
+                    viewPager.setCurrentItem(1, true)
+                }
+            }
+            FragmentState.Status.ERROR -> {
+            }
         }
-    }
-
-    private fun locationQueryObserver(query: String) {
-        Timber.d("Location query has been updated: ($query)")
-        binding.toolbar.subtitle = query
     }
 
     private fun locationObserver(location: Location) {
@@ -169,13 +156,11 @@ class ViewPagerFragment : Fragment() {
 
     private fun onSettingsClick() {
         Timber.d("Settings Click")
-        Navigation.findNavController(binding.root)
-            .navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
+        this.findNavController().navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
     }
 
-    private fun showToast(message: String) {
+    private fun showToast(message: String) =
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
 
     private fun updateInterface(status: PagerState.Status) {
         when (status) {
@@ -204,51 +189,24 @@ class ViewPagerFragment : Fragment() {
 
     private fun initSearchView() {
         searchView = binding.toolbar.menu.findItem(R.id.menu_pager_search).actionView as SearchView
-//        searchAdapter = SimpleCursorAdapter(
-//            requireContext(),
-//            android.R.layout.simple_list_item_1,
-//            null,
-//            arrayOf("city_name"),
-//            intArrayOf(android.R.id.text1),
-//            CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER
-//        )
         searchView.setOnQueryTextListener(searchTextListener())
-//        searchView.setOnSuggestionListener(searchAdapterListener())
+        searchView.setOnCloseListener(searchCloseListener())
     }
 
     private fun searchTextListener() = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String): Boolean = false
         override fun onQueryTextChange(newText: String): Boolean {
-            if (newText.length >= 2) {
-                Timber.d("The search query has been changed: ($newText)")
-                pagerViewModel.searchCitiesInDb(newText)
-            }
+            pagerViewModel.searchCitiesInDb(newText)
             return true
         }
     }
 
-//    private fun searchAdapterListener() = object : SearchView.OnSuggestionListener {
-//        override fun onSuggestionSelect(id: Int): Boolean = false
-//        override fun onSuggestionClick(id: Int): Boolean {
-//            val cursor = searchView.suggestionsAdapter.getItem(id) as Cursor
-//            val name = cursor.getString(cursor.getColumnIndex(COL_CITY_NAME))
-//            binding.toolbar.subtitle = name
-//            cursor.close()
-//            searchAdapter.changeCursor(null)
-//
-//            Timber.d("Select in search: $name")
-//            searchView.run {
-//                setQuery(name, false)
-//                onActionViewCollapsed()
-//                setQuery(null, false)
-//            }
-//            pagerViewModel.run {
-//                isWeatherLoaded = false
-//                pagerViewModel.updateCurrentQuery(name)
-//            }
-//            return true
-//        }
-//    }
+    // TODO: need to click on close twice if text was typed
+    private fun searchCloseListener() = SearchView.OnCloseListener {
+        pagerViewModel.cancelSearchingCities()
+        searchView.onActionViewCollapsed()
+        true
+    }
 
     // Location
 
@@ -288,7 +246,6 @@ class ViewPagerFragment : Fragment() {
 
     companion object {
         private const val CITIES_JSON = "city_list_min.json"
-        private const val COL_CITY_NAME = "city_name"
         private const val SP_FILE_NAME = "sp_file_name"
         private const val SP_IS_DB_CREATED = "sp_is_database_created"
         private const val FRAGMENTS_COUNT = 3
