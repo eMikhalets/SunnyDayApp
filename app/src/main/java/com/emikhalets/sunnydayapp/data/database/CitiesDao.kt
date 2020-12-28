@@ -6,12 +6,6 @@ import androidx.room.*
 interface CitiesDao {
 
     /**
-     * Delete all cities from table.
-     */
-    @Query("DELETE FROM cities")
-    suspend fun deleteAllCities()
-
-    /**
      * Get cities from database that appear in the cities list, that user looking for
      */
     @Query("SELECT * FROM cities WHERE isSearched = 1")
@@ -23,14 +17,6 @@ interface CitiesDao {
      */
     @Query("SELECT * FROM cities WHERE name LIKE '%' || :name || '%'")
     suspend fun getCitiesByName(name: String): List<City>
-
-    /**
-     * Get city by name and country. Used for update isAdded state of the city
-     * @param name city name
-     * @param country city country
-     */
-    @Query("SELECT * FROM cities WHERE name = :name AND country = :country")
-    suspend fun getCityByName(name: String, country: String): City
 
     /**
      * Get city by database id

@@ -10,10 +10,6 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.emikhalets.sunnydayapp.R
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 @AndroidEntryPoint
@@ -85,15 +81,6 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
 
     private fun initObservers() {
         prefViewModel.notice.observe(viewLifecycleOwner, { showToast(it) })
-    }
-
-    private fun formatDateTime(ts: Long): String {
-        val date = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(ts * 1000),
-            ZoneId.systemDefault()
-        )
-        val formatter = DateTimeFormatter.ofPattern("d L y H:m")
-        return date.format(formatter)
     }
 
     private fun setLocale(localeCode: String) {

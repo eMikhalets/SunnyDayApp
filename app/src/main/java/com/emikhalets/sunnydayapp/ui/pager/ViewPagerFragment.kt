@@ -29,6 +29,9 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
+//TODO: settings fragment and recreating if popBackStack()
+//TODO: units (just metric of imperial for request)
+//TODO: language
 @AndroidEntryPoint
 class ViewPagerFragment : Fragment() {
 
@@ -92,6 +95,7 @@ class ViewPagerFragment : Fragment() {
     private fun initObservers() {
         pagerViewModel.dbCreating.observe(viewLifecycleOwner, { dbCreatingObserver(it) })
         pagerViewModel.weather.observe(viewLifecycleOwner, { weatherObserver(it) })
+        pagerViewModel.selectSearching.observe(viewLifecycleOwner, { selectSearchingObserver() })
         pagerViewModel.error.observe(viewLifecycleOwner, { showToast(it) })
 
         binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
@@ -142,6 +146,10 @@ class ViewPagerFragment : Fragment() {
             FragmentState.Status.ERROR -> {
             }
         }
+    }
+
+    private fun selectSearchingObserver() {
+        searchView.onActionViewCollapsed()
     }
 
     private fun locationObserver(location: Location) {

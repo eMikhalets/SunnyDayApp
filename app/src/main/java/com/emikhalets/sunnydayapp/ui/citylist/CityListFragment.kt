@@ -128,6 +128,7 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
             }
             citiesAdapter.isSearchingState = false
         } else {
+            pagerViewModel.selectSearchingCity(city)
             cityListViewModel.checkIsSearched(city)
         }
     }

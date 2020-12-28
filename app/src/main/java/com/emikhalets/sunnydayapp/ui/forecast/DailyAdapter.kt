@@ -50,7 +50,11 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallba
                     R.string.forecast_text_feels_like,
                     averageFeelsLike(item.feels_like)
                 )
-                textDesc.text = item.weather.first().description
+                textDesc.text = root.context.getString(
+                    R.string.forecast_text_desc,
+                    item.weather.first().main,
+                    item.weather.first().description
+                )
                 textPressure.text = root.context.getString(
                     R.string.forecast_text_pressure,
                     item.pressure.toInt()

@@ -11,11 +11,11 @@ import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.data.repository.PagerRepository
 import com.emikhalets.sunnydayapp.utils.FragmentState
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
 import timber.log.Timber
 
 class ViewPagerViewModel @ViewModelInject constructor(
@@ -38,6 +38,9 @@ class ViewPagerViewModel @ViewModelInject constructor(
 
     private val _searchingCities = MutableLiveData<List<City>>()
     val searchingCities: LiveData<List<City>> get() = _searchingCities
+
+    private val _selectSearching = MutableLiveData<City>()
+    val selectSearching: LiveData<City> get() = _selectSearching
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
@@ -85,16 +88,36 @@ class ViewPagerViewModel @ViewModelInject constructor(
         _searchingCities.postValue(mutableListOf())
     }
 
+    fun selectSearchingCity(city: City) {
+        _selectSearching.postValue(city)
+    }
+
     // Parsing cities
 
     fun parseAndInsertToDB(json: String) {
         viewModelScope.launch(coroutineContext) {
-            val cities = Gson().fromJson<List<City>>(json, object : TypeToken<List<City>>() {}.type)
+            val cities = mutableListOf<City>()
+            val jsonCities = JSONArray(json)
+            for (i in 0 until jsonCities.length()) {
+                val city = parseCityJson(jsonCities.getJSONObject(i))
+                cities.add(city)
+            }
             Timber.d("Number of cities in the list: (${cities.size})")
             repository.insertAllCities(cities)
             Timber.d("Parsed list of cities added to the database")
             _dbCreating.postValue(true)
         }
+    }
+
+    private fun parseCityJson(json: JSONObject): City {
+        return City(
+            id = json.getInt("id"),
+            name = json.getString("name"),
+            state = json.getString("state"),
+            country = json.getString("country"),
+            lon = json.getJSONObject("coord").getDouble("lon"),
+            lat = json.getJSONObject("coord").getDouble("lat")
+        )
     }
 
     // Location

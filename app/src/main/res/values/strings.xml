@@ -72,6 +72,7 @@
     <string name="forecast_text_temp_day">day\n%d °C</string>
     <string name="forecast_text_temp_night">night\n%d °C</string>
     <string name="forecast_text_feels_like">feels like\n%d °C</string>
+    <string name="forecast_text_desc">%s: %s</string>
     <string name="forecast_text_pressure">%d hPa</string>
     <string name="forecast_text_humidity">%d %%</string>
     <string name="forecast_text_wind">%d m/s</string>

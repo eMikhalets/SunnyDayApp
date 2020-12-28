@@ -108,7 +108,7 @@ class WeatherFragment : Fragment() {
             )
             textTemp.text = response.current.temp.toInt().toString()
             textDesc.text = getString(
-                R.string.weather_text_header,
+                R.string.weather_text_desc,
                 response.current.weather.first().main,
                 response.current.weather.first().description
             )

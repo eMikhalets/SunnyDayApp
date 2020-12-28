@@ -17,6 +17,7 @@ class DeleteCityDialog @Inject constructor(
         fun onDeleteCity(city: City)
     }
 
+    //TODO: make dialog text is black
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity)
         builder.setMessage(getString(R.string.cities_dialog_message, city.name, city.country))
