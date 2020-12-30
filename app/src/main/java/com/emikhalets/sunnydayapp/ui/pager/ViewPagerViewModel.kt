@@ -54,7 +54,7 @@ class ViewPagerViewModel @ViewModelInject constructor(
 //    private var isLocation = false
 
     var isWeatherLoaded = false
-    lateinit var currentCity: String
+    var currentCity: String = ""
 
     fun sendWeatherRequest(lat: Double, lon: Double) {
         viewModelScope.launch(coroutineContext) {
@@ -92,6 +92,10 @@ class ViewPagerViewModel @ViewModelInject constructor(
         _selectSearching.postValue(city)
     }
 
+    fun updateUserLocation(location: Location) {
+        _userLocation.postValue(location)
+    }
+
     // Parsing cities
 
     fun parseAndInsertToDB(json: String) {
@@ -119,46 +123,4 @@ class ViewPagerViewModel @ViewModelInject constructor(
             lat = json.getJSONObject("coord").getDouble("lat")
         )
     }
-
-    // Location
-
-//    fun getCityAndCountry(lat: Double, lon: Double): String {
-//        val address = Geocoder(getApplication(), Locale.getDefault())
-//            .getFromLocation(lat, lon, 1).first()
-//        return "${address.locality}, ${address.countryName}"
-//    }
-//
-//    fun checkLocationPermissions(): Boolean =
-//        ContextCompat.checkSelfPermission(
-//            getApplication(),
-//            Manifest.permission.ACCESS_COARSE_LOCATION
-//        ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-//            getApplication(),
-//            Manifest.permission.ACCESS_FINE_LOCATION
-//        ) == PackageManager.PERMISSION_GRANTED
-//
-//    @SuppressLint("MissingPermission")
-//    fun requestLocation(fusedLocationClient: FusedLocationProviderClient) {
-//        if (!isLocation) {
-//            isLocation = true
-//            val locationRequest = LocationRequest.create()?.apply {
-//                interval = 1000 * 60 * 10
-//                fastestInterval = interval / 2
-//                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-//                smallestDisplacement = 1000f
-//            }
-//            fusedLocationClient.requestLocationUpdates(
-//                locationRequest,
-//                locationCallback(),
-//                Looper.getMainLooper()
-//            )
-//        }
-//    }
-//
-//    private fun locationCallback() = object : LocationCallback() {
-//        override fun onLocationResult(locationResult: LocationResult?) {
-//            super.onLocationResult(locationResult)
-//            locationResult?.let { _currentLocation.value = locationResult.locations.first() }
-//        }
-//    }
 }

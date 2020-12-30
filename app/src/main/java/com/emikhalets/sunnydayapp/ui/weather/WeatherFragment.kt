@@ -1,5 +1,6 @@
 package com.emikhalets.sunnydayapp.ui.weather
 
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,7 @@ class WeatherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initHourlyAdapter()
-//        initPreferences()
+        initPreferences()
         initObservers()
     }
 
@@ -53,21 +54,22 @@ class WeatherFragment : Fragment() {
         _binding = null
     }
 
+    //TODO: если скроллить этот адаптер, пайджер прокрутиваться не должен
     private fun initHourlyAdapter() {
         hourlyAdapter = HourlyAdapter()
         binding.listHourly.adapter = hourlyAdapter
     }
 
-//    private fun initPreferences() {
+    private fun initPreferences() {
 //        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
 //        prefTemp = pref.getString(getString(R.string.pref_key_temp), "C")!!
 //        prefPressure = pref.getString(getString(R.string.pref_key_press), "mb")!!
 //        prefSpeed = pref.getString(getString(R.string.pref_key_speed), "ms")!!
-//    }
+    }
 
     private fun initObservers() {
         pagerViewModel.weather.observe(viewLifecycleOwner, { weatherObserver(it) })
-//        pagerViewModel.location.observe(viewLifecycleOwner, { locationObserver(it) })
+        pagerViewModel.userLocation.observe(viewLifecycleOwner, { locationObserver(it) })
     }
 
     private fun weatherObserver(state: FragmentState<Response>) {
@@ -84,18 +86,9 @@ class WeatherFragment : Fragment() {
         }
     }
 
-//    private fun locationObserver(location: List<Double>) {
-//        if (!pagerViewModel.isWeatherLoaded) {
-//            Timber.d("Location coordinates is updated.")
-//            updateWeatherUi(WeatherState.Status.LOADING)
-//            updateForecastUi(WeatherState.Status.LOADING)
-//            weatherViewModel.run {
-//                requestCurrent(location[0], location[1])
-//                requestForecastDaily(location[0], location[1])
-//            }
-//            pagerViewModel.isWeatherLoaded = true
-//        }
-//    }
+    private fun locationObserver(location: Location) {
+        pagerViewModel.sendWeatherRequest(location.latitude, location.longitude)
+    }
 
     private fun setWeatherData(response: Response) {
         with(binding.layoutWeatherCurrent) {

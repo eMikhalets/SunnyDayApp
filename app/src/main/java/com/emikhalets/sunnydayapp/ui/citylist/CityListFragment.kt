@@ -13,6 +13,7 @@ import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
+import com.emikhalets.sunnydayapp.utils.getCityFromLocation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_city_list.*
 import timber.log.Timber
@@ -63,8 +64,8 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
     private fun initObservers() {
         cityListViewModel.searchedCities.observe(viewLifecycleOwner, { searchedCitiesObserver(it) })
 
-        pagerViewModel.searchingCities.observe(viewLifecycleOwner, { searchingCitiesObserver(it) })
         pagerViewModel.userLocation.observe(viewLifecycleOwner, { locationObserver(it) })
+        pagerViewModel.searchingCities.observe(viewLifecycleOwner, { searchingCitiesObserver(it) })
 
         binding.textLocationCity.setOnClickListener { onTextLocationClick() }
     }
@@ -98,14 +99,13 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
 
     // TODO: get place name by coordinates and set in text view
     private fun locationObserver(location: Location) {
-//        binding.textLocationCity.text =
+        binding.textLocationCity.text = getCityFromLocation(requireContext(), location)
     }
 
     // TODO: change "your location" on city name
     private fun onTextLocationClick() {
         Timber.d("Clicked the current location in the list of cities")
         pagerViewModel.userLocation.value?.let { location ->
-            pagerViewModel.currentCity = getString(R.string.app_your_location)
             pagerViewModel.sendWeatherRequest(location.latitude, location.longitude)
         } ?: showToast(getString(R.string.cities_text_location_not_determined))
     }

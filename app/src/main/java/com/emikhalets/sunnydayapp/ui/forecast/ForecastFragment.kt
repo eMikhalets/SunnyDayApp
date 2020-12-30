@@ -1,5 +1,6 @@
 package com.emikhalets.sunnydayapp.ui.forecast
 
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,13 +33,18 @@ class ForecastFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initObservers()
         initDailyAdapter()
-        pagerViewModel.weather.observe(viewLifecycleOwner, { weatherObserver(it) })
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun initObservers() {
+        pagerViewModel.weather.observe(viewLifecycleOwner, { weatherObserver(it) })
+        pagerViewModel.userLocation.observe(viewLifecycleOwner, { locationObserver(it) })
     }
 
     private fun initDailyAdapter() {
@@ -63,5 +69,9 @@ class ForecastFragment : Fragment() {
             FragmentState.Status.ERROR -> {
             }
         }
+    }
+
+    private fun locationObserver(location: Location) {
+        pagerViewModel.sendWeatherRequest(location.latitude, location.longitude)
     }
 }
