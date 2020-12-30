@@ -3,10 +3,12 @@ package com.emikhalets.sunnydayapp.ui.weather
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
@@ -17,10 +19,12 @@ import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_weather.*
+import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+
 
 @AndroidEntryPoint
 class WeatherFragment : Fragment() {
@@ -60,8 +64,7 @@ class WeatherFragment : Fragment() {
         hourlyAdapter = HourlyAdapter()
         binding.listHourly.apply {
             adapter = hourlyAdapter
-            //TODO: блок скроллинга пейджера работает кривовато
-            addOnScrollListener(recyclerScrollListener())
+            addOnItemTouchListener(recyclerScrollListener())
         }
     }
 
@@ -95,17 +98,29 @@ class WeatherFragment : Fragment() {
         pagerViewModel.sendWeatherRequest(location.latitude, location.longitude)
     }
 
-    private fun recyclerScrollListener() = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            when (newState) {
-                RecyclerView.SCROLL_STATE_IDLE -> {
+    private fun recyclerScrollListener() = object : CustomItemTouchListener() {
+        var lastX = 0
+        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+            Timber.d(e.action.toString())
+            when (e.action) {
+                MotionEvent.ACTION_MOVE -> {
+                    val isScrollingRight = e.x < lastX
+                    val layoutManager = binding.listHourly.layoutManager as LinearLayoutManager
+                    val itemCount = binding.listHourly.adapter?.itemCount?.minus(1)
+                    pagerViewModel.hourlyScrollCallback.value = isScrollingRight &&
+                            layoutManager.findLastCompletelyVisibleItemPosition() == itemCount ||
+                            !isScrollingRight &&
+                            layoutManager.findFirstCompletelyVisibleItemPosition() == 0
+                }
+                MotionEvent.ACTION_UP -> {
+                    lastX = 0
                     pagerViewModel.hourlyScrollCallback.value = true
                 }
-                RecyclerView.SCROLL_STATE_DRAGGING, RecyclerView.SCROLL_STATE_SETTLING -> {
-                    pagerViewModel.hourlyScrollCallback.value = false
+                MotionEvent.ACTION_DOWN -> {
+                    lastX = e.x.toInt()
                 }
             }
+            return false
         }
     }
 
