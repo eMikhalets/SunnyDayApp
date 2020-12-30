@@ -5,7 +5,6 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,6 +18,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
@@ -34,7 +34,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.*
 
 //TODO: settings fragment and recreating if popBackStack()
 //TODO: units (just metric of imperial for request)
@@ -103,6 +102,10 @@ class ViewPagerFragment : Fragment() {
         pagerViewModel.dbCreating.observe(viewLifecycleOwner, { dbCreatingObserver(it) })
         pagerViewModel.userLocation.observe(viewLifecycleOwner, { locationObserver(it) })
         pagerViewModel.selectSearching.observe(viewLifecycleOwner, { selectSearchingObserver() })
+
+        pagerViewModel.hourlyScrollCallback.observe(viewLifecycleOwner, { isLetScroll ->
+            binding.viewPager.isUserInputEnabled = isLetScroll
+        })
 
         binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
             onSettingsClick()
@@ -246,7 +249,7 @@ class ViewPagerFragment : Fragment() {
     @SuppressLint("MissingPermission")
     fun requestLocation() {
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            location?.let { pagerViewModel.updateUserLocation(it) }
+            location?.let { pagerViewModel.userLocation.postValue(it) }
         }
     }
 

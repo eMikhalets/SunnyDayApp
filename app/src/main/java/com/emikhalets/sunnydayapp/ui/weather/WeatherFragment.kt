@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentWeatherBinding
@@ -57,7 +58,11 @@ class WeatherFragment : Fragment() {
     //TODO: если скроллить этот адаптер, пайджер прокрутиваться не должен
     private fun initHourlyAdapter() {
         hourlyAdapter = HourlyAdapter()
-        binding.listHourly.adapter = hourlyAdapter
+        binding.listHourly.apply {
+            adapter = hourlyAdapter
+            //TODO: блок скроллинга пейджера работает кривовато
+            addOnScrollListener(recyclerScrollListener())
+        }
     }
 
     private fun initPreferences() {
@@ -88,6 +93,20 @@ class WeatherFragment : Fragment() {
 
     private fun locationObserver(location: Location) {
         pagerViewModel.sendWeatherRequest(location.latitude, location.longitude)
+    }
+
+    private fun recyclerScrollListener() = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            when (newState) {
+                RecyclerView.SCROLL_STATE_IDLE -> {
+                    pagerViewModel.hourlyScrollCallback.value = true
+                }
+                RecyclerView.SCROLL_STATE_DRAGGING, RecyclerView.SCROLL_STATE_SETTLING -> {
+                    pagerViewModel.hourlyScrollCallback.value = false
+                }
+            }
+        }
     }
 
     private fun setWeatherData(response: Response) {

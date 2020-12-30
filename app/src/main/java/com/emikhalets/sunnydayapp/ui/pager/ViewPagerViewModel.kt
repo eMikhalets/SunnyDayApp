@@ -33,14 +33,14 @@ class ViewPagerViewModel @ViewModelInject constructor(
     private val _weather = MutableLiveData<FragmentState<Response>>()
     val weather: LiveData<FragmentState<Response>> get() = _weather
 
-    private val _userLocation = MutableLiveData<Location>()
-    val userLocation: LiveData<Location> get() = _userLocation
-
     private val _searchingCities = MutableLiveData<List<City>>()
     val searchingCities: LiveData<List<City>> get() = _searchingCities
 
     private val _selectSearching = MutableLiveData<City>()
     val selectSearching: LiveData<City> get() = _selectSearching
+
+    val userLocation = MutableLiveData<Location>()
+    val hourlyScrollCallback = MutableLiveData<Boolean>()
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
@@ -90,10 +90,6 @@ class ViewPagerViewModel @ViewModelInject constructor(
 
     fun selectSearchingCity(city: City) {
         _selectSearching.postValue(city)
-    }
-
-    fun updateUserLocation(location: Location) {
-        _userLocation.postValue(location)
     }
 
     // Parsing cities
