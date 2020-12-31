@@ -107,14 +107,14 @@ class WeatherFragment : Fragment() {
                     val isScrollingRight = e.x < lastX
                     val layoutManager = binding.listHourly.layoutManager as LinearLayoutManager
                     val itemCount = binding.listHourly.adapter?.itemCount?.minus(1)
-                    pagerViewModel.hourlyScrollCallback.value = isScrollingRight &&
+                    pagerViewModel.scrollCallback.value = isScrollingRight &&
                             layoutManager.findLastCompletelyVisibleItemPosition() == itemCount ||
                             !isScrollingRight &&
                             layoutManager.findFirstCompletelyVisibleItemPosition() == 0
                 }
                 MotionEvent.ACTION_UP -> {
                     lastX = 0
-                    pagerViewModel.hourlyScrollCallback.value = true
+                    pagerViewModel.scrollCallback.value = true
                 }
                 MotionEvent.ACTION_DOWN -> {
                     lastX = e.x.toInt()

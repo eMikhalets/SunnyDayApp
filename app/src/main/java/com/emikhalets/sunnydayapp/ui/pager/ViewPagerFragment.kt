@@ -18,7 +18,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
@@ -31,6 +30,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_pager.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -78,9 +78,10 @@ class ViewPagerFragment : Fragment() {
         lifecycleScope.launch {
             if (isDbCreated) {
                 Timber.d("Cities table in database was created")
-                updateInterface(PagerState.Status.DB_CREATED)
+                motion_pager.transitionToState(R.id.state_ready)
             } else {
                 Timber.d("Cities table not exist")
+                motion_pager.transitionToState(R.id.state_creating_db)
                 startParsingCities()
             }
         }
@@ -88,7 +89,6 @@ class ViewPagerFragment : Fragment() {
 
     private fun startParsingCities() {
         lifecycleScope.launch(Dispatchers.IO) {
-            updateInterface(PagerState.Status.DB_CREATING)
             requireContext().assets.open(CITIES_JSON).bufferedReader().use { reader ->
                 val json = reader.readText()
                 pagerViewModel.parseAndInsertToDB(json)
@@ -102,10 +102,7 @@ class ViewPagerFragment : Fragment() {
         pagerViewModel.dbCreating.observe(viewLifecycleOwner, { dbCreatingObserver(it) })
         pagerViewModel.userLocation.observe(viewLifecycleOwner, { locationObserver(it) })
         pagerViewModel.selectSearching.observe(viewLifecycleOwner, { selectSearchingObserver() })
-
-        pagerViewModel.hourlyScrollCallback.observe(viewLifecycleOwner, { isLetScroll ->
-            binding.viewPager.isUserInputEnabled = isLetScroll
-        })
+        pagerViewModel.scrollCallback.observe(viewLifecycleOwner, { scrollCallbackObserver(it) })
 
         binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
             onSettingsClick()
@@ -116,7 +113,7 @@ class ViewPagerFragment : Fragment() {
         pagerAdapter = ViewPagerAdapter(this)
         binding.viewPager.adapter = pagerAdapter
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+        TabLayoutMediator(binding.tabLayout.tabs, binding.viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = getString(R.string.tab_title_city_list)
                 1 -> tab.text = getString(R.string.tab_title_current)
@@ -134,10 +131,8 @@ class ViewPagerFragment : Fragment() {
                     putBoolean(SP_IS_DB_CREATED, true)
                     apply()
                 }
-                updateInterface(PagerState.Status.DB_CREATED)
+                motion_pager.transitionToState(R.id.state_ready)
             }
-        } else {
-            startParsingCities()
         }
     }
 
@@ -159,6 +154,7 @@ class ViewPagerFragment : Fragment() {
         }
     }
 
+    // When user click on city while searching
     private fun selectSearchingObserver() {
         searchView.onActionViewCollapsed()
     }
@@ -172,6 +168,10 @@ class ViewPagerFragment : Fragment() {
         }
     }
 
+    private fun scrollCallbackObserver(isCanScroll: Boolean) {
+        binding.viewPager.isUserInputEnabled = isCanScroll
+    }
+
     private fun onSettingsClick() {
         Timber.d("Settings Click")
         this.findNavController().navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
@@ -179,29 +179,6 @@ class ViewPagerFragment : Fragment() {
 
     private fun showToast(message: String) =
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-
-    private fun updateInterface(status: PagerState.Status) {
-        when (status) {
-            PagerState.Status.DB_CREATING -> {
-                with(binding) {
-                    viewPager.visibility = View.INVISIBLE
-                    tabLayout.visibility = View.INVISIBLE
-                    textNotice.visibility = View.VISIBLE
-                    pbDbCreating.visibility = View.VISIBLE
-                }
-            }
-            PagerState.Status.DB_CREATED -> {
-                with(binding) {
-                    textNotice.visibility = View.INVISIBLE
-                    pbDbCreating.visibility = View.INVISIBLE
-                    viewPager.visibility = View.VISIBLE
-                    tabLayout.visibility = View.VISIBLE
-                }
-            }
-            PagerState.Status.DB_DELETED -> {
-            }
-        }
-    }
 
     // SearchView
 

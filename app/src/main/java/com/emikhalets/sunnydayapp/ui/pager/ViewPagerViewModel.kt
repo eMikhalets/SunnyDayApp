@@ -40,7 +40,7 @@ class ViewPagerViewModel @ViewModelInject constructor(
     val selectSearching: LiveData<City> get() = _selectSearching
 
     val userLocation = MutableLiveData<Location>()
-    val hourlyScrollCallback = MutableLiveData<Boolean>()
+    val scrollCallback = MutableLiveData<Boolean>()
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error

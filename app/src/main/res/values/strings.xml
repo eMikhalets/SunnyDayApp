@@ -34,7 +34,7 @@
 
     <!-- VIEW PAGER -->
     <string name="pager.text.error_location">Error locating</string>
-    <string name="menu.view_pager.db_creating">Creating a cities database\nIt may take a minute</string>
+    <string name="menu.view_pager.db_creating">Creating a cities database\nIt may take a minute\nonly during the first launch</string>
     <string name="menu.view_pager.search">Search</string>
 
     <!-- VARIABLE PARAMETERS -->
