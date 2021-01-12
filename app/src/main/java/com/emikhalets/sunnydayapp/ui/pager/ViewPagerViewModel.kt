@@ -45,22 +45,18 @@ class ViewPagerViewModel @ViewModelInject constructor(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
-//    private val _location = MutableLiveData<List<Double>>()
-//    val location: LiveData<List<Double>> get() = _location
-//
-//    private val _currentLocation = MutableLiveData<Location>()
-//    val currentLocation: LiveData<Location> get() = _currentLocation
-
-//    private var isLocation = false
-
     var isWeatherLoaded = false
     var currentCity: String = ""
+    var currentLat: Double = 0.0
+    var currentLon: Double = 0.0
 
-    fun sendWeatherRequest(lat: Double, lon: Double) {
+    fun sendWeatherRequest(lat: Double, lon: Double, units: String, lang: String) {
         viewModelScope.launch(coroutineContext) {
             try {
                 _weather.postValue(FragmentState.loading())
-                val response = repository.weatherRequest(lat, lon, "metric", "en")
+                val response = repository.weatherRequest(lat, lon, units, lang)
+                currentLat = lat
+                currentLon = lon
                 _weather.postValue(FragmentState.loaded(response))
                 isWeatherLoaded = true
             } catch (ex: Exception) {

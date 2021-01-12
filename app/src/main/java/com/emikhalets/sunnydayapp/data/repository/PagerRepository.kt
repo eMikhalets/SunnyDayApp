@@ -12,7 +12,7 @@ class PagerRepository @Inject constructor(
 ) {
 
     suspend fun weatherRequest(lat: Double, lon: Double, units: String, lang: String) =
-        api.weather(lat, lon, Keys.getApiKey(), units, lang)
+        api.weather(lat, lon, units, lang, Keys.getApiKey())
 
     suspend fun getCitiesByName(name: String) = db.getCitiesByName(name)
     suspend fun insertAllCities(cities: List<City>) = db.insertAll(cities)

@@ -18,33 +18,18 @@ fun getCityFromLocation(context: Context, location: Location): String {
     return "${address.locality}, ${address.countryCode}"
 }
 
-fun setTempUnit(context: Context, view: TextView, value: Double, unit: String) {
-    when (unit) {
-        "F" -> view.text =
-            context.getString(R.string.variable_text_temp_f, ((value * 9 / 5) + 32).toInt())
-        "K" -> view.text =
-            context.getString(R.string.variable_text_temp_k, (value + 273).toInt())
-        else ->
-            view.text = context.getString(R.string.variable_text_temp, value.toInt())
+fun setTempUnit(context: Context, view: TextView, value: Int, units: String) {
+    when (units) {
+        "metric" -> view.text = context.getString(R.string.variable_text_temp_m, value)
+        "imperial" -> view.text = context.getString(R.string.variable_text_temp_i, value)
+        else -> view.text = context.getString(R.string.variable_text_temp_m, value)
     }
 }
 
-fun setPressureUnit(context: Context, view: TextView, value: Double, unit: String) {
-    when (unit) {
-        "atm" -> view.text =
-            context.getString(R.string.variable_text_pressure_atm, value / 1013)
-        "pa" -> view.text =
-            context.getString(R.string.variable_text_pressure_pa, value * 100)
-        else -> view.text =
-            context.getString(R.string.variable_text_pressure, value)
-    }
-}
-
-fun setSpeedUnit(context: Context, view: TextView, value: Double, unit: String) {
-    when (unit) {
-        "kmh" -> view.text =
-            context.getString(R.string.variable_text_wind_speed, value * 3.6)
-        else -> view.text =
-            context.getString(R.string.variable_text_wind_speed, value)
+fun setWindUnit(context: Context, view: TextView, value: Int, units: String) {
+    when (units) {
+        "metric" -> view.text = context.getString(R.string.variable_text_wind_speed_m, value)
+        "imperial" -> view.text = context.getString(R.string.variable_text_wind_speed_i, value)
+        else -> view.text = context.getString(R.string.variable_text_wind_speed_m, value)
     }
 }

@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.Navigation
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
@@ -174,7 +174,8 @@ class ViewPagerFragment : Fragment() {
 
     private fun onSettingsClick() {
         Timber.d("Settings Click")
-        this.findNavController().navigate(R.id.action_viewPagerFragment_to_preferencePagerFragment)
+        val action = ViewPagerFragmentDirections.actionViewPagerFragmentToPreferencePagerFragment()
+        Navigation.findNavController(binding.root).navigate(action)
     }
 
     private fun showToast(message: String) =

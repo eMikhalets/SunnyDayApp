@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pref_query_lang">
-        <item>@string/pref_pager.lang_en</item>
-        <item>@string/pref_pager.lang_ru</item>
+        <item>English</item>
+        <item>Русский</item>
     </string-array>
 
     <string-array name="pref_query_lang_values">
@@ -10,37 +10,13 @@
         <item>ru</item>
     </string-array>
 
-    <string-array name="pref_units_temp">
-        <item>@string/pref_pager.unit_temp_c</item>
-        <item>@string/pref_pager.unit_temp_f</item>
-        <item>@string/pref_pager.unit_temp_k</item>
+    <string-array name="pref_units">
+        <item>Metric</item>
+        <item>Imperial</item>
     </string-array>
 
-    <string-array name="pref_units_temp_values">
-        <item>C</item>
-        <item>F</item>
-        <item>K</item>
-    </string-array>
-
-    <string-array name="pref_units_pressure">
-        <item>@string/pref_pager.unit_press_mb</item>
-        <item>@string/pref_pager.unit_press_atm</item>
-        <item>@string/pref_pager.unit_press_pa</item>
-    </string-array>
-
-    <string-array name="pref_units_pressure_values">
-        <item>mb</item>
-        <item>atm</item>
-        <item>pa</item>
-    </string-array>
-
-    <string-array name="pref_units_speed">
-        <item>@string/pref_pager.unit_speed_ms</item>
-        <item>@string/pref_pager.unit_speed_kmh</item>
-    </string-array>
-
-    <string-array name="pref_units_speed_values">
-        <item>ms</item>
-        <item>kmh</item>
+    <string-array name="pref_units_values">
+        <item>metric</item>
+        <item>imperial</item>
     </string-array>
 </resources>

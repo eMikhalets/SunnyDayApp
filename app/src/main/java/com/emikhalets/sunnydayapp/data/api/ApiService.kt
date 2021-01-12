@@ -12,9 +12,9 @@ interface ApiService {
     suspend fun weather(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("appid") apiKey: String,
         @Query("units") units: String,
-        @Query("lang") lang: String
+        @Query("lang") lang: String,
+        @Query("appid") apiKey: String
     ): Response
 
     companion object {

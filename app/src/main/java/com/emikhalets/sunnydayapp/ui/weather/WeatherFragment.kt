@@ -1,5 +1,6 @@
 package com.emikhalets.sunnydayapp.ui.weather
 
+import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,12 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentWeatherBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
+import com.emikhalets.sunnydayapp.ui.preference.PreferencePagerFragment
 import com.emikhalets.sunnydayapp.utils.FragmentState
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.squareup.picasso.Picasso
@@ -25,7 +28,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-
 @AndroidEntryPoint
 class WeatherFragment : Fragment() {
 
@@ -35,10 +37,9 @@ class WeatherFragment : Fragment() {
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
     private lateinit var hourlyAdapter: HourlyAdapter
-//    private lateinit var pref: SharedPreferences
-//    private lateinit var prefTemp: String
-//    private lateinit var prefPressure: String
-//    private lateinit var prefSpeed: String
+    private lateinit var pref: SharedPreferences
+    private lateinit var prefLang: String
+    private lateinit var prefUnits: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -59,7 +60,6 @@ class WeatherFragment : Fragment() {
         _binding = null
     }
 
-    //TODO: если скроллить этот адаптер, пайджер прокрутиваться не должен
     private fun initHourlyAdapter() {
         hourlyAdapter = HourlyAdapter()
         binding.listHourly.apply {
@@ -69,10 +69,9 @@ class WeatherFragment : Fragment() {
     }
 
     private fun initPreferences() {
-//        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-//        prefTemp = pref.getString(getString(R.string.pref_key_temp), "C")!!
-//        prefPressure = pref.getString(getString(R.string.pref_key_press), "mb")!!
-//        prefSpeed = pref.getString(getString(R.string.pref_key_speed), "ms")!!
+        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        prefLang = pref.getString(PreferencePagerFragment.KEY_PREF_LANG, "en")!!
+        prefUnits = pref.getString(PreferencePagerFragment.KEY_PREF_UNITS, "metric")!!
     }
 
     private fun initObservers() {
@@ -95,7 +94,12 @@ class WeatherFragment : Fragment() {
     }
 
     private fun locationObserver(location: Location) {
-        pagerViewModel.sendWeatherRequest(location.latitude, location.longitude)
+        pagerViewModel.sendWeatherRequest(
+            location.latitude,
+            location.longitude,
+            prefUnits,
+            prefLang
+        )
     }
 
     private fun recyclerScrollListener() = object : CustomItemTouchListener() {

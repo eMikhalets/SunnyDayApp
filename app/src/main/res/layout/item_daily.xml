@@ -37,7 +37,17 @@
         app:layout_constraintBottom_toTopOf="@+id/text_feels_like"
         app:layout_constraintStart_toEndOf="@+id/image_icon"
         app:layout_constraintTop_toBottomOf="@+id/text_date"
-        tools:text="day\n27 °C" />
+        tools:text="day" />
+
+    <TextView
+        android:id="@+id/text_temp_day_value"
+        style="@style/ForecastTextTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/text_feels_like"
+        app:layout_constraintStart_toEndOf="@+id/image_icon"
+        tools:text="27 °C" />
 
     <TextView
         android:id="@+id/text_temp_night"

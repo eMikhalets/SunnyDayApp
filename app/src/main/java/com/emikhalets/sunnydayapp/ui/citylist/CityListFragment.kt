@@ -1,5 +1,6 @@
 package com.emikhalets.sunnydayapp.ui.citylist
 
+import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,10 +10,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.preference.PreferenceManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
+import com.emikhalets.sunnydayapp.ui.preference.PreferencePagerFragment
 import com.emikhalets.sunnydayapp.utils.getCityFromLocation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_city_list.*
@@ -29,6 +32,9 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
     private lateinit var citiesAdapter: CitiesAdapter
+    private lateinit var pref: SharedPreferences
+    private lateinit var prefLang: String
+    private lateinit var prefUnits: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -41,6 +47,7 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
         super.onViewCreated(view, savedInstanceState)
 
         initObservers()
+        initPreferences()
         initCitiesAdapter()
 
         if (savedInstanceState == null) {
@@ -70,6 +77,12 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
         binding.textLocationCity.setOnClickListener { onTextLocationClick() }
     }
 
+    private fun initPreferences() {
+        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        prefLang = pref.getString(PreferencePagerFragment.KEY_PREF_LANG, "en")!!
+        prefUnits = pref.getString(PreferencePagerFragment.KEY_PREF_UNITS, "metric")!!
+    }
+
     /**
      * Cities that were once searched for in a toolbar.
      */
@@ -81,9 +94,6 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
     /**
      * Cities that are searched for in the toolbar
      */
-    //TODO: если после поиска стереть поисковой запрос (вернется пустой список)
-    // и если список городов в истории поиска пустой, то текстовая вью
-    // с тестом "пустой список" не отобразится
     private fun searchingCitiesObserver(cities: List<City>) {
         if (cities.isNotEmpty()) {
             citiesAdapter.isSearchingState = true
@@ -97,16 +107,19 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
         }
     }
 
-    // TODO: get place name by coordinates and set in text view
     private fun locationObserver(location: Location) {
         binding.textLocationCity.text = getCityFromLocation(requireContext(), location)
     }
 
-    // TODO: change "your location" on city name
     private fun onTextLocationClick() {
         Timber.d("Clicked the current location in the list of cities")
         pagerViewModel.userLocation.value?.let { location ->
-            pagerViewModel.sendWeatherRequest(location.latitude, location.longitude)
+            pagerViewModel.sendWeatherRequest(
+                location.latitude,
+                location.longitude,
+                prefUnits,
+                prefLang
+            )
         } ?: showToast(getString(R.string.cities_text_location_not_determined))
     }
 
@@ -124,7 +137,7 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
         if (!citiesAdapter.isSearchingState) {
             pagerViewModel.apply {
                 currentCity = "${city.name}, ${city.country}"
-                sendWeatherRequest(city.lat, city.lon)
+                sendWeatherRequest(city.lat, city.lon, prefUnits, prefLang)
             }
             citiesAdapter.isSearchingState = false
         } else {

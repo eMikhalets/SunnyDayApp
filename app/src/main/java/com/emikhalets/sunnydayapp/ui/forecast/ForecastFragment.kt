@@ -1,5 +1,6 @@
 package com.emikhalets.sunnydayapp.ui.forecast
 
+import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.preference.PreferenceManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentForecastBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
+import com.emikhalets.sunnydayapp.ui.preference.PreferencePagerFragment
 import com.emikhalets.sunnydayapp.utils.FragmentState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_forecast.*
@@ -22,7 +25,11 @@ class ForecastFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
+
     private lateinit var dailyAdapter: DailyAdapter
+    private lateinit var pref: SharedPreferences
+    private lateinit var prefLang: String
+    private lateinit var prefUnits: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -33,8 +40,9 @@ class ForecastFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initObservers()
         initDailyAdapter()
+        initPreferences()
+        initObservers()
     }
 
     override fun onDestroy() {
@@ -47,8 +55,15 @@ class ForecastFragment : Fragment() {
         pagerViewModel.userLocation.observe(viewLifecycleOwner, { locationObserver(it) })
     }
 
+    private fun initPreferences() {
+        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        prefLang = pref.getString(PreferencePagerFragment.KEY_PREF_LANG, "en")!!
+        prefUnits = pref.getString(PreferencePagerFragment.KEY_PREF_UNITS, "metric")!!
+    }
+
     private fun initDailyAdapter() {
         dailyAdapter = DailyAdapter()
+        dailyAdapter.units = prefUnits
         binding.listForecast.apply {
             setHasFixedSize(true)
             adapter = dailyAdapter
@@ -72,6 +87,11 @@ class ForecastFragment : Fragment() {
     }
 
     private fun locationObserver(location: Location) {
-        pagerViewModel.sendWeatherRequest(location.latitude, location.longitude)
+        pagerViewModel.sendWeatherRequest(
+            location.latitude,
+            location.longitude,
+            prefUnits,
+            prefLang
+        )
     }
 }
