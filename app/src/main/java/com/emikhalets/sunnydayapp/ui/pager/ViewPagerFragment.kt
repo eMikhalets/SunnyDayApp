@@ -112,6 +112,7 @@ class ViewPagerFragment : Fragment() {
     private fun initViewPager() {
         pagerAdapter = ViewPagerAdapter(this)
         binding.viewPager.adapter = pagerAdapter
+        binding.viewPager.isUserInputEnabled = false
 
         TabLayoutMediator(binding.tabLayout.tabs, binding.viewPager) { tab, position ->
             when (position) {
