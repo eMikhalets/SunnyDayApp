@@ -64,7 +64,7 @@ class WeatherFragment : Fragment() {
         hourlyAdapter = HourlyAdapter()
         binding.listHourly.apply {
             adapter = hourlyAdapter
-//            addOnItemTouchListener(recyclerScrollListener())
+            addOnItemTouchListener(recyclerScrollListener())
         }
     }
 
@@ -162,15 +162,13 @@ class WeatherFragment : Fragment() {
                 R.string.weather_text_pressure,
                 response.current.pressure.toInt()
             )
-            chart_hourly.hourlyForecast = response.hourly.toMutableList()
-            chart_hourly.invalidate()
         }
         with(binding.layoutSunTime) {
             textSunrise.text = formatTime(response.current.sunrise, response.timezone)
             textSunset.text = formatTime(response.current.sunset, response.timezone)
         }
-//        hourlyAdapter.timezone = response.timezone
-//        hourlyAdapter.submitList(response.hourly)
+        hourlyAdapter.timezone = response.timezone
+        hourlyAdapter.submitList(response.hourly)
     }
 
     private fun formatDate(timestamp: Long, timezone: String): String {

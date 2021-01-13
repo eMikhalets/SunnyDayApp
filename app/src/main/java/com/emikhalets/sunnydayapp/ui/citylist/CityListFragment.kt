@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.preference.PreferenceManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.database.City
+import com.emikhalets.sunnydayapp.data.model.Hourly
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import com.emikhalets.sunnydayapp.ui.preference.PreferencePagerFragment
@@ -56,6 +57,24 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
                 R.string.cities_text_location_not_determined
             )
         }
+
+        val testForecast = mutableListOf(
+            Hourly(0, 10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+            Hourly(0, 11.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+            Hourly(0, 13.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+            Hourly(0, 15.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+            Hourly(0, 17.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+            Hourly(0, 19.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+            Hourly(0, 20.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+            Hourly(0, 18.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+            Hourly(0, 15.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+            Hourly(0, 14.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+            Hourly(0, 12.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+            Hourly(0, 13.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, listOf(), 0.0),
+        )
+
+        binding.chartHourly.hourlyForecast = testForecast
+        binding.chartHourly.invalidate()
     }
 
     override fun onDestroy() {

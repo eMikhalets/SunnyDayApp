@@ -4,48 +4,54 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.withStyledAttributes
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Hourly
+import timber.log.Timber
+import kotlin.math.min
 
 class ChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
+) : View(context, attrs, defStyleAttr, defStyleRes) {
 
-    private var textColor: Float = Color.BLACK.toFloat()
-    private var textSize: Float = 55f
-    private var lineColor: Float = Color.BLACK.toFloat()
-    private var lineWidth: Float = 20f
-    private var pointColor: Float = Color.BLACK.toFloat()
-    private var pointRadius: Float = 2f
+    // Attributes
+    private var textColor: Float = 0f
+    private var textSize: Float = 0f
+    private var lineColor: Float = 0f
+    private var lineWidth: Float = 0f
+    private var pointColor: Float = 0f
+    private var pointRadius: Float = 0f
 
+    // Local sizes
     private var density = 0f
-    private var chartHeight = 0
-    private var chartYOffset = 0
+    private var minTemp = 0f
+    private var maxTemp = 0f
+    private var chartHeight = 0f
+    private var chartYOffset = 0f
+    private var stretch = 0f
+    private var viewHeight = 0f
+    private var chartPaddingTop = 0f
+    private var chartPaddingBottom = 0f
     private val tempH = mutableListOf<Float>()
 
-    private val linePaint = Paint()
-    private val pointPaint = Paint()
-    private val textPaint = Paint()
+    // Paints
+    private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val pointPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    // Data
     var hourlyForecast = mutableListOf<Hourly>()
-
-//    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-//        style = Paint.Style.FILL
-//        textAlign = Paint.Align.CENTER
-//        textSize = 55.0f
-//        typeface = Typeface.create("", Typeface.BOLD)
-//    }
 
     init {
         context.withStyledAttributes(attrs, R.styleable.ChartView) {
-            density = resources.displayMetrics.scaledDensity
+            density = resources.displayMetrics.density
+            Timber.d("$density")
             textColor = getDimension(R.styleable.ChartView_textColor, Color.BLACK.toFloat())
             textSize = getDimension(R.styleable.ChartView_textSize, 18f * density)
             lineColor = getDimension(R.styleable.ChartView_lineColor, Color.BLACK.toFloat())
@@ -54,68 +60,57 @@ class ChartView @JvmOverloads constructor(
             pointRadius = getDimension(R.styleable.ChartView_pointRadius, 2f * density)
         }
 
-        linePaint.isAntiAlias = true
+        chartHeight = 100f * density
+        chartPaddingTop = 10 * density
+        chartPaddingBottom = 10 * density
+
         linePaint.color = lineColor.toInt()
         linePaint.strokeWidth = lineWidth
         linePaint.style = Paint.Style.STROKE
-
-        pointPaint.isAntiAlias = true
         pointPaint.color = pointColor.toInt()
-
-        textPaint.isAntiAlias = true
         textPaint.color = textColor.toInt()
         textPaint.textSize = textSize
         textPaint.textAlign = Paint.Align.CENTER
     }
 
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-    }
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-    }
+        if (hourlyForecast.isNotEmpty()) {
+            minTemp = (hourlyForecast.minOf { it.temp } * density).toFloat()
+            maxTemp = (hourlyForecast.maxOf { it.temp } * density).toFloat()
+            Timber.d("max temperature = $maxTemp")
+            Timber.d("min temperature = $minTemp")
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        super.onLayout(changed, left, top, right, bottom)
-    }
+            stretch = chartHeight / (maxTemp - minTemp)
+            Timber.d("stretch = $stretch")
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
+            viewHeight = chartHeight + chartPaddingTop + chartPaddingBottom
+            val w = 20f * density + 50f * density * (hourlyForecast.size - 1)
+            val h = min(MeasureSpec.getSize(heightMeasureSpec).toFloat(), viewHeight)
+            setMeasuredDimension(w.toInt(), h.toInt())
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (hourlyForecast.isNotEmpty()) {
-            if (chartHeight == 0) setChartHeight()
+            chartYOffset = minTemp - textSize - pointRadius
             computeYHeight()
             drawChart(canvas)
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return super.onTouchEvent(event)
-    }
-
-    override fun onFocusChanged(gainFocus: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
-        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect)
-    }
-
-    private fun setChartHeight() {
-        val localMinH = hourlyForecast.minOf { it.temp }.toInt()
-        val localMaxH = hourlyForecast.maxOf { it.temp }.toInt()
-        chartYOffset = (localMinH * density - textSize - pointRadius).toInt()
-        chartHeight = ((localMaxH - localMinH) + 10) + textSize.toInt()
-    }
-
     private fun computeYHeight() {
-        for (i in hourlyForecast.indices) {
-            tempH.add(((hourlyForecast[i].temp * density - chartYOffset)).toFloat())
+        hourlyForecast.forEach {
+            val temp = it.temp * density
+            val h = (chartPaddingTop + (temp - minTemp) * stretch).toFloat()
+            Timber.d("${it.temp} : $h")
+            tempH.add(h)
         }
     }
 
     private fun drawChart(canvas: Canvas) {
-        var xOffset = 20 * density
+        var xOffset = 20f * density
 
         for (i in hourlyForecast.indices) {
             val x = xOffset
@@ -133,5 +128,14 @@ class ChartView @JvmOverloads constructor(
 
             xOffset += 50 * density
         }
+    }
+
+    override fun performClick(): Boolean {
+        return super.performClick()
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        Timber.d("In custom view event = $event")
+        return super.onTouchEvent(event)
     }
 }
