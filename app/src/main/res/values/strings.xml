@@ -2,6 +2,11 @@
     <string name="app_name">SunnyDayApp</string>
     <string name="app_text_empty_data">Load weather via search or turn on GPS to determine location</string>
 
+    <!-- KEYS -->
+    <string name="key_pref_lang">key_pref_lang</string>
+    <string name="key_pref_theme">key_pref_theme</string>
+    <string name="key_pref_units">key_pref_units</string>
+
     <!-- SETTINGS -->
     <string name="pref_pager_category_main">General settings</string>
     <string name="pref_pager_lang">Language</string>
@@ -14,6 +19,16 @@
     <string name="pref_pager_key_lang">key_pref_lang</string>
     <string name="pref_pager_key_theme">key_pref_theme</string>
     <string name="pref_pager_key_units">key_pref_units</string>
+
+    <!-- UNITS -->
+    <string name="units_m">metric</string>
+    <string name="units_i">imperial</string>
+    <string name="units_temp_m">%d °C</string>
+    <string name="units_temp_i">%d °F</string>
+    <string name="units_temp_unit_m">°C</string>
+    <string name="units_temp_unit_i">°F</string>
+    <string name="units_speed_m">%d m/s</string>
+    <string name="units_speed_i">%d m/h</string>
 
     <!-- TABS -->
     <string name="tab_title_city_list">Cities</string>
@@ -29,12 +44,6 @@
     <string name="view_pager_db_creating">Creating a cities database\nIt may take a minute\nonly during the first launch</string>
     <string name="view_pager_menu_search">Search</string>
 
-    <!-- VARIABLE PARAMETERS -->
-    <string name="variable_text_temp_m">%d °C</string>
-    <string name="variable_text_temp_i">%d °F</string>
-    <string name="variable_text_wind_speed_m">%d m/s</string>
-    <string name="variable_text_wind_speed_i">%d m/h</string>
-
     <!-- CITIES -->
     <string name="cities_text_empty_list">The list of cities is empty\n\nAdd a new city via search</string>
     <string name="cities_text_location_not_determined">Geolocation not determined</string>
@@ -46,16 +55,10 @@
 
     <!-- WEATHER -->
     <string name="weather_text_header">%s in %s</string>
-    <string name="weather_text_temp_night">night\n%d °C</string>
-    <string name="weather_text_temp_night_imp">night\n%d °F</string>
     <string name="weather_text_desc">%s: %s</string>
     <string name="weather_text_cloud">%d %%</string>
     <string name="weather_text_humidity">%d %%</string>
-    <string name="weather_text_wind">%d m/s</string>
-    <string name="weather_text_wind_imp">%d m/h</string>
     <string name="weather_text_pressure">%d kPa</string>
-    <string name="weather_text_temp">%d °C</string>
-    <string name="weather_text_feels_like">%d °C</string>
 
     <!-- FORECAST -->
     <string name="forecast_text_feels_like">feels like\n%d °C</string>

@@ -79,8 +79,8 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
 
     private fun initPreferences() {
         pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        prefLang = pref.getString(PreferencePagerFragment.KEY_PREF_LANG, "en")!!
-        prefUnits = pref.getString(PreferencePagerFragment.KEY_PREF_UNITS, "metric")!!
+        prefLang = pref.getString(getString(R.string.key_pref_lang), "en").toString()
+        prefUnits = pref.getString(getString(R.string.key_pref_units), "metric").toString()
     }
 
     /**

@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
@@ -59,6 +59,10 @@ class ViewPagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (savedInstanceState == null) Timber.d("PAGER STATE NULL")
+        if (savedInstanceState != null) Timber.d("PAGER STATE NOT NULL")
+
         savedInstanceState ?: checkCitiesTableState()
         initObservers()
         initSearchView()
@@ -175,7 +179,7 @@ class ViewPagerFragment : Fragment() {
     private fun onSettingsClick() {
         Timber.d("Settings Click")
         val action = ViewPagerFragmentDirections.actionViewPagerFragmentToPreferencePagerFragment()
-        Navigation.findNavController(binding.root).navigate(action)
+        binding.root.findNavController().navigate(action)
     }
 
     private fun showToast(message: String) =

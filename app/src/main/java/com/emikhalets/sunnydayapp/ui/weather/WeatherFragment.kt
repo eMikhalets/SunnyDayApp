@@ -16,13 +16,10 @@ import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentWeatherBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
-import com.emikhalets.sunnydayapp.ui.preference.PreferencePagerFragment
-import com.emikhalets.sunnydayapp.utils.FragmentState
-import com.emikhalets.sunnydayapp.utils.buildIconUrl
+import com.emikhalets.sunnydayapp.utils.*
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_weather.*
-import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -50,8 +47,8 @@ class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initHourlyAdapter()
         initPreferences()
+        initHourlyAdapter()
         initObservers()
     }
 
@@ -61,7 +58,7 @@ class WeatherFragment : Fragment() {
     }
 
     private fun initHourlyAdapter() {
-        hourlyAdapter = HourlyAdapter()
+        hourlyAdapter = HourlyAdapter(requireContext())
         binding.listHourly.apply {
             adapter = hourlyAdapter
             addOnItemTouchListener(recyclerScrollListener())
@@ -70,8 +67,8 @@ class WeatherFragment : Fragment() {
 
     private fun initPreferences() {
         pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        prefLang = pref.getString(PreferencePagerFragment.KEY_PREF_LANG, "en")!!
-        prefUnits = pref.getString(PreferencePagerFragment.KEY_PREF_UNITS, "metric")!!
+        prefLang = pref.getString(getString(R.string.key_pref_lang), "en").toString()
+        prefUnits = pref.getString(getString(R.string.key_pref_units), "metric").toString()
     }
 
     private fun initObservers() {
@@ -102,10 +99,73 @@ class WeatherFragment : Fragment() {
         )
     }
 
+    private fun setWeatherData(response: Response) {
+        val data = response.current
+        val weather = response.current.weather.first()
+
+        with(binding.layoutWeatherCurrent) {
+            Picasso.get().load(buildIconUrl(data.weather.first().icon))
+                .into(imageIcon)
+            textHeader.text = getString(
+                R.string.weather_text_header,
+                formatDate(data.dt, response.timezone),
+                pagerViewModel.currentCity
+            )
+            textTemp.text = data.temp.toInt().toString()
+            setTemperatureUnit(requireContext(), textTempUnit, prefUnits)
+            textDesc.text = getString(
+                R.string.weather_text_desc,
+                weather.main,
+                weather.description
+            )
+            textCloud.text = getString(
+                R.string.weather_text_cloud,
+                data.clouds.toInt()
+            )
+            textHumidity.text = getString(
+                R.string.weather_text_humidity,
+                data.humidity.toInt()
+            )
+            setTemperature(requireContext(), textFeelsLike, data.feels_like.toInt(), prefUnits)
+            setWindSpeed(requireContext(), textWind, data.wind_speed.toInt(), prefUnits)
+            // TODO(): create converter
+            textWindDir.text = response.current.wind_deg.toInt().toString()
+            textPressure.text = getString(
+                R.string.weather_text_pressure,
+                data.pressure.toInt()
+            )
+        }
+
+        with(binding.layoutSunTime) {
+            textSunrise.text = formatTime(data.sunrise, response.timezone)
+            textSunset.text = formatTime(data.sunset, response.timezone)
+        }
+
+        hourlyAdapter.units = prefUnits
+        hourlyAdapter.timezone = response.timezone
+        hourlyAdapter.submitList(null)
+        hourlyAdapter.submitList(response.hourly)
+    }
+
+    private fun formatDate(timestamp: Long, timezone: String): String {
+        val date = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(timestamp * 1000),
+            ZoneId.of(timezone)
+        )
+        return date.format(DateTimeFormatter.ofPattern("E, d MMM"))
+    }
+
+    private fun formatTime(timestamp: Long, timezone: String): String {
+        val date = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(timestamp * 1000),
+            ZoneId.of(timezone)
+        )
+        return date.format(DateTimeFormatter.ofPattern("HH:mm"))
+    }
+
     private fun recyclerScrollListener() = object : CustomItemTouchListener() {
         var lastX = 0
         override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-            Timber.d(e.action.toString())
             when (e.action) {
                 MotionEvent.ACTION_MOVE -> {
                     val isScrollingRight = e.x < lastX
@@ -126,64 +186,5 @@ class WeatherFragment : Fragment() {
             }
             return false
         }
-    }
-
-    private fun setWeatherData(response: Response) {
-        with(binding.layoutWeatherCurrent) {
-            Picasso.get().load(buildIconUrl(response.current.weather.first().icon))
-                .into(imageIcon)
-            textHeader.text = getString(
-                R.string.weather_text_header,
-                formatDate(response.current.dt, response.timezone),
-                pagerViewModel.currentCity
-            )
-            textTemp.text = response.current.temp.toInt().toString()
-            textDesc.text = getString(
-                R.string.weather_text_desc,
-                response.current.weather.first().main,
-                response.current.weather.first().description
-            )
-            textCloud.text = getString(
-                R.string.weather_text_cloud,
-                response.current.clouds.toInt()
-            )
-            textHumidity.text = getString(
-                R.string.weather_text_humidity,
-                response.current.humidity.toInt()
-            )
-            textFeelsLike.text = response.current.feels_like.toInt().toString()
-            textWind.text = getString(
-                R.string.weather_text_wind,
-                response.current.wind_speed.toInt()
-            )
-            // TODO(): create converter
-            textWindDir.text = response.current.wind_deg.toInt().toString()
-            textPressure.text = getString(
-                R.string.weather_text_pressure,
-                response.current.pressure.toInt()
-            )
-        }
-        with(binding.layoutSunTime) {
-            textSunrise.text = formatTime(response.current.sunrise, response.timezone)
-            textSunset.text = formatTime(response.current.sunset, response.timezone)
-        }
-        hourlyAdapter.timezone = response.timezone
-        hourlyAdapter.submitList(response.hourly)
-    }
-
-    private fun formatDate(timestamp: Long, timezone: String): String {
-        val date = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(timestamp * 1000),
-            ZoneId.of(timezone)
-        )
-        return date.format(DateTimeFormatter.ofPattern("E, d MMM"))
-    }
-
-    private fun formatTime(timestamp: Long, timezone: String): String {
-        val date = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(timestamp * 1000),
-            ZoneId.of(timezone)
-        )
-        return date.format(DateTimeFormatter.ofPattern("HH:mm"))
     }
 }

@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_pager">
         <action
             android:id="@+id/action_viewPagerFragment_to_preferencePagerFragment"
-            app:destination="@id/preferencePagerFragment" />
+            app:destination="@id/preferencePagerFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment

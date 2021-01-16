@@ -2,7 +2,9 @@ package com.emikhalets.sunnydayapp.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
 import com.emikhalets.sunnydayapp.BuildConfig
+import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -19,4 +21,17 @@ class MainActivity : AppCompatActivity() {
 
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
+
+//    override fun onBackPressed() {
+//        val navController = Navigation.findNavController(binding.root)
+//
+//        when (navController.currentDestination?.id) {
+//            R.id.preferencePagerFragment -> {
+//                navController.popBackStack()
+//            }
+//            else -> {
+//                super.onBackPressed()
+//            }
+//        }
+//    }
 }

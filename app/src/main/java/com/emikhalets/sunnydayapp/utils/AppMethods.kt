@@ -18,18 +18,23 @@ fun getCityFromLocation(context: Context, location: Location): String {
     return "${address.locality}, ${address.countryCode}"
 }
 
-fun setTempUnit(context: Context, view: TextView, value: Int, units: String) {
+fun setTemperature(context: Context, view: TextView, value: Int, units: String) {
     when (units) {
-        "metric" -> view.text = context.getString(R.string.variable_text_temp_m, value)
-        "imperial" -> view.text = context.getString(R.string.variable_text_temp_i, value)
-        else -> view.text = context.getString(R.string.variable_text_temp_m, value)
+        "imperial" -> view.text = context.getString(R.string.units_temp_i, value)
+        else -> view.text = context.getString(R.string.units_temp_m, value)
     }
 }
 
-fun setWindUnit(context: Context, view: TextView, value: Int, units: String) {
+fun setTemperatureUnit(context: Context, view: TextView, units: String) {
     when (units) {
-        "metric" -> view.text = context.getString(R.string.variable_text_wind_speed_m, value)
-        "imperial" -> view.text = context.getString(R.string.variable_text_wind_speed_i, value)
-        else -> view.text = context.getString(R.string.variable_text_wind_speed_m, value)
+        "imperial" -> view.text = context.getString(R.string.units_temp_unit_i)
+        else -> view.text = context.getString(R.string.units_temp_unit_m)
+    }
+}
+
+fun setWindSpeed(context: Context, view: TextView, value: Int, units: String) {
+    when (units) {
+        "imperial" -> view.text = context.getString(R.string.units_speed_i, value)
+        else -> view.text = context.getString(R.string.units_speed_m, value)
     }
 }

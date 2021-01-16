@@ -13,7 +13,6 @@ import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentForecastBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
-import com.emikhalets.sunnydayapp.ui.preference.PreferencePagerFragment
 import com.emikhalets.sunnydayapp.utils.FragmentState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_forecast.*
@@ -40,8 +39,8 @@ class ForecastFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initDailyAdapter()
         initPreferences()
+        initDailyAdapter()
         initObservers()
     }
 
@@ -50,24 +49,21 @@ class ForecastFragment : Fragment() {
         _binding = null
     }
 
+    private fun initPreferences() {
+        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        prefLang = pref.getString(getString(R.string.key_pref_lang), "en").toString()
+        prefUnits = pref.getString(getString(R.string.key_pref_units), "metric").toString()
+    }
+
     private fun initObservers() {
         pagerViewModel.weather.observe(viewLifecycleOwner, { weatherObserver(it) })
         pagerViewModel.userLocation.observe(viewLifecycleOwner, { locationObserver(it) })
     }
 
-    private fun initPreferences() {
-        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        prefLang = pref.getString(PreferencePagerFragment.KEY_PREF_LANG, "en")!!
-        prefUnits = pref.getString(PreferencePagerFragment.KEY_PREF_UNITS, "metric")!!
-    }
-
     private fun initDailyAdapter() {
         dailyAdapter = DailyAdapter()
         dailyAdapter.units = prefUnits
-        binding.listForecast.apply {
-            setHasFixedSize(true)
-            adapter = dailyAdapter
-        }
+        binding.listForecast.adapter = dailyAdapter
     }
 
     private fun weatherObserver(state: FragmentState<Response>) {
@@ -76,9 +72,10 @@ class ForecastFragment : Fragment() {
                 motion_forecast.transitionToState(R.id.state_loading)
             }
             FragmentState.Status.LOADED -> {
-                val response = state.data!!
-                dailyAdapter.timezone = response.timezone
-                dailyAdapter.submitList(response.daily)
+                val response = state.data
+                dailyAdapter.timezone = response?.timezone ?: ""
+                dailyAdapter.submitList(null)
+                dailyAdapter.submitList(response?.daily)
                 motion_forecast.transitionToState(R.id.state_forecast)
             }
             FragmentState.Status.ERROR -> {

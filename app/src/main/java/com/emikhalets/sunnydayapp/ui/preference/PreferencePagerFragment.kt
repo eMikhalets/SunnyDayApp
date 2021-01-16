@@ -1,13 +1,16 @@
 package com.emikhalets.sunnydayapp.ui.preference
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.Navigation
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.emikhalets.sunnydayapp.R
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class PreferencePagerFragment : PreferenceFragmentCompat() {
@@ -20,6 +23,7 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.pref_pager, rootKey)
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         iniPreferences()
@@ -39,20 +43,20 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
                 else -> PREF_UNIT_METRIC
             }
         }
+
+        Navigation.findNavController(view).backStack.forEach {
+            Timber.d(it.destination.navigatorName)
+        }
     }
 
     private fun iniPreferences() {
-        language = findPreference(KEY_PREF_LANG)!!
-        theme = findPreference(KEY_PREF_THEME)!!
-        units = findPreference(KEY_PREF_UNITS)!!
+        language = findPreference(getString(R.string.key_pref_lang))!!
+        theme = findPreference(getString(R.string.key_pref_theme))!!
+        units = findPreference(getString(R.string.key_pref_units))!!
 
     }
 
     companion object {
-        const val KEY_PREF_LANG = "key_pref_lang"
-        const val KEY_PREF_THEME = "key_pref_theme"
-        const val KEY_PREF_UNITS = "key_pref_units"
-
         private const val PREF_LANG_ENG = "English"
         private const val PREF_LANG_RU = "Русский"
         private const val PREF_UNIT_METRIC = "Metric"
