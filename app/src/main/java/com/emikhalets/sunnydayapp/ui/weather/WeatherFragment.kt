@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
+import com.emikhalets.sunnydayapp.data.model.Hourly
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentWeatherBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
@@ -90,6 +91,7 @@ class WeatherFragment : Fragment() {
     private fun setWeatherData(response: Response) {
         val data = response.current
         val weather = response.current.weather.first()
+        hourlyAdapter.submitList(null)
 
         with(binding.layoutWeatherCurrent) {
             Picasso.get().load(buildIconUrl(data.weather.first().icon))
@@ -141,8 +143,6 @@ class WeatherFragment : Fragment() {
 
         hourlyAdapter.units = pagerViewModel.prefUnits
         hourlyAdapter.timezone = response.timezone
-        //TODO: remove this shit (list doesn't appear)
-        hourlyAdapter.submitList(null)
         hourlyAdapter.submitList(response.hourly)
     }
 

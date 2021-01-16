@@ -60,9 +60,9 @@ class ForecastFragment : Fragment() {
                 motion_forecast.transitionToState(R.id.state_loading)
             }
             FragmentState.Status.LOADED -> {
+                dailyAdapter.submitList(null)
                 val response = state.data
                 dailyAdapter.timezone = response?.timezone ?: ""
-                dailyAdapter.submitList(null)
                 dailyAdapter.submitList(response?.daily)
                 motion_forecast.transitionToState(R.id.state_forecast)
             }
