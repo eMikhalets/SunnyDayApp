@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.withStyledAttributes
 import com.emikhalets.sunnydayapp.R
@@ -78,12 +77,7 @@ class ChartView @JvmOverloads constructor(
         if (hourlyForecast.isNotEmpty()) {
             minTemp = (hourlyForecast.minOf { it.temp } * density).toFloat()
             maxTemp = (hourlyForecast.maxOf { it.temp } * density).toFloat()
-            Timber.d("max temperature = $maxTemp")
-            Timber.d("min temperature = $minTemp")
-
             stretch = chartHeight / (maxTemp - minTemp)
-            Timber.d("stretch = $stretch")
-
             viewHeight = chartHeight + chartPaddingTop + chartPaddingBottom
             val w = 20f * density + 50f * density * (hourlyForecast.size - 1)
             val h = min(MeasureSpec.getSize(heightMeasureSpec).toFloat(), viewHeight)
@@ -104,7 +98,6 @@ class ChartView @JvmOverloads constructor(
         hourlyForecast.forEach {
             val temp = it.temp * density
             val h = (chartPaddingTop + (temp - minTemp) * stretch).toFloat()
-            Timber.d("${it.temp} : $h")
             tempH.add(h)
         }
     }
@@ -128,14 +121,5 @@ class ChartView @JvmOverloads constructor(
 
             xOffset += 50 * density
         }
-    }
-
-    override fun performClick(): Boolean {
-        return super.performClick()
-    }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        Timber.d("In custom view event = $event")
-        return super.onTouchEvent(event)
     }
 }

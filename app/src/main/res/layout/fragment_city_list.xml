@@ -18,21 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_location_city" />
 
-    <HorizontalScrollView
-        android:id="@+id/scroller"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_location_city">
-
-        <com.emikhalets.sunnydayapp.utils.ChartView
-            android:id="@+id/chart_hourly"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#50000000" />
-    </HorizontalScrollView>
-
     <TextView
         android:id="@+id/text_location_city"
         style="@style/CitiesListText"
@@ -57,4 +42,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_location_city"
         tools:listitem="@layout/item_city" />
+
+    <HorizontalScrollView
+        android:id="@+id/scroller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_location_city">
+
+        <com.emikhalets.sunnydayapp.utils.ChartView
+            android:id="@+id/chart_hourly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#50000000"/>
+    </HorizontalScrollView>
 </androidx.constraintlayout.motion.widget.MotionLayout>
