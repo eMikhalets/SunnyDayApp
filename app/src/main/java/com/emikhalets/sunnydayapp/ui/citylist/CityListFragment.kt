@@ -46,9 +46,9 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initObservers()
         initPreferences()
         initCitiesAdapter()
+        initObservers()
 
         if (savedInstanceState == null) {
             cityListViewModel.getSearchedCities()
@@ -79,8 +79,14 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
 
     private fun initPreferences() {
         pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        prefLang = pref.getString(getString(R.string.key_pref_lang), "en").toString()
-        prefUnits = pref.getString(getString(R.string.key_pref_units), "metric").toString()
+        prefLang = pref.getString(
+            getString(R.string.key_pref_lang),
+            getString(R.string.pref_lang_en_val)
+        ) ?: getString(R.string.pref_lang_en_val)
+        prefUnits = pref.getString(
+            getString(R.string.key_pref_units),
+            getString(R.string.pref_unit_metric_val)
+        ) ?: getString(R.string.pref_unit_metric_val)
     }
 
     /**
@@ -146,18 +152,12 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
         }
     }
 
-    /**
-     * CitiesAdapter item long click listener
-     */
     override fun onCityLongClick(city: City) {
         Timber.d("Deleting ($city)")
         val dialog = DeleteCityDialog(city, this)
         dialog.show(requireActivity().supportFragmentManager, KEY_DIALOG_DELETE_CITY)
     }
 
-    /**
-     * Delete dialog click listener
-     */
     override fun onDeleteCity(city: City) = cityListViewModel.removeCityFromSearched(city)
 
     private fun showToast(message: String) =

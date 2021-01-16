@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pref_query_lang">
-        <item>English</item>
-        <item>Русский</item>
+        <item>@string/pref_lang_en</item>
+        <item>@string/pref_lang_ru</item>
     </string-array>
 
     <string-array name="pref_query_lang_values">
-        <item>en</item>
-        <item>ru</item>
+        <item>@string/pref_lang_en_val</item>
+        <item>@string/pref_lang_ru_val</item>
     </string-array>
 
     <string-array name="pref_units">
-        <item>Metric</item>
-        <item>Imperial</item>
+        <item>@string/pref_unit_metric</item>
+        <item>@string/pref_unit_imperial</item>
     </string-array>
 
     <string-array name="pref_units_values">
-        <item>metric</item>
-        <item>imperial</item>
+        <item>@string/pref_unit_metric_val</item>
+        <item>@string/pref_unit_imperial_val</item>
     </string-array>
 </resources>

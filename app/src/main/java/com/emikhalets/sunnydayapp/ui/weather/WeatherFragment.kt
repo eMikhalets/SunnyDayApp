@@ -67,8 +67,14 @@ class WeatherFragment : Fragment() {
 
     private fun initPreferences() {
         pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        prefLang = pref.getString(getString(R.string.key_pref_lang), "en").toString()
-        prefUnits = pref.getString(getString(R.string.key_pref_units), "metric").toString()
+        prefLang = pref.getString(
+            getString(R.string.key_pref_lang),
+            getString(R.string.pref_lang_en_val)
+        ) ?: getString(R.string.pref_lang_en_val)
+        prefUnits = pref.getString(
+            getString(R.string.key_pref_units),
+            getString(R.string.pref_unit_metric_val)
+        ) ?: getString(R.string.pref_unit_metric_val)
     }
 
     private fun initObservers() {

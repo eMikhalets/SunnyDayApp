@@ -1,32 +1,31 @@
 <resources>
-    <string name="app_name">SunnyDayApp</string>
+    <string name="app_name" translatable="false">SunnyDayApp</string>
     <string name="app_text_empty_data">Load weather via search or turn on GPS to determine location</string>
 
     <!-- KEYS -->
-    <string name="key_pref_lang">key_pref_lang</string>
-    <string name="key_pref_theme">key_pref_theme</string>
-    <string name="key_pref_units">key_pref_units</string>
+    <string name="key_pref_lang" translatable="false">key_pref_lang</string>
+    <string name="key_pref_theme" translatable="false">key_pref_theme</string>
+    <string name="key_pref_units" translatable="false">key_pref_units</string>
 
     <!-- SETTINGS -->
-    <string name="pref_pager_category_main">General settings</string>
-    <string name="pref_pager_lang">Language</string>
-    <string name="pref_pager_theme">Dark theme</string>
-    <string name="pref_pager_units">Units</string>
-    <string name="pref_pager_lang_en">English</string>
-    <string name="pref_pager_lang_ru">Russian</string>
-    <string name="pref_pager_unit_metric">Metric</string>
-    <string name="pref_pager_unit_imperial">Imperial</string>
-    <string name="pref_pager_key_lang">key_pref_lang</string>
-    <string name="pref_pager_key_theme">key_pref_theme</string>
-    <string name="pref_pager_key_units">key_pref_units</string>
+    <string name="pref_category_main">General settings</string>
+    <string name="pref_lang">Language</string>
+    <string name="pref_theme">Dark theme</string>
+    <string name="pref_units">Units</string>
+    <string name="pref_lang_en">English</string>
+    <string name="pref_lang_ru">Russian</string>
+    <string name="pref_lang_en_val" translatable="false">en</string>
+    <string name="pref_lang_ru_val" translatable="false">ru</string>
+    <string name="pref_unit_metric">Metric</string>
+    <string name="pref_unit_imperial">Imperial</string>
+    <string name="pref_unit_metric_val" translatable="false">metric</string>
+    <string name="pref_unit_imperial_val" translatable="false">imperial</string>
 
     <!-- UNITS -->
-    <string name="units_m">metric</string>
-    <string name="units_i">imperial</string>
-    <string name="units_temp_m">%d °C</string>
-    <string name="units_temp_i">%d °F</string>
-    <string name="units_temp_unit_m">°C</string>
-    <string name="units_temp_unit_i">°F</string>
+    <string name="units_temp_m" translatable="false">%d °C</string>
+    <string name="units_temp_i" translatable="false">%d °F</string>
+    <string name="units_temp_unit_m" translatable="false">°C</string>
+    <string name="units_temp_unit_i" translatable="false">°F</string>
     <string name="units_speed_m">%d m/s</string>
     <string name="units_speed_i">%d m/h</string>
 
@@ -40,7 +39,6 @@
     <string name="toolbar_subtitle">City</string>
 
     <!-- VIEW PAGER -->
-    <string name="view_pager_text_error_location">Error locating</string>
     <string name="view_pager_db_creating">Creating a cities database\nIt may take a minute\nonly during the first launch</string>
     <string name="view_pager_menu_search">Search</string>
 
@@ -48,21 +46,21 @@
     <string name="cities_text_empty_list">The list of cities is empty\n\nAdd a new city via search</string>
     <string name="cities_text_location_not_determined">Geolocation not determined</string>
     <string name="cities_text_location_permissions_not_granted">No access to geolocation</string>
-    <string name="cities_text_list_item">%s, %s</string>
+    <string name="cities_text_list_item" translatable="false">%s, %s</string>
     <string name="cities_dialog_message">Delete city %s, %s?</string>
     <string name="cities_dialog_positive">Delete</string>
     <string name="cities_dialog_negative">Cancel</string>
 
     <!-- WEATHER -->
     <string name="weather_text_header">%s in %s</string>
-    <string name="weather_text_desc">%s: %s</string>
-    <string name="weather_text_cloud">%d %%</string>
-    <string name="weather_text_humidity">%d %%</string>
+    <string name="weather_text_desc" translatable="false">%s: %s</string>
+    <string name="weather_text_cloud" translatable="false">%d %%</string>
+    <string name="weather_text_humidity" translatable="false">%d %%</string>
     <string name="weather_text_pressure">%d kPa</string>
 
     <!-- FORECAST -->
     <string name="forecast_text_feels_like">feels like\n%d °C</string>
-    <string name="forecast_text_desc">%s: %s</string>
-    <string name="forecast_text_pressure">%d hPa</string>
-    <string name="forecast_text_humidity">%d %%</string>
+    <string name="forecast_text_desc" translatable="false">%s: %s</string>
+    <string name="forecast_text_pressure">%d kPa</string>
+    <string name="forecast_text_humidity" translatable="false">%d %%</string>
 </resources>

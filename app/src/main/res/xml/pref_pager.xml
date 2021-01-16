@@ -5,27 +5,27 @@
 
     <PreferenceCategory
         android:key="pref_category_main"
-        android:title="@string/pref_pager_category_main">
+        android:title="@string/pref_category_main">
 
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/pref_query_lang"
             android:entryValues="@array/pref_query_lang_values"
-            android:key="@string/pref_pager_key_lang"
-            android:summary="@string/pref_pager_lang_en"
-            android:title="@string/pref_pager_lang" />
+            android:key="@string/key_pref_lang"
+            android:summary="@string/pref_lang_en"
+            android:title="@string/pref_lang" />
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/pref_pager_key_theme"
-            android:title="@string/pref_pager_theme" />
+            android:key="@string/key_pref_theme"
+            android:title="@string/pref_theme" />
 
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/pref_units"
             android:entryValues="@array/pref_units_values"
-            android:key="@string/pref_pager_key_units"
-            android:summary="@string/pref_pager_unit_metric"
-            android:title="@string/pref_pager_units" />
+            android:key="@string/key_pref_units"
+            android:summary="@string/pref_unit_metric"
+            android:title="@string/pref_units" />
     </PreferenceCategory>
 </PreferenceScreen>

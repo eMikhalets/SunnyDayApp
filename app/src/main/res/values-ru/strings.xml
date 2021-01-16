@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_text_empty_data">Загрузите погоду через поиск или включите GPS, чтобы определить местоположение</string>
+
+    <!-- SETTINGS -->
+    <string name="pref_category_main">Главные настройки</string>
+    <string name="pref_lang">Язык</string>
+    <string name="pref_theme">Темная тема</string>
+    <string name="pref_units">Единицы измерения</string>
+    <string name="pref_lang_en">Английский</string>
+    <string name="pref_lang_ru">Русский</string>
+    <string name="pref_unit_metric">Метрические</string>
+    <string name="pref_unit_imperial">Имперские</string>
+
+    <!-- UNITS -->
+    <string name="units_speed_m">%d м/с</string>
+    <string name="units_speed_i">%d мил/ч</string>
+
+    <!-- TABS -->
+    <string name="tab_title_city_list">Города</string>
+    <string name="tab_title_current">Погода</string>
+    <string name="tab_title_forecast">Прогноз</string>
+
+    <!-- TOOLBAR -->
+    <string name="toolbar_menu_pref_title">Настройки</string>
+    <string name="toolbar_subtitle">Город</string>
+
+    <!-- VIEW PAGER -->
+    <string name="view_pager_db_creating">Создание базы данных городов\nЭто может занять минуту\nтолько при первом запуске</string>
+    <string name="view_pager_menu_search">Поиск</string>
+
+    <!-- CITIES -->
+    <string name="cities_text_empty_list">Список городов пуст\n\nДобавьте новый город через поиск</string>
+    <string name="cities_text_location_not_determined">Геолокация не определена</string>
+    <string name="cities_text_location_permissions_not_granted">Нет доступа к геолокации</string>
+    <string name="cities_dialog_message">Удалить город %s, %s?</string>
+    <string name="cities_dialog_positive">удалить</string>
+    <string name="cities_dialog_negative">Отмена</string>
+
+    <!-- WEATHER -->
+    <string name="weather_text_header">%s в %s</string>
+    <string name="weather_text_pressure">%d кПа</string>
+
+    <!-- FORECAST -->
+    <string name="forecast_text_feels_like">ощущается\n%d °C</string>
+    <string name="forecast_text_pressure">%d кПа</string>
+</resources>

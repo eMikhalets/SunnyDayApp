@@ -60,6 +60,7 @@ class ViewPagerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // temp (recreating fragment back pressed)
         if (savedInstanceState == null) Timber.d("PAGER STATE NULL")
         if (savedInstanceState != null) Timber.d("PAGER STATE NOT NULL")
 
