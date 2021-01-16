@@ -1,6 +1,5 @@
 package com.emikhalets.sunnydayapp.ui.weather
 
-import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
@@ -34,9 +32,6 @@ class WeatherFragment : Fragment() {
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
     private lateinit var hourlyAdapter: HourlyAdapter
-    private lateinit var pref: SharedPreferences
-    private lateinit var prefLang: String
-    private lateinit var prefUnits: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -47,7 +42,6 @@ class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initPreferences()
         initHourlyAdapter()
         initObservers()
     }
@@ -63,18 +57,6 @@ class WeatherFragment : Fragment() {
             adapter = hourlyAdapter
             addOnItemTouchListener(recyclerScrollListener())
         }
-    }
-
-    private fun initPreferences() {
-        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        prefLang = pref.getString(
-            getString(R.string.key_pref_lang),
-            getString(R.string.pref_lang_en_val)
-        ) ?: getString(R.string.pref_lang_en_val)
-        prefUnits = pref.getString(
-            getString(R.string.key_pref_units),
-            getString(R.string.pref_unit_metric_val)
-        ) ?: getString(R.string.pref_unit_metric_val)
     }
 
     private fun initObservers() {
@@ -100,8 +82,8 @@ class WeatherFragment : Fragment() {
         pagerViewModel.sendWeatherRequest(
             location.latitude,
             location.longitude,
-            prefUnits,
-            prefLang
+            pagerViewModel.prefUnits,
+            pagerViewModel.prefLang
         )
     }
 
@@ -118,7 +100,7 @@ class WeatherFragment : Fragment() {
                 pagerViewModel.currentCity
             )
             textTemp.text = data.temp.toInt().toString()
-            setTemperatureUnit(requireContext(), textTempUnit, prefUnits)
+            setTemperatureUnit(requireContext(), textTempUnit, pagerViewModel.prefUnits)
             textDesc.text = getString(
                 R.string.weather_text_desc,
                 weather.main,
@@ -132,8 +114,18 @@ class WeatherFragment : Fragment() {
                 R.string.weather_text_humidity,
                 data.humidity.toInt()
             )
-            setTemperature(requireContext(), textFeelsLike, data.feels_like.toInt(), prefUnits)
-            setWindSpeed(requireContext(), textWind, data.wind_speed.toInt(), prefUnits)
+            setTemperature(
+                requireContext(),
+                textFeelsLike,
+                data.feels_like.toInt(),
+                pagerViewModel.prefUnits
+            )
+            setWindSpeed(
+                requireContext(),
+                textWind,
+                data.wind_speed.toInt(),
+                pagerViewModel.prefUnits
+            )
             // TODO(): create converter
             textWindDir.text = response.current.wind_deg.toInt().toString()
             textPressure.text = getString(
@@ -147,8 +139,9 @@ class WeatherFragment : Fragment() {
             textSunset.text = formatTime(data.sunset, response.timezone)
         }
 
-        hourlyAdapter.units = prefUnits
+        hourlyAdapter.units = pagerViewModel.prefUnits
         hourlyAdapter.timezone = response.timezone
+        //TODO: remove this shit (list doesn't appear)
         hourlyAdapter.submitList(null)
         hourlyAdapter.submitList(response.hourly)
     }

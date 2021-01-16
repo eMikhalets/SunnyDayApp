@@ -8,6 +8,8 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.emikhalets.sunnydayapp.R
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
+import java.util.*
 
 @AndroidEntryPoint
 class PreferencePagerFragment : PreferenceFragmentCompat() {
@@ -25,6 +27,7 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         iniPreferences()
 
         language.summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
+            setLocale(preference.value)
             when (preference.value) {
                 getString(R.string.pref_lang_ru_val) -> getString(R.string.pref_lang_ru)
                 else -> getString(R.string.pref_lang_en)
@@ -43,6 +46,16 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         language = findPreference(getString(R.string.key_pref_lang))!!
         theme = findPreference(getString(R.string.key_pref_theme))!!
         units = findPreference(getString(R.string.key_pref_units))!!
+    }
 
+    //TODO: deprecated method 'Resources.updateConfiguration(Configuration, DisplayMetrics)'
+    private fun setLocale(lang: String) {
+        Timber.d("PREFERENCES SET LOCALE lang='$lang'")
+        val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val resources = requireActivity().resources
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 }

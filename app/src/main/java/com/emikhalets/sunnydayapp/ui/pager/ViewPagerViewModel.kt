@@ -50,6 +50,9 @@ class ViewPagerViewModel @ViewModelInject constructor(
     var currentLat: Double = 0.0
     var currentLon: Double = 0.0
 
+    var prefLang: String = ""
+    var prefUnits: String = ""
+
     fun sendWeatherRequest(lat: Double, lon: Double, units: String, lang: String) {
         viewModelScope.launch(coroutineContext) {
             try {

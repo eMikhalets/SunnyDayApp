@@ -1,6 +1,5 @@
 package com.emikhalets.sunnydayapp.ui.citylist
 
-import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,12 +9,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.preference.PreferenceManager
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.FragmentCityListBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
-import com.emikhalets.sunnydayapp.ui.preference.PreferencePagerFragment
 import com.emikhalets.sunnydayapp.utils.getCityFromLocation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_city_list.*
@@ -32,9 +29,6 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
     private val pagerViewModel: ViewPagerViewModel by activityViewModels()
 
     private lateinit var citiesAdapter: CitiesAdapter
-    private lateinit var pref: SharedPreferences
-    private lateinit var prefLang: String
-    private lateinit var prefUnits: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -46,7 +40,6 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initPreferences()
         initCitiesAdapter()
         initObservers()
 
@@ -75,18 +68,6 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
         pagerViewModel.searchingCities.observe(viewLifecycleOwner, { searchingCitiesObserver(it) })
 
         binding.textLocationCity.setOnClickListener { onTextLocationClick() }
-    }
-
-    private fun initPreferences() {
-        pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        prefLang = pref.getString(
-            getString(R.string.key_pref_lang),
-            getString(R.string.pref_lang_en_val)
-        ) ?: getString(R.string.pref_lang_en_val)
-        prefUnits = pref.getString(
-            getString(R.string.key_pref_units),
-            getString(R.string.pref_unit_metric_val)
-        ) ?: getString(R.string.pref_unit_metric_val)
     }
 
     /**
@@ -123,8 +104,8 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
             pagerViewModel.sendWeatherRequest(
                 location.latitude,
                 location.longitude,
-                prefUnits,
-                prefLang
+                pagerViewModel.prefUnits,
+                pagerViewModel.prefLang
             )
         } ?: showToast(getString(R.string.cities_text_location_not_determined))
     }

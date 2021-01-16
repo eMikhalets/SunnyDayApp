@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Response
@@ -34,6 +35,7 @@ import kotlinx.android.synthetic.main.fragment_pager.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 //TODO: settings fragment and recreating if popBackStack()
 //TODO: units (just metric of imperial for request)
@@ -65,6 +67,7 @@ class ViewPagerFragment : Fragment() {
         if (savedInstanceState != null) Timber.d("PAGER STATE NOT NULL")
 
         savedInstanceState ?: checkCitiesTableState()
+        initPreferences()
         initObservers()
         initSearchView()
         initViewPager()
@@ -74,6 +77,31 @@ class ViewPagerFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun initPreferences() {
+        val pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        pagerViewModel.prefLang = pref.getString(
+            getString(R.string.key_pref_lang),
+            getString(R.string.pref_lang_en_val)
+        ) ?: getString(R.string.pref_lang_en_val)
+        pagerViewModel.prefUnits = pref.getString(
+            getString(R.string.key_pref_units),
+            getString(R.string.pref_unit_metric_val)
+        ) ?: getString(R.string.pref_unit_metric_val)
+
+        setLocale(pagerViewModel.prefLang)
+    }
+
+    //TODO: deprecated method 'Resources.updateConfiguration(Configuration, DisplayMetrics)'
+    private fun setLocale(lang: String) {
+        Timber.d("PREFERENCES SET LOCALE lang='$lang'")
+        val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val resources = requireActivity().resources
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 
     private fun checkCitiesTableState() {
@@ -209,7 +237,7 @@ class ViewPagerFragment : Fragment() {
         true
     }
 
-    // Location
+// Location
 
     private fun initLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
