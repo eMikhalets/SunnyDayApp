@@ -85,7 +85,7 @@ class WeatherFragment : Fragment() {
                 motion_weather.transitionToState(R.id.state_loading)
             }
             FragmentState.Status.LOADED -> {
-                setWeatherData(state.data!!)
+                state.data?.let { setWeatherData(it) }
                 motion_weather.transitionToState(R.id.state_weather)
             }
             FragmentState.Status.ERROR -> {
@@ -167,6 +167,8 @@ class WeatherFragment : Fragment() {
             textSunrise.text = formatTime(response.current.sunrise, response.timezone)
             textSunset.text = formatTime(response.current.sunset, response.timezone)
         }
+        hourlyAdapter.maxTemp = response.hourly.maxOf { it.temp }
+        hourlyAdapter.minTemp = response.hourly.minOf { it.temp }
         hourlyAdapter.timezone = response.timezone
         hourlyAdapter.submitList(response.hourly)
     }

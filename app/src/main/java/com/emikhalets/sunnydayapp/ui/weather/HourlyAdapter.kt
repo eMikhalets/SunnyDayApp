@@ -18,6 +18,8 @@ import java.time.format.DateTimeFormatter
 class HourlyAdapter : ListAdapter<Hourly, HourlyAdapter.ViewHolder>(HourlyDiffCallback()) {
 
     var timezone: String = ""
+    var maxTemp = 0.0
+    var minTemp = 0.0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -26,13 +28,28 @@ class HourlyAdapter : ListAdapter<Hourly, HourlyAdapter.ViewHolder>(HourlyDiffCa
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), timezone)
+        when (position) {
+            0 -> {
+                holder.bind(getItem(position), position, null, getItem(position + 1))
+            }
+            itemCount -> {
+                holder.bind(getItem(position), position, getItem(position - 1), null)
+            }
+            else -> {
+                holder.bind(
+                    getItem(position),
+                    position,
+                    getItem(position - 1),
+                    getItem(position + 1)
+                )
+            }
+        }
     }
 
     inner class ViewHolder(private val binding: ItemHourlyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Hourly, timezone: String) {
+        fun bind(item: Hourly, position: Int, prev: Hourly?, next: Hourly?) {
             Picasso.get().load(buildIconUrl(item.weather.first().icon)).into(binding.imageIcon)
 
             with(binding) {
@@ -44,6 +61,15 @@ class HourlyAdapter : ListAdapter<Hourly, HourlyAdapter.ViewHolder>(HourlyDiffCa
                     R.string.weather_text_feels_like,
                     item.feels_like.toInt()
                 )
+
+                chart.prevTemp = prev?.temp ?: 0.0
+                chart.currentTemp = item.temp
+                chart.nextTemp = next?.temp ?: 0.0
+                chart.tempText = root.context.getString(
+                    R.string.weather_text_temp, item.temp.toInt()
+                )
+                chart.maxTemp = maxTemp
+                chart.minTemp = minTemp
             }
         }
 
