@@ -8,24 +8,34 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/text_header"
-        style="@style/WeatherTextHeader"
+        android:id="@+id/text_city"
+        style="@style/AppTextBig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Fri, 25 Aug in Moscow" />
+        tools:text="Moscow, RU" />
+
+    <TextView
+        android:id="@+id/text_date"
+        style="@style/AppTextSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_city"
+        tools:text="Fri, 25 Aug" />
 
     <ImageView
         android:id="@+id/image_icon"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/bg_weather_icon"
         app:layout_constraintBottom_toBottomOf="@+id/text_temp"
         app:layout_constraintEnd_toStartOf="@+id/text_temp"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/text_temp"
@@ -34,37 +44,32 @@
 
     <TextView
         android:id="@+id/text_temp"
-        style="@style/WeatherTextTemp"
+        style="@style/WeatherTextTemperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/image_icon"
-        app:layout_constraintTop_toBottomOf="@+id/text_header"
+        app:layout_constraintTop_toBottomOf="@+id/text_date"
         tools:text="30" />
 
     <TextView
         android:id="@+id/text_temp_unit"
-        style="@style/WeatherTextUnit"
+        style="@style/WeatherTextTempUnit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         app:layout_constraintStart_toEndOf="@+id/text_temp"
         app:layout_constraintTop_toTopOf="@+id/text_temp"
         tools:text="°С" />
 
     <TextView
         android:id="@+id/text_desc"
-        style="@style/WeatherTextHeader"
+        style="@style/WeatherTextDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_temp"
-        tools:text="Snow: Light shower sleet" />
+        tools:text="light shower sleet" />
 
     <ImageView
         android:id="@+id/image_cloud"
@@ -73,7 +78,6 @@
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_cloud"
         app:layout_constraintEnd_toStartOf="@+id/image_humidity"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_desc"
         tools:ignore="ContentDescription" />
@@ -84,7 +88,6 @@
         android:layout_height="40dp"
         android:src="@drawable/ic_humidity"
         app:layout_constraintEnd_toStartOf="@+id/image_feels_like"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/image_cloud"
         app:layout_constraintTop_toTopOf="@+id/image_cloud"
         tools:ignore="ContentDescription" />
@@ -95,7 +98,6 @@
         android:layout_height="40dp"
         android:src="@drawable/ic_temp"
         app:layout_constraintEnd_toStartOf="@+id/image_wind"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/image_humidity"
         app:layout_constraintTop_toTopOf="@+id/image_humidity"
         tools:ignore="ContentDescription" />
@@ -106,7 +108,6 @@
         android:layout_height="40dp"
         android:src="@drawable/ic_wind"
         app:layout_constraintEnd_toStartOf="@+id/image_wind_dir"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/image_feels_like"
         app:layout_constraintTop_toTopOf="@+id/image_feels_like"
         tools:ignore="ContentDescription" />
@@ -117,7 +118,6 @@
         android:layout_height="40dp"
         android:src="@drawable/ic_wind_dir"
         app:layout_constraintEnd_toStartOf="@+id/image_pressure_icon"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/image_wind"
         app:layout_constraintTop_toTopOf="@+id/image_wind"
         tools:ignore="ContentDescription" />
@@ -128,7 +128,6 @@
         android:layout_height="40dp"
         android:src="@drawable/ic_pressure"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/image_wind_dir"
         app:layout_constraintTop_toTopOf="@+id/image_wind_dir"
         tools:ignore="ContentDescription" />

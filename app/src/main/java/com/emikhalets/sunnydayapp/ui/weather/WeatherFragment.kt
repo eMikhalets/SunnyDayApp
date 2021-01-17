@@ -96,18 +96,11 @@ class WeatherFragment : Fragment() {
         with(binding.layoutWeatherCurrent) {
             Picasso.get().load(buildIconUrl(data.weather.first().icon))
                 .into(imageIcon)
-            textHeader.text = getString(
-                R.string.weather_text_header,
-                formatDate(data.dt, response.timezone),
-                pagerViewModel.currentCity
-            )
+            textCity.text = pagerViewModel.currentCity
+            textDate.text = formatDate(data.dt, response.timezone)
             textTemp.text = data.temp.toInt().toString()
             setTemperatureUnit(requireContext(), textTempUnit, pagerViewModel.prefUnits)
-            textDesc.text = getString(
-                R.string.weather_text_desc,
-                weather.main,
-                weather.description
-            )
+            textDesc.text = weather.description
             textCloud.text = getString(
                 R.string.weather_text_cloud,
                 data.clouds.toInt()

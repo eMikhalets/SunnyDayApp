@@ -5,16 +5,16 @@
     android:id="@+id/motion_weather"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackgroundApp"
     app:layoutDescription="@xml/fragment_weather_scene">
 
     <TextView
         android:id="@+id/text_empty_data"
+        style="@style/AppTextMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/app_text_empty_data"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,16 +40,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/view_divider_1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_margin="8dp"
-        android:background="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_weather_current" />
-
     <include
         android:id="@+id/layout_sun_time"
         layout="@layout/layout_sun_time"
@@ -58,17 +48,7 @@
         android:layout_margin="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_divider_1" />
-
-    <View
-        android:id="@+id/view_divider_2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_margin="8dp"
-        android:background="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_sun_time" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_weather_current" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_hourly"
@@ -79,6 +59,6 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_divider_2"
+        app:layout_constraintTop_toBottomOf="@+id/layout_sun_time"
         tools:listitem="@layout/item_hourly" />
 </androidx.constraintlayout.motion.widget.MotionLayout>

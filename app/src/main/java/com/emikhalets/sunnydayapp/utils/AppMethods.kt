@@ -25,6 +25,13 @@ fun setTemperature(context: Context, view: TextView, value: Int, units: String) 
     }
 }
 
+fun setFeelsLike(context: Context, view: TextView, value: Int, units: String) {
+    when (units) {
+        "imperial" -> view.text = context.getString(R.string.units_feels_like_i, value)
+        else -> view.text = context.getString(R.string.units_feels_like_m, value)
+    }
+}
+
 fun setTemperatureUnit(context: Context, view: TextView, units: String) {
     when (units) {
         "imperial" -> view.text = context.getString(R.string.units_temp_unit_i)

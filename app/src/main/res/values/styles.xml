@@ -6,10 +6,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <!-- APPLICATION -->
+
     <style name="AppToolBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:background">@color/colorBackgroundBlock</item>
         <item name="android:minHeight">?attr/actionBarSize</item>
         <item name="android:theme">?attr/actionBarTheme</item>
     </style>
@@ -18,67 +21,64 @@
         <item name="tabBackground">@color/colorPrimary</item>
         <item name="tabIndicatorGravity">center</item>
         <item name="tabIndicatorHeight">?attr/actionBarSize</item>
-        <item name="tabIndicatorColor">@android:color/holo_blue_bright</item>
+        <item name="tabIndicatorColor">@color/colorBackgroundBlock</item>
         <item name="tabTextColor">@android:color/black</item>
     </style>
 
-    <!-- CITIES LIST -->
-
-    <style name="CitiesListText">
-        <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">20sp</item>
+    <style name="AppText">
+        <item name="android:textColor">@color/colorText</item>
     </style>
 
-    <!-- WEATHER -->
-
-    <style name="WeatherText">
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="WeatherTextHeader" parent="WeatherText">
-        <item name="android:textSize">24sp</item>
-    </style>
-
-    <style name="WeatherTextTemp" parent="WeatherText">
+    <style name="AppTextVeryBig" parent="AppText">
         <item name="android:textSize">100sp</item>
     </style>
 
-    <style name="WeatherTextUnit" parent="WeatherText">
-        <item name="android:textSize">32sp</item>
+    <style name="AppTextBig" parent="AppText">
+        <item name="android:textSize">24sp</item>
     </style>
 
-    <style name="WeatherTextNight" parent="WeatherText">
+    <style name="AppTextMedium" parent="AppText">
         <item name="android:textSize">20sp</item>
-        <item name="android:gravity">center</item>
     </style>
 
-    <style name="WeatherTextDetails" parent="WeatherText">
+    <style name="AppTextSmall" parent="AppText">
         <item name="android:textSize">16sp</item>
+    </style>
+
+
+    <!-- CITIES LIST -->
+
+    <style name="CitiesListText" parent="AppTextMedium">
+        <item name="android:background">@drawable/bg_view_item</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+
+    <!-- WEATHER -->
+
+    <style name="WeatherTextTemperature" parent="AppTextVeryBig">
+        <item name="android:layout_marginStart">8sp</item>
+        <item name="android:layout_marginTop">8sp</item>
+    </style>
+
+    <style name="WeatherTextTempUnit" parent="AppTextBig">
+        <item name="android:layout_marginTop">16sp</item>
+    </style>
+
+    <style name="WeatherTextDesc" parent="AppTextBig">
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <style name="WeatherTextDetails" parent="AppTextSmall">
         <item name="android:layout_marginTop">8dp</item>
     </style>
 
-    <style name="WeatherTextSun">
-        <item name="android:textSize">20sp</item>
-    </style>
-
-    <style name="WeatherHourlyText">
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="WeatherHourlyTextDark" parent="WeatherHourlyText">
-        <item name="android:textColor">@android:color/black</item>
-    </style>
 
     <!-- FORECAST -->
 
-    <style name="ForecastText">
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="ForecastTextTemp" parent="ForecastText">
-        <item name="android:textSize">18sp</item>
-        <item name="android:gravity">center</item>
+    <style name="ForecastText" parent="AppTextSmall">
+        <item name="android:layout_margin">8sp</item>
     </style>
 </resources>

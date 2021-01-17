@@ -12,7 +12,6 @@
         style="@style/ForecastText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Fri, 26 Aug 2016" />
@@ -22,69 +21,79 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_margin="8dp"
-        android:background="@drawable/bg_weather_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_date"
         tools:ignore="ContentDescription"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/text_temp_day"
-        style="@style/ForecastTextTemp"
+        android:id="@+id/text_desc"
+        style="@style/ForecastText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/text_feels_like"
-        app:layout_constraintStart_toEndOf="@+id/image_icon"
-        app:layout_constraintTop_toBottomOf="@+id/text_date"
-        tools:text="day" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_icon"
+        tools:text="scattered clouds: 25-50%" />
+
+    <ImageView
+        android:id="@+id/image_sun"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_sun"
+        app:layout_constraintBottom_toTopOf="@+id/text_temp_day"
+        app:layout_constraintEnd_toEndOf="@+id/text_temp_day"
+        app:layout_constraintStart_toStartOf="@+id/text_temp_day"
+        tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/text_temp_day_value"
-        style="@style/ForecastTextTemp"
+        android:id="@+id/text_temp_day"
+        style="@style/AppTextSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/text_feels_like"
         app:layout_constraintStart_toEndOf="@+id/image_icon"
         tools:text="27 °C" />
 
+    <ImageView
+        android:id="@+id/image_moon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/ic_moon"
+        app:layout_constraintBottom_toTopOf="@+id/text_temp_night"
+        app:layout_constraintEnd_toEndOf="@+id/text_temp_night"
+        app:layout_constraintStart_toStartOf="@+id/text_temp_night"
+        tools:ignore="ContentDescription" />
+
     <TextView
         android:id="@+id/text_temp_night"
-        style="@style/ForecastTextTemp"
+        style="@style/AppTextSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/text_temp_day"
         app:layout_constraintStart_toEndOf="@+id/text_temp_day"
-        app:layout_constraintTop_toTopOf="@+id/text_temp_day"
-        tools:text="night\n12 °C" />
+        tools:text="12 °C" />
 
     <TextView
         android:id="@+id/text_feels_like"
-        style="@style/ForecastTextTemp"
+        style="@style/AppTextSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@+id/image_icon"
         app:layout_constraintEnd_toEndOf="@+id/text_temp_night"
         app:layout_constraintStart_toStartOf="@+id/text_temp_day"
         tools:text="feels like\n27 °C" />
 
-    <TextView
-        android:id="@+id/text_desc"
-        style="@style/ForecastText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_icon"
-        tools:text="Clouds: scattered clouds: 25-50%" />
-
     <ImageView
         android:id="@+id/image_pressure"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         app:layout_constraintBottom_toTopOf="@+id/image_humidity"
         app:layout_constraintStart_toEndOf="@+id/text_temp_night"
         app:layout_constraintTop_toBottomOf="@+id/text_date"
@@ -93,7 +102,7 @@
 
     <TextView
         android:id="@+id/text_pressure"
-        style="@style/ForecastText"
+        style="@style/AppTextSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -114,7 +123,7 @@
 
     <TextView
         android:id="@+id/text_humidity"
-        style="@style/ForecastText"
+        style="@style/AppTextSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -135,7 +144,7 @@
 
     <TextView
         android:id="@+id/text_wind"
-        style="@style/ForecastText"
+        style="@style/AppTextSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
