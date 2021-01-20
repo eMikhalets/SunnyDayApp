@@ -2,6 +2,7 @@ package com.emikhalets.sunnydayapp.ui.preference
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -39,6 +40,13 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
                 getString(R.string.pref_unit_imperial_val) -> getString(R.string.pref_unit_imperial)
                 else -> getString(R.string.pref_unit_metric)
             }
+        }
+
+        theme.setOnPreferenceChangeListener { _, newValue ->
+            val isDark: Boolean = newValue as Boolean
+            if (isDark) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            true
         }
     }
 

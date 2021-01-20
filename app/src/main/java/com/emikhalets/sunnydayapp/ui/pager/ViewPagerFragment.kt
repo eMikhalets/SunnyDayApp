@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -56,6 +57,7 @@ class ViewPagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPagerBinding.inflate(inflater, container, false)
+        initPreferences()
         return binding.root
     }
 
@@ -67,7 +69,6 @@ class ViewPagerFragment : Fragment() {
         if (savedInstanceState != null) Timber.d("PAGER STATE NOT NULL")
 
         savedInstanceState ?: checkCitiesTableState()
-        initPreferences()
         initObservers()
         initSearchView()
         initViewPager()
@@ -89,7 +90,12 @@ class ViewPagerFragment : Fragment() {
             getString(R.string.key_pref_units),
             getString(R.string.pref_unit_metric_val)
         ) ?: getString(R.string.pref_unit_metric_val)
+//        pagerViewModel.prefTheme = pref.getBoolean(
+//            getString(R.string.key_pref_theme),
+//            false
+//        )
 
+//        setTheme(pagerViewModel.prefTheme)
         setLocale(pagerViewModel.prefLang)
     }
 
@@ -102,6 +108,12 @@ class ViewPagerFragment : Fragment() {
         val config = resources.configuration
         config.setLocale(locale)
         resources.updateConfiguration(config, resources.displayMetrics)
+    }
+
+    private fun setTheme(isDarkTheme: Boolean) {
+        Timber.d("PREFERENCES SET THEME isDark='$isDarkTheme'")
+        if (isDarkTheme) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 
     private fun checkCitiesTableState() {

@@ -39,6 +39,7 @@ class CityListFragment : Fragment(), CitiesAdapter.OnCityClick,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Timber.d("CREATING FRAGMENT CITY LIST FRAGMENT")
 
         initCitiesAdapter()
         initObservers()

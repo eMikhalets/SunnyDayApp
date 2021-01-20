@@ -18,6 +18,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
 
+//TODO: Is android view model need?
 class ViewPagerViewModel @ViewModelInject constructor(
     private val repository: PagerRepository,
     application: Application
@@ -52,6 +53,7 @@ class ViewPagerViewModel @ViewModelInject constructor(
 
     var prefLang: String = ""
     var prefUnits: String = ""
+    var prefTheme: Boolean = false
 
     fun sendWeatherRequest(lat: Double, lon: Double, units: String, lang: String) {
         viewModelScope.launch(coroutineContext) {

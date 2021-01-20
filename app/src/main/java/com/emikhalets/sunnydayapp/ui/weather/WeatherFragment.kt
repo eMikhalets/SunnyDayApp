@@ -19,6 +19,7 @@ import com.emikhalets.sunnydayapp.utils.*
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_weather.*
+import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -43,6 +44,7 @@ class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Timber.d("CREATING FRAGMENT WEATHER FRAGMENT")
         initHourlyAdapter()
         initObservers()
     }
