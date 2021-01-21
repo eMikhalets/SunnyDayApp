@@ -15,11 +15,6 @@
             android:summary="@string/pref_lang_en"
             android:title="@string/pref_lang" />
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_pref_theme"
-            android:title="@string/pref_theme" />
-
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/pref_units"

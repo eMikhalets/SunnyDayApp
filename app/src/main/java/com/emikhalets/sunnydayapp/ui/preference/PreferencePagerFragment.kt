@@ -5,7 +5,6 @@ import android.view.View
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
 import com.emikhalets.sunnydayapp.R
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -15,7 +14,6 @@ import java.util.*
 class PreferencePagerFragment : PreferenceFragmentCompat() {
 
     private lateinit var language: ListPreference
-    private lateinit var theme: SwitchPreference
     private lateinit var units: ListPreference
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -44,7 +42,6 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
 
     private fun iniPreferences() {
         language = findPreference(getString(R.string.key_pref_lang))!!
-        theme = findPreference(getString(R.string.key_pref_theme))!!
         units = findPreference(getString(R.string.key_pref_units))!!
     }
 

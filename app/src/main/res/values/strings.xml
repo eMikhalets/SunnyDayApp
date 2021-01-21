@@ -4,13 +4,11 @@
 
     <!-- KEYS -->
     <string name="key_pref_lang" translatable="false">key_pref_lang</string>
-    <string name="key_pref_theme" translatable="false">key_pref_theme</string>
     <string name="key_pref_units" translatable="false">key_pref_units</string>
 
     <!-- SETTINGS -->
     <string name="pref_category_main">General settings</string>
     <string name="pref_lang">Language</string>
-    <string name="pref_theme">Dark theme</string>
     <string name="pref_units">Units</string>
     <string name="pref_lang_en">English</string>
     <string name="pref_lang_ru">Russian</string>
