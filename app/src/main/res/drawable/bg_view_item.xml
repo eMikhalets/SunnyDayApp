@@ -3,11 +3,5 @@
     android:shape="rectangle">
 
     <corners android:radius="10dp" />
-    <gradient
-        android:angle="315"
-        android:endColor="#ddd"
-        android:startColor="#fff" />
-    <stroke
-        android:width="1dp"
-        android:color="@android:color/black" />
+    <solid android:color="@color/colorBackgroundBlock" />
 </shape>

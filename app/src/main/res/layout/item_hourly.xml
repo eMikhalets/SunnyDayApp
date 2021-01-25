@@ -5,14 +5,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
+    android:padding="8dp"
     android:background="@drawable/bg_view_item">
 
     <TextView
         android:id="@+id/text_time"
-        style="@style/WeatherHourlyTextDark"
+        style="@style/AppTextSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,8 +22,7 @@
         android:id="@+id/image_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="8dp"
-        android:background="@drawable/bg_weather_icon"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_time"
@@ -32,24 +31,14 @@
 
     <TextView
         android:id="@+id/text_temp"
-        style="@style/WeatherHourlyTextDark"
+        style="@style/AppTextSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_icon"
         tools:text="27 °C" />
-
-    <TextView
-        android:id="@+id/text_feels_like"
-        style="@style/WeatherHourlyText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_temp"
-        tools:text="20 °C" />
 </androidx.constraintlayout.widget.ConstraintLayout>

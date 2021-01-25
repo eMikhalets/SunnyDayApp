@@ -56,6 +56,7 @@ class ViewPagerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPagerBinding.inflate(inflater, container, false)
+        initPreferences()
         return binding.root
     }
 
@@ -67,7 +68,6 @@ class ViewPagerFragment : Fragment() {
         if (savedInstanceState != null) Timber.d("PAGER STATE NOT NULL")
 
         savedInstanceState ?: checkCitiesTableState()
-        initPreferences()
         initObservers()
         initSearchView()
         initViewPager()

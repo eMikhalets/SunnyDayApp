@@ -14,6 +14,7 @@ import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
 import com.emikhalets.sunnydayapp.utils.FragmentState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_forecast.*
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ForecastFragment : Fragment() {
@@ -34,6 +35,7 @@ class ForecastFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Timber.d("CREATING FRAGMENT FORECAST FRAGMENT")
         initDailyAdapter()
         initObservers()
     }

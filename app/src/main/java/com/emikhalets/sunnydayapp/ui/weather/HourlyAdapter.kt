@@ -41,7 +41,6 @@ class HourlyAdapter(private val context: Context) :
             with(binding) {
                 textTime.text = formatTime(item.dt, timezone)
                 setTemperature(context, textTemp, item.temp.toInt(), units)
-                setTemperature(context, textFeelsLike, item.feels_like.toInt(), units)
             }
         }
 

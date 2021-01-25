@@ -26,6 +26,8 @@
     <string name="units_temp_unit_i" translatable="false">°F</string>
     <string name="units_speed_m">%d m/s</string>
     <string name="units_speed_i">%d m/h</string>
+    <string name="units_feels_like_m">feels like\n%d °C</string>
+    <string name="units_feels_like_i">feels like\n%d °F</string>
 
     <!-- TABS -->
     <string name="tab_title_city_list">Cities</string>
@@ -50,15 +52,11 @@
     <string name="cities_dialog_negative">Cancel</string>
 
     <!-- WEATHER -->
-    <string name="weather_text_header">%s in %s</string>
-    <string name="weather_text_desc" translatable="false">%s: %s</string>
     <string name="weather_text_cloud" translatable="false">%d %%</string>
     <string name="weather_text_humidity" translatable="false">%d %%</string>
     <string name="weather_text_pressure">%d kPa</string>
 
     <!-- FORECAST -->
-    <string name="forecast_text_feels_like">feels like\n%d °C</string>
-    <string name="forecast_text_desc" translatable="false">%s: %s</string>
     <string name="forecast_text_pressure">%d kPa</string>
     <string name="forecast_text_humidity" translatable="false">%d %%</string>
 </resources>

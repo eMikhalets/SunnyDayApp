@@ -5,6 +5,7 @@
     android:id="@+id/motion_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackgroundApp"
     app:layoutDescription="@xml/fragment_pager_scene">
 
     <androidx.appcompat.widget.Toolbar
@@ -15,9 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/menu_view_pager"
         app:subtitle="@string/toolbar_subtitle"
-        app:subtitleTextColor="@android:color/black"
         app:title="@string/app_name"
-        app:titleTextColor="@android:color/black"
         tools:menu="@menu/menu_view_pager" />
 
     <ProgressBar

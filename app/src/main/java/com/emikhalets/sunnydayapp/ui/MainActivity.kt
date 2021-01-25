@@ -2,9 +2,7 @@ package com.emikhalets.sunnydayapp.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.Navigation
 import com.emikhalets.sunnydayapp.BuildConfig
-import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber

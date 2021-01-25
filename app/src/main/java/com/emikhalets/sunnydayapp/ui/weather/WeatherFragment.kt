@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
-import com.emikhalets.sunnydayapp.data.model.Hourly
 import com.emikhalets.sunnydayapp.data.model.Response
 import com.emikhalets.sunnydayapp.databinding.FragmentWeatherBinding
 import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
@@ -19,6 +18,7 @@ import com.emikhalets.sunnydayapp.utils.*
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_weather.*
+import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -43,6 +43,7 @@ class WeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Timber.d("CREATING FRAGMENT WEATHER FRAGMENT")
         initHourlyAdapter()
         initObservers()
     }
@@ -96,18 +97,11 @@ class WeatherFragment : Fragment() {
         with(binding.layoutWeatherCurrent) {
             Picasso.get().load(buildIconUrl(data.weather.first().icon))
                 .into(imageIcon)
-            textHeader.text = getString(
-                R.string.weather_text_header,
-                formatDate(data.dt, response.timezone),
-                pagerViewModel.currentCity
-            )
+            textCity.text = pagerViewModel.currentCity
+            textDate.text = formatDate(data.dt, response.timezone)
             textTemp.text = data.temp.toInt().toString()
             setTemperatureUnit(requireContext(), textTempUnit, pagerViewModel.prefUnits)
-            textDesc.text = getString(
-                R.string.weather_text_desc,
-                weather.main,
-                weather.description
-            )
+            textDesc.text = weather.description
             textCloud.text = getString(
                 R.string.weather_text_cloud,
                 data.clouds.toInt()

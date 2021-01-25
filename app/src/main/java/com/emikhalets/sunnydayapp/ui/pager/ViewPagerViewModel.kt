@@ -18,6 +18,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
 
+//TODO: Is android view model need?
 class ViewPagerViewModel @ViewModelInject constructor(
     private val repository: PagerRepository,
     application: Application
@@ -45,11 +46,11 @@ class ViewPagerViewModel @ViewModelInject constructor(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
-    var isWeatherLoaded = false
-    var currentCity: String = ""
-    var currentLat: Double = 0.0
-    var currentLon: Double = 0.0
+    private var isWeatherLoaded = false
+    private var currentLat: Double = 0.0
+    private var currentLon: Double = 0.0
 
+    var currentCity: String = ""
     var prefLang: String = ""
     var prefUnits: String = ""
 

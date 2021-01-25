@@ -9,9 +9,10 @@
 
     <TextView
         android:id="@+id/text_notice"
-        style="@style/CitiesListText"
+        style="@style/AppTextMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/cities_text_empty_list"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

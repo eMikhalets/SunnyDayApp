@@ -10,6 +10,7 @@ import com.emikhalets.sunnydayapp.data.model.Daily
 import com.emikhalets.sunnydayapp.data.model.FellsLike
 import com.emikhalets.sunnydayapp.databinding.ItemDailyBinding
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
+import com.emikhalets.sunnydayapp.utils.setFeelsLike
 import com.emikhalets.sunnydayapp.utils.setTemperature
 import com.emikhalets.sunnydayapp.utils.setWindSpeed
 import com.squareup.picasso.Picasso
@@ -42,12 +43,8 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallba
                 textDate.text = formatDate(item.dt, timezone)
                 setTemperature(root.context, textTempDay, item.temp.day.toInt(), units)
                 setTemperature(root.context, textTempNight, item.temp.night.toInt(), units)
-                setTemperature(root.context, textFeelsLike, averageFeelsLike(item.feels_like), units)
-                textDesc.text = root.context.getString(
-                    R.string.forecast_text_desc,
-                    item.weather.first().main,
-                    item.weather.first().description
-                )
+                setFeelsLike(root.context, textFeelsLike, averageFeelsLike(item.feels_like), units)
+                textDesc.text = item.weather.first().description
                 textPressure.text = root.context.getString(
                     R.string.forecast_text_pressure,
                     item.pressure.toInt()
