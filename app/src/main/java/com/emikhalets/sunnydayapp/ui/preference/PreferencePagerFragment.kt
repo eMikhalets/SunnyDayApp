@@ -2,11 +2,9 @@ package com.emikhalets.sunnydayapp.ui.preference
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
 import com.emikhalets.sunnydayapp.R
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -16,7 +14,6 @@ import java.util.*
 class PreferencePagerFragment : PreferenceFragmentCompat() {
 
     private lateinit var language: ListPreference
-    private lateinit var theme: SwitchPreference
     private lateinit var units: ListPreference
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -41,18 +38,10 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
                 else -> getString(R.string.pref_unit_metric)
             }
         }
-
-        theme.setOnPreferenceChangeListener { _, newValue ->
-            val isDark: Boolean = newValue as Boolean
-            if (isDark) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            true
-        }
     }
 
     private fun iniPreferences() {
         language = findPreference(getString(R.string.key_pref_lang))!!
-        theme = findPreference(getString(R.string.key_pref_theme))!!
         units = findPreference(getString(R.string.key_pref_units))!!
     }
 

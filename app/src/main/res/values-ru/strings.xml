@@ -5,7 +5,6 @@
     <!-- SETTINGS -->
     <string name="pref_category_main">Главные настройки</string>
     <string name="pref_lang">Язык</string>
-    <string name="pref_theme">Темная тема</string>
     <string name="pref_units">Единицы измерения</string>
     <string name="pref_lang_en">Английский</string>
     <string name="pref_lang_ru">Русский</string>
