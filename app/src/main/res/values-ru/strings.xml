@@ -13,7 +13,7 @@
 
     <!-- UNITS -->
     <string name="units_speed_m">%d м/с</string>
-    <string name="units_speed_i">%d мил/ч</string>
+    <string name="units_speed_i">%d мл/ч</string>
     <string name="units_feels_like_m">ощущается\n%d °C</string>
     <string name="units_feels_like_i">ощущается\n%d °F</string>
 

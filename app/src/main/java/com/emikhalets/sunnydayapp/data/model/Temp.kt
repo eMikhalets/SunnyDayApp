@@ -1,12 +1,20 @@
 package com.emikhalets.sunnydayapp.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Temp(
+    @SerializedName("day")
     val day: Double,
+    @SerializedName("min")
     val min: Double,
+    @SerializedName("max")
     val max: Double,
+    @SerializedName("night")
     val night: Double,
     // evening
+    @SerializedName("eve")
     val eve: Double,
     // morning
+    @SerializedName("morn")
     val morn: Double
 )
