@@ -34,18 +34,20 @@
 
     <com.emikhalets.sunnydayapp.utils.SunTimeView
         android:id="@+id/view_sun_time"
+        style="@style/AppTextMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:src="@drawable/ic_sun"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_location_city" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_cities"
-        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="4dp"
+        android:visibility="invisible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
