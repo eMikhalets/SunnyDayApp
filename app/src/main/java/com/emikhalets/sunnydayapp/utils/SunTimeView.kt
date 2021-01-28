@@ -14,8 +14,6 @@ import com.emikhalets.sunnydayapp.R
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-// TODO: set view height mutable, depending on text size, image size and width
-// TODO: if now time < sunrise || > sundown set sun in start or end of arc
 class SunTimeView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -59,9 +57,9 @@ class SunTimeView @JvmOverloads constructor(
     private var textNowY = 0f
 
     // Utils
-    private var nowNum = 0
-    private var startNum = 0
-    private var endNum = 0
+    private var nowNum = 0.0
+    private var startNum = 0.0
+    private var endNum = 0.0
     private var angleStep = 0.0
     private var legA = 0.0
     private var legB = 0.0
@@ -102,7 +100,7 @@ class SunTimeView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val w = MeasureSpec.getSize(widthMeasureSpec)
-        val h = (150 * density).toInt()
+        val h = (w / 2 - textSize).toInt()
         setMeasuredDimension(w, h)
     }
 
@@ -116,16 +114,16 @@ class SunTimeView @JvmOverloads constructor(
 
     private fun computeCoordinates() {
         offset = 20 * density
-        radius = height - offset * 3
-        imageSize = (32 * density).toInt()
         textOffset = 10 * density
+        imageSize = (32 * density).toInt()
+        radius = width / 2 - offset - textSize * 3 - imageSize / 2
 
         groundY = height - offset
         groundLeftX = offset
         groundRightX = width - offset
 
-        arcTop = offset * 2
-        arcBottom = (height - offset * 2) * 2
+        arcTop = height - offset - radius
+        arcBottom = height + radius - offset
         arcLeft = width / 2 - radius
         arcRight = width / 2 + radius
 
@@ -134,16 +132,28 @@ class SunTimeView @JvmOverloads constructor(
         textTimeY = groundY - textOffset
 
         if (isDataEnabled) {
-            nowNum = now.split(":")[0].toInt()
-            startNum = sunrise.split(":")[0].toInt()
-            endNum = sundown.split(":")[0].toInt()
+            nowNum = convertTimeToDouble(now)
+            startNum = convertTimeToDouble(sunrise)
+            endNum = convertTimeToDouble(sundown)
 
-            angleStep = Math.toRadians(180.00 / (endNum - startNum))
-            legA = radius * sin(angleStep * (nowNum - startNum))
-            legB = sqrt(radius * radius - legA * legA)
+            when {
+                nowNum < startNum -> {
+                    sunX = (width / 2 - radius).toInt()
+                    sunY = groundY.toInt()
+                }
+                nowNum > endNum -> {
+                    sunX = (width / 2 + radius).toInt()
+                    sunY = groundY.toInt()
+                }
+                else -> {
+                    angleStep = Math.toRadians(180.00 / (endNum - startNum))
+                    legA = radius * sin(angleStep * (nowNum - startNum))
+                    legB = sqrt(radius * radius - legA * legA)
 
-            sunX = (width / 2 - legB).toInt()
-            sunY = (groundY - legA).toInt()
+                    sunX = (width / 2 - legB).toInt()
+                    sunY = (groundY - legA).toInt()
+                }
+            }
         } else {
             sunX = width / 2
             sunY = arcTop.toInt()
@@ -185,14 +195,23 @@ class SunTimeView @JvmOverloads constructor(
             }
         } else {
             canvas.drawCircle((sunX).toFloat(), sunY.toFloat(), 10 * density, sunPaint)
+            canvas.drawCircle((sunX).toFloat(), sunY.toFloat(), 10 * density, linePaint)
         }
     }
 
-    fun setTime(now: String, sunrise: String, sundown: String) {
-        this.now = now
-        this.sunrise = sunrise
-        this.sundown = sundown
-        isDataEnabled = true
+    private fun convertTimeToDouble(time: String): Double {
+        val timeArr = time.split(":")
+        val minutes = timeArr[1].toDouble() / 60
+        return timeArr[0].toDouble() + minutes
+    }
+
+    fun setTime(nowTime: String, sunriseTime: String, sundownTime: String) {
+        now = nowTime
+        sunrise = sunriseTime
+        sundown = sundownTime
+        if (now.isNotEmpty() && sunriseTime.isNotEmpty() && sundownTime.isNotEmpty()) {
+            isDataEnabled = true
+        }
         invalidate()
     }
 }

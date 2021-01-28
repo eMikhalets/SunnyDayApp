@@ -5,6 +5,7 @@
     <color name="colorAccent">#03DAC5</color>
 
     <color name="colorText">#000000</color>
+    <color name="colorBackgroundBars">#4fc3f7</color>
+    <color name="colorBackgroundBlock">#81d4fa</color>
     <color name="colorBackgroundApp">#e1f5fe</color>
-    <color name="colorBackgroundBlock">#B7D4FF</color>
 </resources>

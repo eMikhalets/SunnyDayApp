@@ -12,7 +12,7 @@
     <style name="AppToolBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/colorBackgroundBlock</item>
+        <item name="android:background">@color/colorBackgroundBars</item>
         <item name="android:minHeight">?attr/actionBarSize</item>
         <item name="android:theme">?attr/actionBarTheme</item>
         <item name="titleTextColor">@color/colorText</item>
@@ -23,7 +23,7 @@
         <item name="tabBackground">@color/colorBackgroundApp</item>
         <item name="tabIndicatorGravity">center</item>
         <item name="tabIndicatorHeight">?attr/actionBarSize</item>
-        <item name="tabIndicatorColor">@color/colorBackgroundBlock</item>
+        <item name="tabIndicatorColor">@color/colorBackgroundBars</item>
         <item name="tabTextColor">@color/colorText</item>
     </style>
 

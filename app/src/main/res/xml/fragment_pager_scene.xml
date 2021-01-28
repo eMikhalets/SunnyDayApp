@@ -2,17 +2,15 @@
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:motion="http://schemas.android.com/apk/res-auto"
-    app:defaultDuration="500">
+    app:defaultDuration="300">
 
     <Transition
         motion:constraintSetEnd="@+id/state_creating_db"
-        motion:constraintSetStart="@id/state_no_db"
-        motion:duration="500" />
+        motion:constraintSetStart="@id/state_no_db" />
 
     <Transition
         motion:constraintSetEnd="@+id/state_ready"
-        motion:constraintSetStart="@id/state_creating_db"
-        motion:duration="500" />
+        motion:constraintSetStart="@id/state_creating_db" />
 
     <ConstraintSet android:id="@+id/state_no_db">
 

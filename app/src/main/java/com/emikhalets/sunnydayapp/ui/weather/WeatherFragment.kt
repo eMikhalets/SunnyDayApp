@@ -130,10 +130,11 @@ class WeatherFragment : Fragment() {
             )
         }
 
-        with(binding.layoutSunTime) {
-            textSunrise.text = formatTime(data.sunrise, response.timezone)
-            textSunset.text = formatTime(data.sunset, response.timezone)
-        }
+        binding.viewSunTime.setTime(
+            formatTime(data.dt, response.timezone),
+            formatTime(data.sunrise, response.timezone),
+            formatTime(data.sunset, response.timezone)
+        )
 
         hourlyAdapter.units = pagerViewModel.prefUnits
         hourlyAdapter.timezone = response.timezone

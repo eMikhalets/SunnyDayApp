@@ -2,12 +2,11 @@
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:motion="http://schemas.android.com/apk/res-auto"
-    app:defaultDuration="500">
+    app:defaultDuration="300">
 
     <Transition
         motion:constraintSetEnd="@+id/state_cities"
-        motion:constraintSetStart="@id/state_no_cities"
-        motion:duration="300" />
+        motion:constraintSetStart="@id/state_no_cities" />
 
     <ConstraintSet android:id="@+id/state_no_cities">
 
