@@ -13,4 +13,7 @@ data class FellsLike(
     // morning
     @SerializedName("morn")
     val morn: Double
-)
+) {
+    val averageFeelsLike: Int
+        get() = (morn + day + eve + night).toInt() / 4
+}

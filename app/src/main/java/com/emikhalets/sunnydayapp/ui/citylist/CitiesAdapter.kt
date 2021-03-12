@@ -9,10 +9,10 @@ import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.database.City
 import com.emikhalets.sunnydayapp.databinding.ItemCityBinding
 
-class CitiesAdapter(private val click: OnCityClick) :
-    ListAdapter<City, CitiesAdapter.ViewHolder>(CitiesDiffCallback()) {
-
-    var isSearchingState = false
+class CitiesAdapter(
+    private val click: (City) -> Unit,
+    private val longClick: (City) -> Unit
+) : ListAdapter<City, CitiesAdapter.ViewHolder>(CitiesDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -21,31 +21,27 @@ class CitiesAdapter(private val click: OnCityClick) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), click)
+        try {
+            holder.bind(getItem(position))
+            holder.itemView.setOnClickListener { click.invoke(getItem(position)) }
+            holder.itemView.setOnLongClickListener {
+                longClick.invoke(getItem(position))
+                true
+            }
+        } catch (ex: IndexOutOfBoundsException) {
+            ex.printStackTrace()
+        }
     }
 
     class ViewHolder(private val binding: ItemCityBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(item: City, click: OnCityClick) {
-            with(binding) {
-                textName.text = root.context.getString(
-                    R.string.cities_text_list_item,
-                    item.name,
-                    item.country
-                )
-                root.setOnClickListener { click.onCityClick(item) }
-                root.setOnLongClickListener {
-                    click.onCityLongClick(item)
-                    true
-                }
-            }
+        fun bind(item: City) {
+            binding.textName.text = binding.root.context.getString(
+                R.string.cities_text_list_item,
+                item.name,
+                item.country
+            )
         }
-    }
-
-    interface OnCityClick {
-        fun onCityClick(city: City)
-        fun onCityLongClick(city: City)
     }
 
     private class CitiesDiffCallback : DiffUtil.ItemCallback<City>() {

@@ -7,22 +7,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Daily
-import com.emikhalets.sunnydayapp.data.model.FellsLike
 import com.emikhalets.sunnydayapp.databinding.ItemDailyBinding
-import com.emikhalets.sunnydayapp.utils.buildIconUrl
-import com.emikhalets.sunnydayapp.utils.setFeelsLike
-import com.emikhalets.sunnydayapp.utils.setTemperature
-import com.emikhalets.sunnydayapp.utils.setWindSpeed
+import com.emikhalets.sunnydayapp.utils.*
 import com.squareup.picasso.Picasso
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallback()) {
 
     var timezone: String = ""
-    var units: String = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -40,10 +31,10 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallba
         fun bind(item: Daily) {
             with(binding) {
                 Picasso.get().load(buildIconUrl(item.weather.first().icon)).into(imageIcon)
-                textDate.text = formatDate(item.dt, timezone)
-                setTemperature(root.context, textTempDay, item.temp.day.toInt(), units)
-                setTemperature(root.context, textTempNight, item.temp.night.toInt(), units)
-                setFeelsLike(root.context, textFeelsLike, averageFeelsLike(item.feels_like), units)
+                textDate.text = formatDateWithWeek(item.dt, timezone)
+                setTemperature(root.context, textTempDay, item.temp.day.toInt())
+                setTemperature(root.context, textTempNight, item.temp.night.toInt())
+                setFeelsLike(root.context, textFeelsLike, item.feels_like.averageFeelsLike)
                 textDesc.text = item.weather.first().description
                 textPressure.text = root.context.getString(
                     R.string.forecast_text_pressure,
@@ -53,20 +44,9 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallba
                     R.string.forecast_text_humidity,
                     item.humidity.toInt()
                 )
-                setWindSpeed(root.context, textWind, item.wind_speed.toInt(), units)
+                setWindSpeed(root.context, textWind, item.wind_speed.toInt())
             }
         }
-
-        private fun formatDate(timestamp: Long, timezone: String): String {
-            val date = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(timestamp * 1000),
-                ZoneId.of(timezone)
-            )
-            return date.format(DateTimeFormatter.ofPattern("E, d MMM y"))
-        }
-
-        private fun averageFeelsLike(fl: FellsLike): Int =
-            (fl.morn + fl.day + fl.eve + fl.night).toInt() / 4
     }
 
     private class DailyDiffCallback : DiffUtil.ItemCallback<Daily>() {

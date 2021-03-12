@@ -2,12 +2,13 @@ package com.emikhalets.sunnydayapp.ui.preference
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.activityViewModels
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.emikhalets.sunnydayapp.R
+import com.emikhalets.sunnydayapp.ui.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import java.util.*
 
 @AndroidEntryPoint
@@ -15,6 +16,7 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
 
     private lateinit var language: ListPreference
     private lateinit var units: ListPreference
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.pref_pager, rootKey)
@@ -27,15 +29,27 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         language.summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
             setLocale(preference.value)
             when (preference.value) {
-                getString(R.string.pref_lang_ru_val) -> getString(R.string.pref_lang_ru)
-                else -> getString(R.string.pref_lang_en)
+                getString(R.string.pref_lang_ru_val) -> {
+                    mainViewModel.prefLang.value = getString(R.string.pref_lang_ru)
+                    getString(R.string.pref_lang_ru)
+                }
+                else -> {
+                    mainViewModel.prefLang.value = getString(R.string.pref_lang_en)
+                    getString(R.string.pref_lang_en)
+                }
             }
         }
 
         units.summaryProvider = Preference.SummaryProvider<ListPreference> { preference ->
             when (preference.value) {
-                getString(R.string.pref_unit_imperial_val) -> getString(R.string.pref_unit_imperial)
-                else -> getString(R.string.pref_unit_metric)
+                getString(R.string.pref_unit_imperial_val) -> {
+                    mainViewModel.prefUnits.value = getString(R.string.pref_unit_imperial)
+                    getString(R.string.pref_unit_imperial)
+                }
+                else -> {
+                    mainViewModel.prefUnits.value = getString(R.string.pref_unit_metric)
+                    getString(R.string.pref_unit_metric)
+                }
             }
         }
     }
@@ -45,12 +59,9 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         units = findPreference(getString(R.string.key_pref_units))!!
     }
 
-    //TODO: deprecated method 'Resources.updateConfiguration(Configuration, DisplayMetrics)'
     private fun setLocale(lang: String) {
-        Timber.d("PREFERENCES SET LOCALE lang='$lang'")
         val locale = Locale(lang)
         Locale.setDefault(locale)
-        val resources = requireActivity().resources
         val config = resources.configuration
         config.setLocale(locale)
         resources.updateConfiguration(config, resources.displayMetrics)

@@ -7,14 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.emikhalets.sunnydayapp.R
-import com.emikhalets.sunnydayapp.data.model.Response
+import com.emikhalets.sunnydayapp.data.model.WeatherResponse
 import com.emikhalets.sunnydayapp.databinding.FragmentForecastBinding
-import com.emikhalets.sunnydayapp.ui.pager.ViewPagerViewModel
-import com.emikhalets.sunnydayapp.utils.FragmentState
+import com.emikhalets.sunnydayapp.ui.MainViewModel
+import com.emikhalets.sunnydayapp.utils.State
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_forecast.*
-import timber.log.Timber
 
 @AndroidEntryPoint
 class ForecastFragment : Fragment() {
@@ -22,12 +19,13 @@ class ForecastFragment : Fragment() {
     private var _binding: FragmentForecastBinding? = null
     private val binding get() = _binding!!
 
-    private val pagerViewModel: ViewPagerViewModel by activityViewModels()
-
     private lateinit var dailyAdapter: DailyAdapter
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentForecastBinding.inflate(inflater, container, false)
         return binding.root
@@ -35,9 +33,17 @@ class ForecastFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.d("CREATING FRAGMENT FORECAST FRAGMENT")
-        initDailyAdapter()
-        initObservers()
+        dailyAdapter = DailyAdapter()
+        binding.listForecast.apply {
+            adapter = dailyAdapter
+            setHasFixedSize(true)
+        }
+        with(mainViewModel) {
+            weather.observe(viewLifecycleOwner) { weatherObserver(it) }
+            location.observe(viewLifecycleOwner) { locationObserver(it) }
+            error.observe(viewLifecycleOwner) { binding.textNotice.text = it }
+            searchingState.observe(viewLifecycleOwner) { updateInterface(it) }
+        }
     }
 
     override fun onDestroy() {
@@ -45,40 +51,38 @@ class ForecastFragment : Fragment() {
         _binding = null
     }
 
-    private fun initObservers() {
-        pagerViewModel.weather.observe(viewLifecycleOwner, { weatherObserver(it) })
-        pagerViewModel.userLocation.observe(viewLifecycleOwner, { locationObserver(it) })
-    }
-
-    private fun initDailyAdapter() {
-        dailyAdapter = DailyAdapter()
-        dailyAdapter.units = pagerViewModel.prefUnits
-        binding.listForecast.adapter = dailyAdapter
-    }
-
-    private fun weatherObserver(state: FragmentState<Response>) {
-        when (state.status) {
-            FragmentState.Status.LOADING -> {
-                motion_forecast.transitionToState(R.id.state_loading)
-            }
-            FragmentState.Status.LOADED -> {
-                dailyAdapter.submitList(null)
-                val response = state.data
-                dailyAdapter.timezone = response?.timezone ?: ""
-                dailyAdapter.submitList(response?.daily)
-                motion_forecast.transitionToState(R.id.state_forecast)
-            }
-            FragmentState.Status.ERROR -> {
-            }
-        }
+    private fun weatherObserver(response: WeatherResponse) {
+        dailyAdapter.timezone = response.timezone
+        dailyAdapter.submitList(response.daily)
     }
 
     private fun locationObserver(location: Location) {
-        pagerViewModel.sendWeatherRequest(
+        mainViewModel.sendWeatherRequest(
             location.latitude,
-            location.longitude,
-            pagerViewModel.prefUnits,
-            pagerViewModel.prefLang
+            location.longitude
         )
+    }
+
+    private fun updateInterface(state: State) {
+        val duration = 500L
+        with(binding) {
+            when (state) {
+                State.LOADING -> {
+                    textNotice.animate().alpha(0f).setDuration(duration).start()
+                    pbLoadingForecast.animate().alpha(1f).setDuration(duration).start()
+                    listForecast.animate().alpha(0f).setDuration(duration).start()
+                }
+                State.LOADED -> {
+                    textNotice.animate().alpha(0f).setDuration(duration).start()
+                    pbLoadingForecast.animate().alpha(0f).setDuration(duration).start()
+                    listForecast.animate().alpha(1f).setDuration(duration).start()
+                }
+                State.ERROR -> {
+                    textNotice.animate().alpha(1f).setDuration(duration).start()
+                    pbLoadingForecast.animate().alpha(0f).setDuration(duration).start()
+                    listForecast.animate().alpha(0f).setDuration(duration).start()
+                }
+            }
+        }
     }
 }

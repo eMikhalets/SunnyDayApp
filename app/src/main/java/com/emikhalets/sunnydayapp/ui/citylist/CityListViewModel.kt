@@ -1,64 +1,54 @@
 package com.emikhalets.sunnydayapp.ui.citylist
 
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.annotation.SuppressLint
+import androidx.lifecycle.*
 import com.emikhalets.sunnydayapp.data.database.City
+import com.emikhalets.sunnydayapp.data.database.DbResult
 import com.emikhalets.sunnydayapp.data.repository.CityListRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import javax.inject.Inject
 
-class CityListViewModel @ViewModelInject constructor(
+@HiltViewModel
+class CityListViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val repository: CityListRepository
 ) : ViewModel() {
 
-    private val coroutineContext = Dispatchers.IO + SupervisorJob()
+    private val _savedCities = MutableLiveData<List<City>>()
+    val savedCities: LiveData<List<City>> get() = _savedCities
 
-    private val _searchedCities = MutableLiveData<List<City>>()
-    val searchedCities: LiveData<List<City>> get() = _searchedCities
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> get() = _error
 
-    fun checkIsSearched(city: City) {
-        viewModelScope.launch(coroutineContext) {
-            try {
-                if (!city.isSearched) {
-                    city.isSearched = true
-                    repository.updateCity(city)
-                    getSearchedCities()
-                } else {
-                    Timber.d("The isSearched status is already true")
+    fun saveCity(city: City) {
+        viewModelScope.launch {
+            if (!city.isSearched) {
+                city.isSearched = true
+                when (val result = repository.updateCity(city)) {
+                    is DbResult.Success -> getSearchedCities()
+                    is DbResult.Error -> _error.postValue(result.msg)
                 }
-            } catch (ex: Exception) {
-                Timber.e(ex)
             }
         }
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun getSearchedCities() {
-        viewModelScope.launch(coroutineContext) {
-            try {
-                val result = repository.getSearchedCities()
-                Timber.d("Searched cities: ${result.size} items")
-                _searchedCities.postValue(result)
-            } catch (ex: Exception) {
-                Timber.e(ex)
+        viewModelScope.launch {
+            when (val result = repository.getSavedCities()) {
+                is DbResult.Success -> _savedCities.postValue(result.result)
+                is DbResult.Error -> _error.postValue(result.msg)
             }
         }
     }
 
-    fun removeCityFromSearched(city: City) {
-        viewModelScope.launch(coroutineContext) {
-            try {
-                val receivedCity = repository.getCity(city.id)
-                receivedCity.isSearched = false
-                repository.updateCity(receivedCity)
-                Timber.d("City removed from search history : (${city.name})")
-                getSearchedCities()
-            } catch (ex: Exception) {
-                Timber.e(ex)
+    fun removeCityFromSaved(city: City) {
+        viewModelScope.launch {
+            city.isSearched = false
+            when (val result = repository.updateCity(city)) {
+                is DbResult.Success -> getSearchedCities()
+                is DbResult.Error -> _error.postValue(result.msg)
             }
         }
     }
