@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
@@ -18,9 +19,9 @@ import androidx.preference.PreferenceManager
 import com.emikhalets.sunnydayapp.BuildConfig
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.ActivityMainBinding
-import com.emikhalets.sunnydayapp.utils.Conf
 import com.emikhalets.sunnydayapp.utils.OnLocationSettingsClick
 import com.emikhalets.sunnydayapp.utils.State
+import com.emikhalets.sunnydayapp.utils.getCityFromLocation
 import com.google.android.gms.location.*
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -52,8 +53,8 @@ class MainActivity : AppCompatActivity(), OnLocationSettingsClick {
         if (savedInstanceState == null) checkDatabase()
         initLocation()
         mainViewModel.database.observe(this) { databaseObserver(it) }
-        mainViewModel.prefLang.observe(this) { prefLangObserver(it) }
-        mainViewModel.prefUnits.observe(this) { prefUnitsObserver(it) }
+        mainViewModel.location.observe(this) { locationObserver(it) }
+        mainViewModel.prefs.observe(this) { preferencesObserver(it) }
     }
 
     private fun initPreferences() {
@@ -68,9 +69,8 @@ class MainActivity : AppCompatActivity(), OnLocationSettingsClick {
         ) ?: getString(R.string.pref_unit_metric_val)
         if (prefUnits == "1") prefLang = getString(R.string.pref_lang_en_val)
         if (prefUnits == "1") prefUnits = getString(R.string.pref_unit_metric_val)
-        mainViewModel.prefLang.value = prefLang
-        mainViewModel.prefUnits.value = prefUnits
-        setLocale(mainViewModel.prefLang.value ?: getString(R.string.pref_lang_en_val))
+        mainViewModel.prefs.value = mapOf(KEY_LANG to prefLang, KEY_UNITS to prefUnits)
+        setLocale(prefLang)
     }
 
     private fun setLocale(lang: String) {
@@ -93,28 +93,15 @@ class MainActivity : AppCompatActivity(), OnLocationSettingsClick {
             .putBoolean(SP_DB_STATUS, true).apply()
     }
 
-    private fun prefLangObserver(lang: String) {
-        if (Conf.lang != lang) {
-            setLocale(lang)
-            if (mainViewModel.currentLat != 0.0 && mainViewModel.currentLong != 0.0) {
-                mainViewModel.sendWeatherRequest(
-                    mainViewModel.currentLat,
-                    mainViewModel.currentLong
-                )
-            }
-        }
+    private fun locationObserver(location: Location) {
+        mainViewModel.currentCity = getCityFromLocation(this, location)
+        mainViewModel.currentLat = location.latitude
+        mainViewModel.currentLong = location.longitude
+        mainViewModel.sendWeatherRequest(location.latitude, location.longitude)
     }
 
-    private fun prefUnitsObserver(units: String) {
-        if (Conf.units != units) {
-            Conf.units = units
-            if (mainViewModel.currentLat != 0.0 && mainViewModel.currentLong != 0.0) {
-                mainViewModel.sendWeatherRequest(
-                    mainViewModel.currentLat,
-                    mainViewModel.currentLong
-                )
-            }
-        }
+    private fun preferencesObserver(map: Map<String, String>) {
+        setLocale(map[KEY_LANG] ?: "en")
     }
 
     // =================== Location
@@ -194,6 +181,8 @@ class MainActivity : AppCompatActivity(), OnLocationSettingsClick {
         private const val CITIES_JSON = "city_list_min.json"
         private const val SP_FILE = "SunnyDayApp_shared_preferences"
         private const val SP_DB_STATUS = "sp_database_status"
+        private const val KEY_LANG = "key_language"
+        private const val KEY_UNITS = "key_units"
 //        private const val SP_THEME = "sp_theme"
     }
 }

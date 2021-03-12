@@ -41,13 +41,14 @@ class MainViewModel @Inject constructor(
     private val _searchingState = MutableLiveData<State>()
     val searchingState: LiveData<State> get() = _searchingState
 
-    val prefLang = MutableLiveData<String>()
-    val prefUnits = MutableLiveData<String>()
+    val prefs = MutableLiveData<Map<String, String>>()
     val selecting = MutableLiveData<City?>()
     val location = MutableLiveData<Location>()
     val scrollCallback = MutableLiveData<Boolean>()
 
     var currentCity = ""
+    var currentLang = ""
+    var currentUnits = ""
     var currentLat = 0.0
     var currentLong = 0.0
 
@@ -64,20 +65,22 @@ class MainViewModel @Inject constructor(
     }
 
     private fun createCitiesDatabase(json: String) {
-        viewModelScope.launch {
-            val cities = mutableListOf<City>()
-            val jsonCities = JSONArray(json)
-            for (i in 0 until jsonCities.length()) {
-                val city = parseCityItem(jsonCities.getJSONObject(i))
-                cities.add(city)
-            }
-            when (val result = repository.insertAllCities(cities)) {
-                is DbResult.Success -> _database.postValue(State.LOADED)
-                is DbResult.Error -> {
-                    _error.postValue(result.msg)
-                    _database.postValue(State.ERROR)
+            viewModelScope.launch {
+                val cities = mutableListOf<City>()
+                val jsonCities = JSONArray(json)
+                for (i in 0 until jsonCities.length()) {
+                    val city = parseCityItem(jsonCities.getJSONObject(i))
+                    cities.add(city)
                 }
-            }
+                when (val result = repository.insertAllCities(cities)) {
+                    is DbResult.Success -> {
+                        _database.postValue(State.LOADED)
+                    }
+                    is DbResult.Error -> {
+                        _error.postValue(result.msg)
+                        _database.postValue(State.ERROR)
+                    }
+                }
         }
     }
 

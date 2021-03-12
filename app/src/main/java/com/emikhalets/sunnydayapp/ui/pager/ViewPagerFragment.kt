@@ -1,6 +1,5 @@
 package com.emikhalets.sunnydayapp.ui.pager
 
-import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +15,9 @@ import com.emikhalets.sunnydayapp.ui.MainViewModel
 import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
 import com.emikhalets.sunnydayapp.ui.forecast.ForecastFragment
 import com.emikhalets.sunnydayapp.ui.weather.WeatherFragment
+import com.emikhalets.sunnydayapp.utils.Conf
 import com.emikhalets.sunnydayapp.utils.CustomSearchQueryListener
 import com.emikhalets.sunnydayapp.utils.State
-import com.emikhalets.sunnydayapp.utils.getCityFromLocation
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,7 +45,8 @@ class ViewPagerFragment : Fragment() {
         mainViewModel.database.observe(viewLifecycleOwner) { updateInterface(it) }
         mainViewModel.error.observe(viewLifecycleOwner) { errorObserver(it) }
         mainViewModel.weather.observe(viewLifecycleOwner) { weatherObserver() }
-        mainViewModel.location.observe(viewLifecycleOwner) { locationObserver(it) }
+        mainViewModel.prefs.observe(viewLifecycleOwner) { preferencesObserver(it) }
+        mainViewModel.location.observe(viewLifecycleOwner) { locationObserver() }
         mainViewModel.selecting.observe(viewLifecycleOwner) { selectSearchingObserver() }
         mainViewModel.scrollCallback.observe(viewLifecycleOwner) { scrollCallbackObserver(it) }
         binding.toolbar.findViewById<View>(R.id.menu_pager_preference)
@@ -91,18 +91,31 @@ class ViewPagerFragment : Fragment() {
         }
     }
 
+    private fun preferencesObserver(map: Map<String, String>) {
+        val lang = map[KEY_LANG] ?: ""
+        val units = map[KEY_UNITS] ?: ""
+        if (units != mainViewModel.currentUnits || lang != mainViewModel.currentLang) {
+            mainViewModel.currentLang = lang
+            mainViewModel.currentUnits = units
+            Conf.lang = lang
+            Conf.units = units
+            if (mainViewModel.currentLat != 0.0 && mainViewModel.currentLong != 0.0) {
+                mainViewModel.sendWeatherRequest(
+                    mainViewModel.currentLat,
+                    mainViewModel.currentLong
+                )
+            }
+        }
+    }
+
     private fun selectSearchingObserver() {
         searchView.setQuery("", false)
         searchView.onActionViewCollapsed()
         binding.viewPager.setCurrentItem(1, true)
     }
 
-    private fun locationObserver(location: Location) {
+    private fun locationObserver() {
         binding.viewPager.setCurrentItem(1, true)
-        mainViewModel.currentCity = getCityFromLocation(requireContext(), location)
-        mainViewModel.currentLat = location.latitude
-        mainViewModel.currentLong = location.longitude
-        mainViewModel.sendWeatherRequest(location.latitude, location.longitude)
     }
 
     private fun scrollCallbackObserver(isCanScroll: Boolean) {
@@ -164,5 +177,10 @@ class ViewPagerFragment : Fragment() {
             1 -> WeatherFragment()
             else -> ForecastFragment()
         }
+    }
+
+    companion object {
+        private const val KEY_LANG = "key_language"
+        private const val KEY_UNITS = "key_units"
     }
 }
