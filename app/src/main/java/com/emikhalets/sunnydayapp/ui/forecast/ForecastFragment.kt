@@ -56,6 +56,7 @@ class ForecastFragment : Fragment() {
 
     private fun weatherObserver(response: WeatherResponse) {
         dailyAdapter.timezone = response.timezone
+//        dailyAdapter.timezone = response.current.weather.first().icon
         dailyAdapter.submitList(response.daily)
     }
 
@@ -66,23 +67,22 @@ class ForecastFragment : Fragment() {
     private fun updateInterface(state: State) {
         val duration = 500L
         with(binding) {
+            btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
+            btnLocationSettings.visibility = View.GONE
             when (state) {
                 State.LOADING -> {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingForecast.animate().alpha(1f).setDuration(duration).start()
-                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     listForecast.animate().alpha(0f).setDuration(duration).start()
                 }
                 State.LOADED -> {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingForecast.animate().alpha(0f).setDuration(duration).start()
-                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     listForecast.animate().alpha(1f).setDuration(duration).start()
                 }
                 State.ERROR -> {
                     textNotice.animate().alpha(1f).setDuration(duration).start()
                     pbLoadingForecast.animate().alpha(0f).setDuration(duration).start()
-                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     listForecast.animate().alpha(0f).setDuration(duration).start()
                 }
             }

@@ -26,6 +26,9 @@ class WeatherFragment : Fragment() {
     private val locationSettingsClick: OnLocationSettingsClick?
         get() = requireActivity() as? OnLocationSettingsClick?
 
+//    private val themeListener: OnThemeListener?
+//        get() = requireActivity() as? OnThemeListener?
+
     private lateinit var hourlyAdapter: HourlyAdapter
     private val mainViewModel: MainViewModel by activityViewModels()
 
@@ -66,23 +69,22 @@ class WeatherFragment : Fragment() {
     private fun updateInterface(state: State) {
         val duration = 500L
         with(binding) {
+            btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
+            btnLocationSettings.visibility = View.GONE
             when (state) {
                 State.LOADING -> {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingWeather.animate().alpha(1f).setDuration(duration).start()
-                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     weatherScroll.animate().alpha(0f).setDuration(duration).start()
                 }
                 State.LOADED -> {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingWeather.animate().alpha(0f).setDuration(duration).start()
-                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     weatherScroll.animate().alpha(1f).setDuration(duration).start()
                 }
                 State.ERROR -> {
                     textNotice.animate().alpha(1f).setDuration(duration).start()
                     pbLoadingWeather.animate().alpha(0f).setDuration(duration).start()
-                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     weatherScroll.animate().alpha(0f).setDuration(duration).start()
                 }
             }
@@ -92,6 +94,7 @@ class WeatherFragment : Fragment() {
     private fun setWeatherData(response: WeatherResponse) {
         val data = response.current
         val weather = response.current.weather.first()
+//        setColors(weather.icon)
         with(binding.layoutWeatherMain) {
             imageIcon.load(buildIconUrl(data.weather.first().icon))
             textCity.text = mainViewModel.currentCity
@@ -124,6 +127,69 @@ class WeatherFragment : Fragment() {
         hourlyAdapter.timezone = response.timezone
         hourlyAdapter.submitList(response.hourly)
     }
+
+//    private fun setColors(weather: String) {
+//        if (weather.contains("n")) {
+//            themeListener?.onThemeChange()
+//            return
+//        }
+//        when (weather) {
+//            "01d" -> setColors(
+//                ContextCompat.getColor(binding.root.context, R.color.colorText),
+//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClear)
+//            )
+//            "02d" -> setColors(
+//                ContextCompat.getColor(binding.root.context, R.color.colorText),
+//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
+//            )
+//            "03d" -> setColors(
+//                ContextCompat.getColor(binding.root.context, R.color.colorText),
+//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
+//            )
+//            "04d" -> setColors(
+//                ContextCompat.getColor(binding.root.context, R.color.colorText),
+//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
+//            )
+//            "09d" -> setColors(
+//                ContextCompat.getColor(binding.root.context, R.color.colorText),
+//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryRain)
+//            )
+//            "10d" -> setColors(
+//                ContextCompat.getColor(binding.root.context, R.color.colorText),
+//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryRain)
+//            )
+//            "11d" -> setColors(
+//                ContextCompat.getColor(binding.root.context, R.color.colorTextNight),
+//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryStorm)
+//            )
+//            "13d" -> setColors(
+//                ContextCompat.getColor(binding.root.context, R.color.colorText),
+//                ContextCompat.getColor(binding.root.context, R.color.colorPrimarySnow)
+//            )
+//            "50d" -> setColors(
+//                ContextCompat.getColor(binding.root.context, R.color.colorText),
+//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryMist)
+//            )
+//        }
+//    }
+//
+//    private fun setColors(text: Int, bg: Int) {
+//        with(binding) {
+//            layoutWeatherMain.textCity.setTextColor(text)
+//            layoutWeatherMain.textDate.setTextColor(text)
+//            layoutWeatherMain.textTemp.setTextColor(text)
+//            layoutWeatherMain.textTempUnit.setTextColor(text)
+//            layoutWeatherMain.textDesc.setTextColor(text)
+//            layoutWeatherMain.textCloud.setTextColor(text)
+//            layoutWeatherMain.textHumidity.setTextColor(text)
+//            layoutWeatherMain.textFeelsLike.setTextColor(text)
+//            layoutWeatherMain.textWind.setTextColor(text)
+//            layoutWeatherMain.textWindDir.setTextColor(text)
+//            layoutWeatherMain.textPressure.setTextColor(text)
+//            layoutWeatherMain.root.setBackgroundColor(bg)
+//            viewSunTime.setBackgroundColor(bg)
+//        }
+//    }
 
     private fun recyclerScrollListener() = object : CustomItemTouchListener() {
         var lastX = 0

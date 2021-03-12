@@ -20,60 +20,6 @@
         <item name="colorText">@color/colorTextNight</item>
     </style>
 
-    <style name="AppTheme.Clear" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/colorPrimaryClear</item>
-        <item name="colorSecondary">@color/colorSecondaryClear</item>
-        <item name="colorOnBackground">@color/colorBackground</item>
-        <item name="colorControlNormal">@color/colorText</item>
-        <item name="colorText">@color/colorText</item>
-    </style>
-
-    <style name="AppTheme.Clouds" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/colorPrimaryClouds</item>
-        <item name="colorSecondary">@color/colorSecondaryClouds</item>
-        <item name="colorOnBackground">@color/colorBackground</item>
-        <item name="colorControlNormal">@color/colorText</item>
-        <item name="colorText">@color/colorText</item>
-    </style>
-
-    <style name="AppTheme.Rain" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/colorPrimaryRain</item>
-        <item name="colorSecondary">@color/colorSecondaryRain</item>
-        <item name="colorOnBackground">@color/colorBackground</item>
-        <item name="colorControlNormal">@color/colorText</item>
-        <item name="colorText">@color/colorText</item>
-    </style>
-
-    <style name="AppTheme.Storm" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/colorPrimaryStorm</item>
-        <item name="colorSecondary">@color/colorSecondaryStorm</item>
-        <item name="colorOnBackground">@color/colorBackgroundNight</item>
-        <item name="colorControlNormal">@color/colorTextNight</item>
-        <item name="colorText">@color/colorTextNight</item>
-    </style>
-
-    <style name="AppTheme.Snow" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/colorPrimarySnow</item>
-        <item name="colorSecondary">@color/colorSecondarySnow</item>
-        <item name="colorOnBackground">@color/colorBackground</item>
-        <item name="colorControlNormal">@color/colorText</item>
-        <item name="colorText">@color/colorText</item>
-    </style>
-
-    <style name="AppTheme.Mist" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/colorPrimaryMist</item>
-        <item name="colorSecondary">@color/colorSecondaryMist</item>
-        <item name="colorOnBackground">@color/colorBackground</item>
-        <item name="colorControlNormal">@color/colorText</item>
-        <item name="colorText">@color/colorText</item>
-    </style>
-
     <!--========== VIEWS ==========-->
 
     <style name="AppToolBar">

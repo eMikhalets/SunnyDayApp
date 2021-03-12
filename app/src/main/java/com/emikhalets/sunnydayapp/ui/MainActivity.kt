@@ -94,16 +94,26 @@ class MainActivity : AppCompatActivity(), OnLocationSettingsClick {
     }
 
     private fun prefLangObserver(lang: String) {
-        setLocale(lang)
-        if (mainViewModel.currentLat != 0.0 && mainViewModel.currentLong != 0.0) {
-            mainViewModel.sendWeatherRequest(mainViewModel.currentLat, mainViewModel.currentLong)
+        if (Conf.lang != lang) {
+            setLocale(lang)
+            if (mainViewModel.currentLat != 0.0 && mainViewModel.currentLong != 0.0) {
+                mainViewModel.sendWeatherRequest(
+                    mainViewModel.currentLat,
+                    mainViewModel.currentLong
+                )
+            }
         }
     }
 
     private fun prefUnitsObserver(units: String) {
-        Conf.units = units
-        if (mainViewModel.currentLat != 0.0 && mainViewModel.currentLong != 0.0) {
-            mainViewModel.sendWeatherRequest(mainViewModel.currentLat, mainViewModel.currentLong)
+        if (Conf.units != units) {
+            Conf.units = units
+            if (mainViewModel.currentLat != 0.0 && mainViewModel.currentLong != 0.0) {
+                mainViewModel.sendWeatherRequest(
+                    mainViewModel.currentLat,
+                    mainViewModel.currentLong
+                )
+            }
         }
     }
 
@@ -169,6 +179,13 @@ class MainActivity : AppCompatActivity(), OnLocationSettingsClick {
         locationSettingsResult.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
     }
 
+//    override fun onThemeChange() {
+//        val theme = getSharedPreferences(SP_FILE, MODE_PRIVATE).getString(SP_THEME, "")
+//        if (theme)
+//        setTheme(R.style.AppTheme_Night)
+//        recreate()
+//    }
+
     companion object {
         private val PERMISSION_ARRAY = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -177,5 +194,6 @@ class MainActivity : AppCompatActivity(), OnLocationSettingsClick {
         private const val CITIES_JSON = "city_list_min.json"
         private const val SP_FILE = "SunnyDayApp_shared_preferences"
         private const val SP_DB_STATUS = "sp_database_status"
+//        private const val SP_THEME = "sp_theme"
     }
 }
