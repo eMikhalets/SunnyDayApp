@@ -1,6 +1,5 @@
 package com.emikhalets.sunnydayapp.ui.forecast
 
-import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import com.emikhalets.sunnydayapp.data.model.WeatherResponse
 import com.emikhalets.sunnydayapp.databinding.FragmentForecastBinding
 import com.emikhalets.sunnydayapp.ui.MainViewModel
+import com.emikhalets.sunnydayapp.utils.OnLocationSettingsClick
 import com.emikhalets.sunnydayapp.utils.State
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,6 +18,9 @@ class ForecastFragment : Fragment() {
 
     private var _binding: FragmentForecastBinding? = null
     private val binding get() = _binding!!
+
+    private val locationSettingsClick: OnLocationSettingsClick?
+        get() = requireActivity() as? OnLocationSettingsClick?
 
     private lateinit var dailyAdapter: DailyAdapter
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -40,10 +43,10 @@ class ForecastFragment : Fragment() {
         }
         with(mainViewModel) {
             weather.observe(viewLifecycleOwner) { weatherObserver(it) }
-            location.observe(viewLifecycleOwner) { locationObserver(it) }
             error.observe(viewLifecycleOwner) { binding.textNotice.text = it }
             searchingState.observe(viewLifecycleOwner) { updateInterface(it) }
         }
+        binding.btnLocationSettings.setOnClickListener { onLocationSettingsClick() }
     }
 
     override fun onDestroy() {
@@ -56,11 +59,8 @@ class ForecastFragment : Fragment() {
         dailyAdapter.submitList(response.daily)
     }
 
-    private fun locationObserver(location: Location) {
-        mainViewModel.sendWeatherRequest(
-            location.latitude,
-            location.longitude
-        )
+    private fun onLocationSettingsClick() {
+        locationSettingsClick?.onLocationSettingsClick()
     }
 
     private fun updateInterface(state: State) {
@@ -70,16 +70,19 @@ class ForecastFragment : Fragment() {
                 State.LOADING -> {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingForecast.animate().alpha(1f).setDuration(duration).start()
+                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     listForecast.animate().alpha(0f).setDuration(duration).start()
                 }
                 State.LOADED -> {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingForecast.animate().alpha(0f).setDuration(duration).start()
+                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     listForecast.animate().alpha(1f).setDuration(duration).start()
                 }
                 State.ERROR -> {
                     textNotice.animate().alpha(1f).setDuration(duration).start()
                     pbLoadingForecast.animate().alpha(0f).setDuration(duration).start()
+                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     listForecast.animate().alpha(0f).setDuration(duration).start()
                 }
             }

@@ -27,6 +27,11 @@
         <item name="tabTextColor">@color/colorText</item>
     </style>
 
+    <style name="AppButton">
+        <item name="backgroundTint">@color/colorBackgroundBlock</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
     <style name="AppText">
         <item name="android:textColor">@color/colorText</item>
     </style>

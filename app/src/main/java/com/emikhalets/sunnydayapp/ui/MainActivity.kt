@@ -3,10 +3,14 @@ package com.emikhalets.sunnydayapp.ui
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import android.os.Looper
+import android.provider.Settings
+import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -15,19 +19,29 @@ import com.emikhalets.sunnydayapp.BuildConfig
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.ActivityMainBinding
 import com.emikhalets.sunnydayapp.utils.Conf
+import com.emikhalets.sunnydayapp.utils.OnLocationSettingsClick
 import com.emikhalets.sunnydayapp.utils.State
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.util.*
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnLocationSettingsClick {
 
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
+
+    private val locationSettingsResult = registerForActivityResult(StartActivityForResult()) {
+        if (isLocationEnabled()) requestLocation()
+    }
+    private val locationPermissionResult = registerForActivityResult(RequestMultiplePermissions()) {
+        var isSuccess = true
+        it.forEach { p -> if (!p.value) isSuccess = false }
+        if (isSuccess && isLocationEnabled()) requestLocation()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,23 +111,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun initLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        val requestLocationPermission = registerForActivityResult(RequestPermission()) {
-            if (it) requestLocation()
-        }
-        if (isGpsEnabled() && permissionCoarseLocation()) {
-            requestLocation()
+        if (permissionFineLocation() && permissionCoarseLocation()) {
+            if (isLocationEnabled()) requestLocation()
         } else {
-            if (permissionFineLocation()) {
-                requestLocation()
-            } else {
-                requestLocationPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            }
+            locationPermissionResult.launch(PERMISSION_ARRAY)
         }
-    }
-
-    private fun isGpsEnabled(): Boolean {
-        return (getSystemService(LOCATION_SERVICE) as LocationManager)
-            .isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
     private fun permissionCoarseLocation(): Boolean {
@@ -129,14 +131,49 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("MissingPermission")
-    fun requestLocation() {
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            location?.let { mainViewModel.location.postValue(it) }
+    private fun requestLocation() {
+        fusedLocationClient.lastLocation.apply {
+            addOnSuccessListener {
+                if (it != null) mainViewModel.location.postValue(it)
+                else requestLocationUpdates()
+            }
+            addOnFailureListener { requestLocationUpdates() }
         }
-//        fusedLocationClient.requestLocationUpdates(LocationRequest(), LocationCallback, Looper.getMainLooper())
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestLocationUpdates() {
+        val locationRequest = LocationRequest()
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(10000)
+            .setFastestInterval(5000)
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                mainViewModel.location.postValue(locationResult.locations.first())
+                fusedLocationClient.removeLocationUpdates(locationCallback)
+            }
+        }
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    override fun onLocationSettingsClick() {
+        locationSettingsResult.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
     }
 
     companion object {
+        private val PERMISSION_ARRAY = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
         private const val CITIES_JSON = "city_list_min.json"
         private const val SP_FILE = "SunnyDayApp_shared_preferences"
         private const val SP_DB_STATUS = "sp_database_status"

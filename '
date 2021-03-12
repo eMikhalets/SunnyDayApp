@@ -1,0 +1,46 @@
+* 9b0df62	 (HEAD -> master, origin/new_api, origin/master, new_api) refactoring
+* 4f20fc2	 fixed date/time format. refactoring
+* f4c4cf1	 worked with searching, fixed cities list animations
+* 5ca445b	 added motion animations, refactoring
+* 14621d0	 fixed weather and pager fragments
+* e009b90	 fixed cities list
+* 8fa20a8	 added forecast fragment
+* fa81a57	 refactoring
+* 5c27010	 refactoring data folder
+* aeed1d3	 refactoring details and view pager
+* 097b49b	 refactoring cities list fragment
+* c0c4bb6	 refactoring weather fragment
+* e3fafe5	 learn MotionLayout
+* 5b7ed68	 refactoring cities list
+* c2a336a	 refactoring
+* 2f6527a	 add delete city dialog
+* 0d86e21	 add english, units settings
+* 39f5b85	 fixed dates and time
+* dc0dafa	 refactoring
+* ed1e36c	 refactoring
+* b81d39c	 implemented Hilt
+* 9666422	 partially fixed dates, add details, partially add settings (api usage)
+* d208415	 migrate from Location to Fused Location
+* 7100f0f	 recreating cities table on toolbar button click
+* 0799ed4	 Migrated from shared preferences to data store, fixed ui when first launch (creating cities table in db), fixed cities list ui
+* 7dfae78	 location permission fixes
+* b5c081e	 logs and weather by location
+* ad2deb7	 redesigned app, united forecast and current weather in one fragment, remove hourly forecast files, other fixes and refactoring
+* ab53916	 hided api key using NDK, refactoring
+* 58c6007	 refactoring
+* 8f94319	 refactoring
+* 61669a2	 added preference screen, moved string keys from Const to strings resource
+* a5808f5	 divided AppRepository into several
+* dba7f11	 handle errors of api requests
+* 8fc8b49	 Added animation, fix bug change toolbar subtitle when city list item clicked, added progress bars. Change packets structure
+* 523ef9d	 Implemented added city list. Begin implemented list item click listeners
+* e948b66	 Аdded a database of cities, they are parsed into the local db at the first launch. Implemented autocomplete in the search bar. The search gives matches from the db by city name. When you select an item, weather queries are performed.
+* 8d501cb	 Redid layouts. Unix timestamp is formatted into readable date and time.
+* e5ce857	 Change NavigationView to ViewPager2 with TabLayout. Update navigation. Remove hourly layout. Remove some adapters.
+* 472a032	 Настроил репозиторий и работу с базой данных, сделал список городов
+* c2d72a5	 Исправления в макетах. Добавил запросы. Создал адаптеры для списков. Главный фрагмент загружает данные по 3 запросам и отображает погоду.
+* 58f7fcd	 Created all layouts
+* 93667cc	 Weather, current layouts is ended
+* 88f7d35	 Continue creating layouts
+* 9405a64	 Started creating layouts
+* 1b4e852	 init

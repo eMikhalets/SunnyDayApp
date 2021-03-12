@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Daily
 import com.emikhalets.sunnydayapp.databinding.ItemDailyBinding
 import com.emikhalets.sunnydayapp.utils.*
-import com.squareup.picasso.Picasso
 
 class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallback()) {
 
@@ -30,7 +30,7 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallba
 
         fun bind(item: Daily) {
             with(binding) {
-                Picasso.get().load(buildIconUrl(item.weather.first().icon)).into(imageIcon)
+                imageIcon.load(buildIconUrl(item.weather.first().icon))
                 textDate.text = formatDateWithWeek(item.dt, timezone)
                 setTemperature(root.context, textTempDay, item.temp.day.toInt())
                 setTemperature(root.context, textTempNight, item.temp.night.toInt())

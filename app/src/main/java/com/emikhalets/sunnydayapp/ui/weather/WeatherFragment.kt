@@ -1,6 +1,5 @@
 package com.emikhalets.sunnydayapp.ui.weather
 
-import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -24,6 +23,9 @@ class WeatherFragment : Fragment() {
     private var _binding: FragmentWeatherBinding? = null
     private val binding get() = _binding!!
 
+    private val locationSettingsClick: OnLocationSettingsClick?
+        get() = requireActivity() as? OnLocationSettingsClick?
+
     private lateinit var hourlyAdapter: HourlyAdapter
     private val mainViewModel: MainViewModel by activityViewModels()
 
@@ -46,10 +48,10 @@ class WeatherFragment : Fragment() {
         }
         with(mainViewModel) {
             weather.observe(viewLifecycleOwner) { setWeatherData(it) }
-            location.observe(viewLifecycleOwner) { locationObserver(it) }
             error.observe(viewLifecycleOwner) { binding.textNotice.text = it }
             searchingState.observe(viewLifecycleOwner) { updateInterface(it) }
         }
+        binding.btnLocationSettings.setOnClickListener { onLocationSettingsClick() }
     }
 
     override fun onDestroy() {
@@ -57,8 +59,8 @@ class WeatherFragment : Fragment() {
         _binding = null
     }
 
-    private fun locationObserver(location: Location) {
-        mainViewModel.sendWeatherRequest(location.latitude, location.longitude)
+    private fun onLocationSettingsClick() {
+        locationSettingsClick?.onLocationSettingsClick()
     }
 
     private fun updateInterface(state: State) {
@@ -68,16 +70,19 @@ class WeatherFragment : Fragment() {
                 State.LOADING -> {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingWeather.animate().alpha(1f).setDuration(duration).start()
+                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     weatherScroll.animate().alpha(0f).setDuration(duration).start()
                 }
                 State.LOADED -> {
                     textNotice.animate().alpha(0f).setDuration(duration).start()
                     pbLoadingWeather.animate().alpha(0f).setDuration(duration).start()
+                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     weatherScroll.animate().alpha(1f).setDuration(duration).start()
                 }
                 State.ERROR -> {
                     textNotice.animate().alpha(1f).setDuration(duration).start()
                     pbLoadingWeather.animate().alpha(0f).setDuration(duration).start()
+                    btnLocationSettings.animate().alpha(0f).setDuration(duration).start()
                     weatherScroll.animate().alpha(0f).setDuration(duration).start()
                 }
             }

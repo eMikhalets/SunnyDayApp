@@ -49,9 +49,8 @@ class ViewPagerFragment : Fragment() {
         mainViewModel.location.observe(viewLifecycleOwner) { locationObserver(it) }
         mainViewModel.selecting.observe(viewLifecycleOwner) { selectSearchingObserver() }
         mainViewModel.scrollCallback.observe(viewLifecycleOwner) { scrollCallbackObserver(it) }
-        binding.toolbar.findViewById<View>(R.id.menu_pager_preference).setOnClickListener {
-            onSettingsClick()
-        }
+        binding.toolbar.findViewById<View>(R.id.menu_pager_preference)
+            .setOnClickListener { onSettingsClick() }
     }
 
     override fun onDestroy() {
@@ -73,7 +72,7 @@ class ViewPagerFragment : Fragment() {
 
     private fun initSearchView() {
         searchView = binding.toolbar.menu.findItem(R.id.menu_pager_search).actionView as SearchView
-        searchView.setOnQueryTextFocusChangeListener { _ , hasFocus ->
+        searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
             if (hasFocus) binding.viewPager.setCurrentItem(0, true)
         }
         searchView.setOnQueryTextListener(searchTextListener())
@@ -99,10 +98,11 @@ class ViewPagerFragment : Fragment() {
     }
 
     private fun locationObserver(location: Location) {
+        binding.viewPager.setCurrentItem(1, true)
         mainViewModel.currentCity = getCityFromLocation(requireContext(), location)
-        if (binding.viewPager.currentItem == 0) {
-            binding.viewPager.setCurrentItem(1, true)
-        }
+        mainViewModel.currentLat = location.latitude
+        mainViewModel.currentLong = location.longitude
+        mainViewModel.sendWeatherRequest(location.latitude, location.longitude)
     }
 
     private fun scrollCallbackObserver(isCanScroll: Boolean) {

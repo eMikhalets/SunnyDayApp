@@ -40,6 +40,7 @@
 
     <!-- WEATHER -->
     <string name="weather_text_pressure">%d кПа</string>
+    <string name="weather_btn_turn_on_gps">Включить GPS</string>
 
     <!-- FORECAST -->
     <string name="forecast_text_pressure">%d кПа</string>

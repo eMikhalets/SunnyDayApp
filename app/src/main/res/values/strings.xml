@@ -55,6 +55,7 @@
     <string name="weather_text_cloud" translatable="false">%d %%</string>
     <string name="weather_text_humidity" translatable="false">%d %%</string>
     <string name="weather_text_pressure">%d kPa</string>
+    <string name="weather_btn_turn_on_gps">Turn on GPS</string>
 
     <!-- FORECAST -->
     <string name="forecast_text_pressure">%d kPa</string>
