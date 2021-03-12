@@ -9,9 +9,11 @@
 
     <TextView
         android:id="@+id/text_date"
-        style="@style/ForecastText"
+        style="@style/AppText.Sml"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Fri, 26 Aug 2016" />
@@ -21,16 +23,20 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_margin="8dp"
+        android:background="@drawable/bg_view_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_date"
         tools:ignore="ContentDescription"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:src="@drawable/night_rain" />
 
     <TextView
         android:id="@+id/text_desc"
-        style="@style/ForecastText"
+        style="@style/AppText.Sml"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_icon"
@@ -48,7 +54,7 @@
 
     <TextView
         android:id="@+id/text_temp_day"
-        style="@style/AppTextSmall"
+        style="@style/AppText.Sml"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -65,11 +71,12 @@
         app:layout_constraintBottom_toTopOf="@+id/text_temp_night"
         app:layout_constraintEnd_toEndOf="@+id/text_temp_night"
         app:layout_constraintStart_toStartOf="@+id/text_temp_night"
+        app:layout_constraintTop_toTopOf="@+id/image_sun"
         tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/text_temp_night"
-        style="@style/AppTextSmall"
+        style="@style/AppText.Sml"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -79,7 +86,7 @@
 
     <TextView
         android:id="@+id/text_feels_like"
-        style="@style/AppTextSmall"
+        style="@style/AppText.Sml"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -102,7 +109,7 @@
 
     <TextView
         android:id="@+id/text_pressure"
-        style="@style/AppTextSmall"
+        style="@style/AppText.Sml"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -123,7 +130,7 @@
 
     <TextView
         android:id="@+id/text_humidity"
-        style="@style/AppTextSmall"
+        style="@style/AppText.Sml"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -144,7 +151,7 @@
 
     <TextView
         android:id="@+id/text_wind"
-        style="@style/AppTextSmall"
+        style="@style/AppText.Sml"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

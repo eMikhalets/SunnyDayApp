@@ -4,4 +4,6 @@
         <attr name="android:textSize" format="dimension" />
         <attr name="android:src" format="reference" />
     </declare-styleable>
+
+    <attr name="colorText" format="reference"/>
 </resources>

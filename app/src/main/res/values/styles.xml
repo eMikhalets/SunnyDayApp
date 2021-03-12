@@ -1,91 +1,121 @@
 <resources>
-    <!-- Base application theme. -->
+    <!--========== THEMES ==========-->
+
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnBackground">@color/colorBackground</item>
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorText">@color/colorText</item>
     </style>
 
+    <style name="AppTheme.Night" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryNight</item>
+        <item name="colorSecondary">@color/colorSecondaryNight</item>
+        <item name="colorOnBackground">@color/colorBackgroundNight</item>
+        <item name="colorControlNormal">@color/colorTextNight</item>
+        <item name="colorText">@color/colorTextNight</item>
+    </style>
 
-    <!-- APPLICATION -->
+    <style name="AppTheme.Clear" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryClear</item>
+        <item name="colorSecondary">@color/colorSecondaryClear</item>
+        <item name="colorOnBackground">@color/colorBackground</item>
+        <item name="colorControlNormal">@color/colorText</item>
+        <item name="colorText">@color/colorText</item>
+    </style>
+
+    <style name="AppTheme.Clouds" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryClouds</item>
+        <item name="colorSecondary">@color/colorSecondaryClouds</item>
+        <item name="colorOnBackground">@color/colorBackground</item>
+        <item name="colorControlNormal">@color/colorText</item>
+        <item name="colorText">@color/colorText</item>
+    </style>
+
+    <style name="AppTheme.Rain" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryRain</item>
+        <item name="colorSecondary">@color/colorSecondaryRain</item>
+        <item name="colorOnBackground">@color/colorBackground</item>
+        <item name="colorControlNormal">@color/colorText</item>
+        <item name="colorText">@color/colorText</item>
+    </style>
+
+    <style name="AppTheme.Storm" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryStorm</item>
+        <item name="colorSecondary">@color/colorSecondaryStorm</item>
+        <item name="colorOnBackground">@color/colorBackgroundNight</item>
+        <item name="colorControlNormal">@color/colorTextNight</item>
+        <item name="colorText">@color/colorTextNight</item>
+    </style>
+
+    <style name="AppTheme.Snow" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimarySnow</item>
+        <item name="colorSecondary">@color/colorSecondarySnow</item>
+        <item name="colorOnBackground">@color/colorBackground</item>
+        <item name="colorControlNormal">@color/colorText</item>
+        <item name="colorText">@color/colorText</item>
+    </style>
+
+    <style name="AppTheme.Mist" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryMist</item>
+        <item name="colorSecondary">@color/colorSecondaryMist</item>
+        <item name="colorOnBackground">@color/colorBackground</item>
+        <item name="colorControlNormal">@color/colorText</item>
+        <item name="colorText">@color/colorText</item>
+    </style>
+
+    <!--========== VIEWS ==========-->
 
     <style name="AppToolBar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/colorBackgroundBars</item>
+        <item name="android:background">?attr/colorSecondary</item>
         <item name="android:minHeight">?attr/actionBarSize</item>
-        <item name="android:theme">?attr/actionBarTheme</item>
-        <item name="titleTextColor">@color/colorText</item>
-        <item name="subtitleTextColor">@color/colorText</item>
+        <item name="titleTextColor">?attr/colorText</item>
+        <item name="subtitleTextColor">?attr/colorText</item>
     </style>
 
     <style name="AppTabLayout">
-        <item name="tabBackground">@color/colorBackgroundApp</item>
+        <item name="tabBackground">?attr/colorOnBackground</item>
         <item name="tabIndicatorGravity">center</item>
         <item name="tabIndicatorHeight">?attr/actionBarSize</item>
-        <item name="tabIndicatorColor">@color/colorBackgroundBars</item>
-        <item name="tabTextColor">@color/colorText</item>
+        <item name="tabIndicatorColor">?attr/colorSecondary</item>
+        <item name="tabTextColor">?attr/colorText</item>
     </style>
 
     <style name="AppButton">
-        <item name="backgroundTint">@color/colorBackgroundBlock</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorText</item>
         <item name="textAllCaps">false</item>
     </style>
 
+    <!--========== TEXT ==========-->
+
     <style name="AppText">
-        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColor">?attr/colorText</item>
     </style>
 
-    <style name="AppTextVeryBig" parent="AppText">
+    <style name="AppText.VBig" parent="AppText">
         <item name="android:textSize">100sp</item>
     </style>
 
-    <style name="AppTextBig" parent="AppText">
+    <style name="AppText.Big" parent="AppText">
         <item name="android:textSize">24sp</item>
     </style>
 
-    <style name="AppTextMedium" parent="AppText">
+    <style name="AppText.Mid" parent="AppText">
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="AppTextSmall" parent="AppText">
+    <style name="AppText.Sml" parent="AppText">
         <item name="android:textSize">16sp</item>
-    </style>
-
-
-    <!-- CITIES LIST -->
-
-    <style name="CitiesListText" parent="AppTextMedium">
-        <item name="android:background">@drawable/bg_view_item</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:layout_margin">4dp</item>
-        <item name="android:padding">8dp</item>
-    </style>
-
-
-    <!-- WEATHER -->
-
-    <style name="WeatherTextTemperature" parent="AppTextVeryBig">
-        <item name="android:layout_marginStart">8sp</item>
-        <item name="android:layout_marginTop">8sp</item>
-    </style>
-
-    <style name="WeatherTextTempUnit" parent="AppTextBig">
-        <item name="android:layout_marginTop">16sp</item>
-    </style>
-
-    <style name="WeatherTextDesc" parent="AppTextBig">
-        <item name="android:layout_margin">8dp</item>
-    </style>
-
-    <style name="WeatherTextDetails" parent="AppTextSmall">
-        <item name="android:layout_marginTop">8dp</item>
-    </style>
-
-
-    <!-- FORECAST -->
-
-    <style name="ForecastText" parent="AppTextSmall">
-        <item name="android:layout_margin">8sp</item>
     </style>
 </resources>

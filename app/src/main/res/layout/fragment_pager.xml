@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackgroundApp">
+    android:background="?attr/colorOnBackground">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/AppToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,14 +21,13 @@
 
     <TextView
         android:id="@+id/text_notice"
+        style="@style/AppText.Mid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:alpha="0"
         android:text="@string/view_pager_db_creating"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/pb_db_creating"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
