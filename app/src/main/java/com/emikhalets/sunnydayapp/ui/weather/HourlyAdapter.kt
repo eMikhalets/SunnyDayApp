@@ -10,11 +10,13 @@ import com.emikhalets.sunnydayapp.data.model.Hourly
 import com.emikhalets.sunnydayapp.databinding.ItemHourlyBinding
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
 import com.emikhalets.sunnydayapp.utils.formatTime
+import com.emikhalets.sunnydayapp.utils.getBackgroundColor
 import com.emikhalets.sunnydayapp.utils.setTemperature
 
 class HourlyAdapter : ListAdapter<Hourly, HourlyAdapter.ViewHolder>(HourlyDiffCallback()) {
 
     var timezone: String = ""
+    var currentWeather: String = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -31,61 +33,18 @@ class HourlyAdapter : ListAdapter<Hourly, HourlyAdapter.ViewHolder>(HourlyDiffCa
 
         fun bind(item: Hourly) {
             with(binding) {
-//                setColors(item.weather.first().icon)
+                setBackground(item.weather.first().icon)
                 imageIcon.load(buildIconUrl(item.weather.first().icon))
                 textTime.text = formatTime(item.dt, timezone)
                 setTemperature(root.context, textTemp, item.temp.toInt())
             }
         }
 
-//        private fun setColors(weather: String) {
-//            when (weather) {
-//                "01d" -> setColors(
-//                    ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                    ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClear)
-//                )
-//                "02d" -> setColors(
-//                    ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                    ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
-//                )
-//                "03d" -> setColors(
-//                    ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                    ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
-//                )
-//                "04d" -> setColors(
-//                    ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                    ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
-//                )
-//                "09d" -> setColors(
-//                    ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                    ContextCompat.getColor(binding.root.context, R.color.colorPrimaryRain)
-//                )
-//                "10d" -> setColors(
-//                    ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                    ContextCompat.getColor(binding.root.context, R.color.colorPrimaryRain)
-//                )
-//                "11d" -> setColors(
-//                    ContextCompat.getColor(binding.root.context, R.color.colorTextNight),
-//                    ContextCompat.getColor(binding.root.context, R.color.colorPrimaryStorm)
-//                )
-//                "13d" -> setColors(
-//                    ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                    ContextCompat.getColor(binding.root.context, R.color.colorPrimarySnow)
-//                )
-//                "50d" -> setColors(
-//                    ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                    ContextCompat.getColor(binding.root.context, R.color.colorPrimaryMist)
-//                )
-//            }
-//        }
-//
-//        private fun setColors(text: Int, bg: Int) {
-//            with(binding) {
-//                textTime.setTextColor(text)
-//                textTemp.setTextColor(text)
-//                root.setBackgroundColor(bg)
-//            }
-//        }
+        private fun setBackground(icon: String) {
+            if (!currentWeather.contains("n")) {
+                binding.root.setBackgroundColor(getBackgroundColor(binding.root.context, icon))
+            }
+        }
     }
 
     private class HourlyDiffCallback : DiffUtil.ItemCallback<Hourly>() {

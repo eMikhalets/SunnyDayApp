@@ -56,7 +56,7 @@ class ForecastFragment : Fragment() {
 
     private fun weatherObserver(response: WeatherResponse) {
         dailyAdapter.timezone = response.timezone
-//        dailyAdapter.timezone = response.current.weather.first().icon
+        dailyAdapter.currentWeather = response.current.weather.first().icon
         dailyAdapter.submitList(response.daily)
     }
 

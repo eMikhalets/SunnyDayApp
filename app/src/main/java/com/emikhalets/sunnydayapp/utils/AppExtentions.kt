@@ -4,7 +4,7 @@ import android.content.Context
 import android.location.Geocoder
 import android.location.Location
 import android.widget.TextView
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.api.ApiResult
 import com.emikhalets.sunnydayapp.data.database.DbResult
@@ -106,4 +106,28 @@ fun formatTime(timestamp: Long, timezone: String): String {
         ZoneId.of(timezone)
     )
     return time.format(DateTimeFormatter.ofPattern("HH:mm"))
+}
+
+fun getBackgroundColor(context: Context, weather: String): Int {
+    return when (weather) {
+        "01d" -> ContextCompat.getColor(context, R.color.colorPrimaryClear)
+        "01n" -> ContextCompat.getColor(context, R.color.colorPrimaryClear)
+        "02d" -> ContextCompat.getColor(context, R.color.colorPrimaryClouds)
+        "02n" -> ContextCompat.getColor(context, R.color.colorPrimaryClouds)
+        "03d" -> ContextCompat.getColor(context, R.color.colorPrimaryClouds)
+        "03n" -> ContextCompat.getColor(context, R.color.colorPrimaryClouds)
+        "04d" -> ContextCompat.getColor(context, R.color.colorPrimaryClouds)
+        "04n" -> ContextCompat.getColor(context, R.color.colorPrimaryClouds)
+        "09d" -> ContextCompat.getColor(context, R.color.colorPrimaryRain)
+        "09n" -> ContextCompat.getColor(context, R.color.colorPrimaryRain)
+        "10d" -> ContextCompat.getColor(context, R.color.colorPrimaryRain)
+        "10n" -> ContextCompat.getColor(context, R.color.colorPrimaryRain)
+        "11d" -> ContextCompat.getColor(context, R.color.colorPrimaryStorm)
+        "11n" -> ContextCompat.getColor(context, R.color.colorPrimaryStorm)
+        "13d" -> ContextCompat.getColor(context, R.color.colorPrimarySnow)
+        "13n" -> ContextCompat.getColor(context, R.color.colorPrimarySnow)
+        "50d" -> ContextCompat.getColor(context, R.color.colorPrimaryMist)
+        "50n" -> ContextCompat.getColor(context, R.color.colorPrimaryMist)
+        else -> -1
+    }
 }

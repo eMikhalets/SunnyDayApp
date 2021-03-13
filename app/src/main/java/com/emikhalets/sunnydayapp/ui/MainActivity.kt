@@ -20,6 +20,7 @@ import com.emikhalets.sunnydayapp.BuildConfig
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.ActivityMainBinding
 import com.emikhalets.sunnydayapp.utils.OnLocationSettingsClick
+import com.emikhalets.sunnydayapp.utils.OnThemeListener
 import com.emikhalets.sunnydayapp.utils.State
 import com.emikhalets.sunnydayapp.utils.getCityFromLocation
 import com.google.android.gms.location.*
@@ -28,7 +29,7 @@ import timber.log.Timber
 import java.util.*
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), OnLocationSettingsClick {
+class MainActivity : AppCompatActivity(), OnLocationSettingsClick, OnThemeListener {
 
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
@@ -166,12 +167,16 @@ class MainActivity : AppCompatActivity(), OnLocationSettingsClick {
         locationSettingsResult.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
     }
 
-//    override fun onThemeChange() {
-//        val theme = getSharedPreferences(SP_FILE, MODE_PRIVATE).getString(SP_THEME, "")
-//        if (theme)
-//        setTheme(R.style.AppTheme_Night)
-//        recreate()
-//    }
+    override fun onThemeChange() {
+        val sp = getSharedPreferences(SP_FILE, MODE_PRIVATE)
+        val theme = sp.getInt(SP_THEME, -1)
+        if (theme != -1 && theme != mainViewModel.currentTheme) {
+            mainViewModel.currentTheme = theme
+            sp.edit().putInt(SP_THEME, R.style.AppTheme_Night).apply()
+            setTheme(R.style.AppTheme_Night)
+            recreate()
+        }
+    }
 
     companion object {
         private val PERMISSION_ARRAY = arrayOf(
@@ -183,6 +188,6 @@ class MainActivity : AppCompatActivity(), OnLocationSettingsClick {
         private const val SP_DB_STATUS = "sp_database_status"
         private const val KEY_LANG = "key_language"
         private const val KEY_UNITS = "key_units"
-//        private const val SP_THEME = "sp_theme"
+        private const val SP_THEME = "sp_theme"
     }
 }

@@ -26,8 +26,8 @@ class WeatherFragment : Fragment() {
     private val locationSettingsClick: OnLocationSettingsClick?
         get() = requireActivity() as? OnLocationSettingsClick?
 
-//    private val themeListener: OnThemeListener?
-//        get() = requireActivity() as? OnThemeListener?
+    private val themeListener: OnThemeListener?
+        get() = requireActivity() as? OnThemeListener?
 
     private lateinit var hourlyAdapter: HourlyAdapter
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -92,104 +92,63 @@ class WeatherFragment : Fragment() {
     }
 
     private fun setWeatherData(response: WeatherResponse) {
-        val data = response.current
         val weather = response.current.weather.first()
-//        setColors(weather.icon)
+        if (!weather.icon.contains("n")) setBackgrounds(weather.icon)
+//        else themeListener?.onThemeChange()
+        setMainData(response)
+        setViewSunTimeData(response)
+        setRecyclerData(response)
+    }
+
+    private fun setBackgrounds(icon: String) {
+        with(binding) {
+            layoutWeatherMain.root.setBackgroundColor(getBackgroundColor(requireContext(), icon))
+            viewSunTime.setBackgroundColor(getBackgroundColor(requireContext(), icon))
+        }
+    }
+
+    private fun setMainData(response: WeatherResponse) {
         with(binding.layoutWeatherMain) {
-            imageIcon.load(buildIconUrl(data.weather.first().icon))
+            imageIcon.load(buildIconUrl(response.current.weather.first().icon))
             textCity.text = mainViewModel.currentCity
-            textDate.text = formatDate(data.dt, response.timezone)
-            textTemp.text = data.temp.toInt().toString()
+            textDate.text = formatDate(response.current.dt, response.timezone)
+            textTemp.text = response.current.temp.toInt().toString()
             setTemperatureUnit(requireContext(), textTempUnit)
-            textDesc.text = weather.description
+            textDesc.text = response.current.weather.first().description
             textCloud.text = getString(
                 R.string.weather_text_cloud,
-                data.clouds.toInt()
+                response.current.clouds.toInt()
             )
             textHumidity.text = getString(
                 R.string.weather_text_humidity,
-                data.humidity.toInt()
+                response.current.humidity.toInt()
             )
-            setTemperature(requireContext(), textFeelsLike, data.feels_like.toInt())
-            setWindSpeed(requireContext(), textWind, data.wind_speed.toInt())
+            setTemperature(requireContext(), textFeelsLike, response.current.feels_like.toInt())
+            setWindSpeed(requireContext(), textWind, response.current.wind_speed.toInt())
             // TODO(): create converter
             textWindDir.text = response.current.wind_deg.toInt().toString()
             textPressure.text = getString(
                 R.string.weather_text_pressure,
-                data.pressure.toInt()
+                response.current.pressure.toInt()
             )
         }
-        binding.viewSunTime.setTime(
-            formatTime(data.dt, response.timezone),
-            formatTime(data.sunrise, response.timezone),
-            formatTime(data.sunset, response.timezone)
-        )
-        hourlyAdapter.timezone = response.timezone
-        hourlyAdapter.submitList(response.hourly)
     }
 
-//    private fun setColors(weather: String) {
-//        if (weather.contains("n")) {
-//            themeListener?.onThemeChange()
-//            return
-//        }
-//        when (weather) {
-//            "01d" -> setColors(
-//                ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClear)
-//            )
-//            "02d" -> setColors(
-//                ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
-//            )
-//            "03d" -> setColors(
-//                ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
-//            )
-//            "04d" -> setColors(
-//                ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
-//            )
-//            "09d" -> setColors(
-//                ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryRain)
-//            )
-//            "10d" -> setColors(
-//                ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryRain)
-//            )
-//            "11d" -> setColors(
-//                ContextCompat.getColor(binding.root.context, R.color.colorTextNight),
-//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryStorm)
-//            )
-//            "13d" -> setColors(
-//                ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                ContextCompat.getColor(binding.root.context, R.color.colorPrimarySnow)
-//            )
-//            "50d" -> setColors(
-//                ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                ContextCompat.getColor(binding.root.context, R.color.colorPrimaryMist)
-//            )
-//        }
-//    }
-//
-//    private fun setColors(text: Int, bg: Int) {
-//        with(binding) {
-//            layoutWeatherMain.textCity.setTextColor(text)
-//            layoutWeatherMain.textDate.setTextColor(text)
-//            layoutWeatherMain.textTemp.setTextColor(text)
-//            layoutWeatherMain.textTempUnit.setTextColor(text)
-//            layoutWeatherMain.textDesc.setTextColor(text)
-//            layoutWeatherMain.textCloud.setTextColor(text)
-//            layoutWeatherMain.textHumidity.setTextColor(text)
-//            layoutWeatherMain.textFeelsLike.setTextColor(text)
-//            layoutWeatherMain.textWind.setTextColor(text)
-//            layoutWeatherMain.textWindDir.setTextColor(text)
-//            layoutWeatherMain.textPressure.setTextColor(text)
-//            layoutWeatherMain.root.setBackgroundColor(bg)
-//            viewSunTime.setBackgroundColor(bg)
-//        }
-//    }
+    private fun setViewSunTimeData(response: WeatherResponse) {
+        binding.viewSunTime.setTime(
+            formatTime(response.current.dt, response.timezone),
+            formatTime(response.current.sunrise, response.timezone),
+            formatTime(response.current.sunset, response.timezone)
+        )
+    }
+
+    private fun setRecyclerData(response: WeatherResponse) {
+        hourlyAdapter.apply {
+            timezone = response.timezone
+            currentWeather = response.current.weather.first().icon
+            submitList(response.hourly)
+        }
+    }
 
     private fun recyclerScrollListener() = object : CustomItemTouchListener() {
         var lastX = 0

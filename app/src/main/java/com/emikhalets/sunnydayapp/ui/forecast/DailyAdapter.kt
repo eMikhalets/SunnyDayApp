@@ -14,7 +14,7 @@ import com.emikhalets.sunnydayapp.utils.*
 class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallback()) {
 
     var timezone: String = ""
-//    var currentWeather: String = ""
+    var currentWeather: String = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -31,7 +31,7 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallba
 
         fun bind(item: Daily) {
             with(binding) {
-//                setColors(item.weather.first().icon)
+                setBackground(item.weather.first().icon)
                 imageIcon.load(buildIconUrl(item.weather.first().icon))
                 textDate.text = formatDateWithWeek(item.dt, timezone)
                 setTemperature(root.context, textTempDay, item.temp.day.toInt())
@@ -50,62 +50,11 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallba
             }
         }
 
-//        private fun setColors(weather: String) {
-//            if (!currentWeather.contains("n")) {
-//                when (weather) {
-//                    "01d" -> setColors(
-//                        ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                        ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClear)
-//                    )
-//                    "02d" -> setColors(
-//                        ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                        ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
-//                    )
-//                    "03d" -> setColors(
-//                        ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                        ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
-//                    )
-//                    "04d" -> setColors(
-//                        ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                        ContextCompat.getColor(binding.root.context, R.color.colorPrimaryClouds)
-//                    )
-//                    "09d" -> setColors(
-//                        ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                        ContextCompat.getColor(binding.root.context, R.color.colorPrimaryRain)
-//                    )
-//                    "10d" -> setColors(
-//                        ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                        ContextCompat.getColor(binding.root.context, R.color.colorPrimaryRain)
-//                    )
-//                    "11d" -> setColors(
-//                        ContextCompat.getColor(binding.root.context, R.color.colorTextNight),
-//                        ContextCompat.getColor(binding.root.context, R.color.colorPrimaryStorm)
-//                    )
-//                    "13d" -> setColors(
-//                        ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                        ContextCompat.getColor(binding.root.context, R.color.colorPrimarySnow)
-//                    )
-//                    "50d" -> setColors(
-//                        ContextCompat.getColor(binding.root.context, R.color.colorText),
-//                        ContextCompat.getColor(binding.root.context, R.color.colorPrimaryMist)
-//                    )
-//                }
-//            }
-//        }
-//
-//        private fun setColors(text: Int, bg: Int) {
-//            with(binding) {
-//                textDate.setTextColor(text)
-//                textDesc.setTextColor(text)
-//                textTempDay.setTextColor(text)
-//                textTempNight.setTextColor(text)
-//                textFeelsLike.setTextColor(text)
-//                textPressure.setTextColor(text)
-//                textHumidity.setTextColor(text)
-//                textWind.setTextColor(text)
-//                root.setBackgroundColor(bg)
-//            }
-//        }
+        private fun setBackground(icon: String) {
+            if (!currentWeather.contains("n")) {
+                binding.root.setBackgroundColor(getBackgroundColor(binding.root.context, icon))
+            }
+        }
     }
 
     private class DailyDiffCallback : DiffUtil.ItemCallback<Daily>() {

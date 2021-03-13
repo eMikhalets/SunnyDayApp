@@ -49,6 +49,7 @@ class MainViewModel @Inject constructor(
     var currentCity = ""
     var currentLang = ""
     var currentUnits = ""
+    var currentTheme = -1
     var currentLat = 0.0
     var currentLong = 0.0
 

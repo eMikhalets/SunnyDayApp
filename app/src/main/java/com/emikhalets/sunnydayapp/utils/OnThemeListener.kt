@@ -1,5 +1,5 @@
 package com.emikhalets.sunnydayapp.utils
 
-//interface OnThemeListener {
-//    fun onThemeChange()
-//}
+interface OnThemeListener {
+    fun onThemeChange()
+}
