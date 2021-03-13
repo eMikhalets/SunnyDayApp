@@ -91,6 +91,7 @@ class WeatherFragment : Fragment() {
         }
     }
 
+    // TODO test night theme
     private fun setWeatherData(response: WeatherResponse) {
         val weather = response.current.weather.first()
         if (!weather.icon.contains("n")) setBackgrounds(weather.icon)
@@ -126,7 +127,7 @@ class WeatherFragment : Fragment() {
             setTemperature(requireContext(), textFeelsLike, response.current.feels_like.toInt())
             setWindSpeed(requireContext(), textWind, response.current.wind_speed.toInt())
             // TODO(): create converter
-            textWindDir.text = response.current.wind_deg.toInt().toString()
+            textWindDir.text = convertWingDegree(response.current.wind_deg)
             textPressure.text = getString(
                 R.string.weather_text_pressure,
                 response.current.pressure.toInt()
@@ -147,6 +148,19 @@ class WeatherFragment : Fragment() {
             timezone = response.timezone
             currentWeather = response.current.weather.first().icon
             submitList(response.hourly)
+        }
+    }
+
+    private fun convertWingDegree(degree: Double): String {
+        return when (degree) {
+            in 25.0..65.0 -> "N-E"
+            in 65.0..115.0 -> "E"
+            in 115.0..155.0 -> "S-E"
+            in 155.0..205.0 -> "S"
+            in 205.0..245.0 -> "S-W"
+            in 245.0..295.0 -> "W"
+            in 295.0..335.0 -> "N-W"
+            else -> "N"
         }
     }
 
