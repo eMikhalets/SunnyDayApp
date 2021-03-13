@@ -75,6 +75,7 @@ class CityListFragment : Fragment(), DeleteCityDialog.DeleteCityListener {
     }
 
     private fun onLocationCityClick() {
+        mainViewModel.isWeatherLoaded = false
         mainViewModel.selecting.value = null
         mainViewModel.location.value?.let {
             mainViewModel.sendWeatherRequest(it.latitude, it.longitude)
@@ -82,6 +83,7 @@ class CityListFragment : Fragment(), DeleteCityDialog.DeleteCityListener {
     }
 
     private fun onCityClick(city: City) {
+        mainViewModel.isWeatherLoaded = false
         mainViewModel.selecting.value = city
         citiesViewModel.saveCity(city)
         mainViewModel.apply {

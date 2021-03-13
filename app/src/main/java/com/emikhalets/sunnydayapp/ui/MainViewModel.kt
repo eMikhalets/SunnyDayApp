@@ -49,9 +49,10 @@ class MainViewModel @Inject constructor(
     var currentCity = ""
     var currentLang = ""
     var currentUnits = ""
-    var currentTheme = -1
     var currentLat = 0.0
     var currentLong = 0.0
+    var isNightTheme = false
+    var isWeatherLoaded = false
 
     // =================== Parsing cities
 
@@ -66,22 +67,22 @@ class MainViewModel @Inject constructor(
     }
 
     private fun createCitiesDatabase(json: String) {
-            viewModelScope.launch {
-                val cities = mutableListOf<City>()
-                val jsonCities = JSONArray(json)
-                for (i in 0 until jsonCities.length()) {
-                    val city = parseCityItem(jsonCities.getJSONObject(i))
-                    cities.add(city)
+        viewModelScope.launch {
+            val cities = mutableListOf<City>()
+            val jsonCities = JSONArray(json)
+            for (i in 0 until jsonCities.length()) {
+                val city = parseCityItem(jsonCities.getJSONObject(i))
+                cities.add(city)
+            }
+            when (val result = repository.insertAllCities(cities)) {
+                is DbResult.Success -> {
+                    _database.postValue(State.LOADED)
                 }
-                when (val result = repository.insertAllCities(cities)) {
-                    is DbResult.Success -> {
-                        _database.postValue(State.LOADED)
-                    }
-                    is DbResult.Error -> {
-                        _error.postValue(result.msg)
-                        _database.postValue(State.ERROR)
-                    }
+                is DbResult.Error -> {
+                    _error.postValue(result.msg)
+                    _database.postValue(State.ERROR)
                 }
+            }
         }
     }
 
@@ -104,20 +105,24 @@ class MainViewModel @Inject constructor(
 
     @SuppressLint("NullSafeMutableLiveData")
     fun sendWeatherRequest(lat: Double, lon: Double) {
-        weatherJob?.cancel()
-        weatherJob = viewModelScope.launch {
-            if (currentLat != 0.0 && currentLong != 0.0) {
-                _searchingState.postValue(State.LOADING)
-                when (val response = repository.weatherRequest(lat, lon)) {
-                    is ApiResult.Success -> {
-                        _weather.postValue(response.result)
-                        currentLat = response.result.lat
-                        currentLong = response.result.lon
-                        _searchingState.postValue(State.LOADED)
-                    }
-                    is ApiResult.Error -> {
-                        _error.postValue(response.msg)
-                        _searchingState.postValue(State.ERROR)
+        if (!isWeatherLoaded) {
+            weatherJob?.cancel()
+            weatherJob = viewModelScope.launch {
+                if (currentLat != 0.0 && currentLong != 0.0) {
+                    _searchingState.postValue(State.LOADING)
+                    when (val response = repository.weatherRequest(lat, lon)) {
+                        is ApiResult.Success -> {
+                            isWeatherLoaded = true
+                            _weather.postValue(response.result)
+                            currentLat = response.result.lat
+                            currentLong = response.result.lon
+                            _searchingState.postValue(State.LOADED)
+                        }
+                        is ApiResult.Error -> {
+                            isWeatherLoaded = false
+                            _error.postValue(response.msg)
+                            _searchingState.postValue(State.ERROR)
+                        }
                     }
                 }
             }

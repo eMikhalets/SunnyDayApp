@@ -11,13 +11,9 @@
         <item name="colorText">@color/colorText</item>
     </style>
 
-    <style name="AppTheme.Night" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimary">@color/colorPrimaryNight</item>
-        <item name="colorSecondary">@color/colorSecondaryNight</item>
-        <item name="colorOnBackground">@color/colorBackgroundNight</item>
-        <item name="colorControlNormal">@color/colorTextNight</item>
-        <item name="colorText">@color/colorTextNight</item>
+    <style name="ThemeChangingAnim">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
     </style>
 
     <!--========== VIEWS ==========-->

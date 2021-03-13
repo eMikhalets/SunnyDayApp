@@ -91,11 +91,21 @@ class WeatherFragment : Fragment() {
         }
     }
 
-    // TODO test night theme
     private fun setWeatherData(response: WeatherResponse) {
         val weather = response.current.weather.first()
-        if (!weather.icon.contains("n")) setBackgrounds(weather.icon)
-//        else themeListener?.onThemeChange()
+        when {
+            weather.icon.contains("n") -> {
+                themeListener?.onThemeChange(true)
+            }
+            weather.icon == "11d" -> {
+                themeListener?.onThemeChange(true)
+                setBackgrounds(weather.icon)
+            }
+            else -> {
+                themeListener?.onThemeChange(false)
+                setBackgrounds(weather.icon)
+            }
+        }
         setMainData(response)
         setViewSunTimeData(response)
         setRecyclerData(response)
@@ -126,7 +136,6 @@ class WeatherFragment : Fragment() {
             )
             setTemperature(requireContext(), textFeelsLike, response.current.feels_like.toInt())
             setWindSpeed(requireContext(), textWind, response.current.wind_speed.toInt())
-            // TODO(): create converter
             textWindDir.text = convertWingDegree(response.current.wind_deg)
             textPressure.text = getString(
                 R.string.weather_text_pressure,

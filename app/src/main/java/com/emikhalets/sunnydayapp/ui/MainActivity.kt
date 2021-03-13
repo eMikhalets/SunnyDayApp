@@ -10,10 +10,12 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.util.TypedValue
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.emikhalets.sunnydayapp.BuildConfig
@@ -167,14 +169,24 @@ class MainActivity : AppCompatActivity(), OnLocationSettingsClick, OnThemeListen
         locationSettingsResult.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
     }
 
-    override fun onThemeChange() {
-        val sp = getSharedPreferences(SP_FILE, MODE_PRIVATE)
-        val theme = sp.getInt(SP_THEME, -1)
-        if (theme != -1 && theme != mainViewModel.currentTheme) {
-            mainViewModel.currentTheme = theme
-            sp.edit().putInt(SP_THEME, R.style.AppTheme_Night).apply()
-            setTheme(R.style.AppTheme_Night)
-            recreate()
+    override fun onThemeChange(isNight: Boolean) {
+        when (isNight) {
+            true -> {
+                if (!mainViewModel.isNightTheme) {
+                    mainViewModel.isNightTheme = true
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    window.setWindowAnimations(R.style.ThemeChangingAnim)
+                    recreate()
+                }
+            }
+            false -> {
+                if (mainViewModel.isNightTheme) {
+                    mainViewModel.isNightTheme = false
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    window.setWindowAnimations(R.style.ThemeChangingAnim)
+                    recreate()
+                }
+            }
         }
     }
 
@@ -188,6 +200,5 @@ class MainActivity : AppCompatActivity(), OnLocationSettingsClick, OnThemeListen
         private const val SP_DB_STATUS = "sp_database_status"
         private const val KEY_LANG = "key_language"
         private const val KEY_UNITS = "key_units"
-        private const val SP_THEME = "sp_theme"
     }
 }

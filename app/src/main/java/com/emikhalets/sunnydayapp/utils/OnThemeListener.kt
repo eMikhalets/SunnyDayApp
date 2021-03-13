@@ -1,5 +1,5 @@
 package com.emikhalets.sunnydayapp.utils
 
 interface OnThemeListener {
-    fun onThemeChange()
+    fun onThemeChange(isNight: Boolean)
 }
