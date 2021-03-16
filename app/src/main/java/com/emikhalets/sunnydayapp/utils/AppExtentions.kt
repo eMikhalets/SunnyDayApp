@@ -38,7 +38,7 @@ fun getCityFromLocation(context: Context, location: Location): String {
     return "${address.locality}, ${address.countryCode}"
 }
 
-suspend fun <T> safeNetworkCall(call: suspend () -> T): ApiResult<T> =
+suspend fun <T : Any> safeNetworkCall(call: suspend () -> T): ApiResult<T> =
     try {
         val result = call.invoke()
         ApiResult.Success(result)
@@ -47,7 +47,7 @@ suspend fun <T> safeNetworkCall(call: suspend () -> T): ApiResult<T> =
         ApiResult.Error(ex.message ?: "", ex)
     }
 
-suspend fun <T> safeDatabaseCall(call: suspend () -> T): DbResult<T> =
+suspend fun <T : Any> safeDatabaseCall(call: suspend () -> T): DbResult<T> =
     try {
         val result = call.invoke()
         DbResult.Success(result)

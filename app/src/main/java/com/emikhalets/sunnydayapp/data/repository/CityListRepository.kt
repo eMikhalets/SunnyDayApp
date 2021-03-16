@@ -16,10 +16,6 @@ class CityListRepository @Inject constructor(
         return withContext(Dispatchers.IO) { safeDatabaseCall { db.getSearchedCities() } }
     }
 
-    suspend fun getCity(id: Int): DbResult<City> {
-        return withContext(Dispatchers.IO) { safeDatabaseCall { db.getCityById(id) } }
-    }
-
     suspend fun updateCity(city: City): DbResult<Unit> {
         return withContext(Dispatchers.IO) { safeDatabaseCall { db.update(city) } }
     }

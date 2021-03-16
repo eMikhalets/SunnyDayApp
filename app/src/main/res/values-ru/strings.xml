@@ -33,7 +33,6 @@
     <!-- CITIES -->
     <string name="cities_text_empty_list">Список городов пуст\n\nДобавьте новый город через поиск</string>
     <string name="cities_text_location_not_determined">Геолокация не определена</string>
-    <string name="cities_text_location_permissions_not_granted">Нет доступа к геолокации</string>
     <string name="cities_dialog_message">Удалить город %s, %s?</string>
     <string name="cities_dialog_positive">удалить</string>
     <string name="cities_dialog_negative">Отмена</string>

@@ -11,7 +11,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CityListViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val repository: CityListRepository
 ) : ViewModel() {
 

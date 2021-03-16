@@ -45,7 +45,6 @@
     <!-- CITIES -->
     <string name="cities_text_empty_list">The list of cities is empty\n\nAdd a new city via search</string>
     <string name="cities_text_location_not_determined">Geolocation not determined</string>
-    <string name="cities_text_location_permissions_not_granted">No access to geolocation</string>
     <string name="cities_text_list_item" translatable="false">%s, %s</string>
     <string name="cities_dialog_message">Delete city %s, %s?</string>
     <string name="cities_dialog_positive">Delete</string>
