@@ -67,9 +67,11 @@ class CityListFragment : Fragment(), DeleteCityDialog.DeleteCityListener {
     private fun searchingObserver(cities: List<City>) {
         if (cities.isNotEmpty()) {
             updateInterface(State.LOADED)
+            binding.textLocationCity.visibility = View.GONE
             citiesAdapter.submitList(cities)
         } else {
             updateInterface(State.LOADING)
+            binding.textLocationCity.visibility = View.VISIBLE
             citiesViewModel.getSearchedCities()
         }
     }
