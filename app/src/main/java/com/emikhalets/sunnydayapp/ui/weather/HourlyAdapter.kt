@@ -9,9 +9,12 @@ import coil.load
 import com.emikhalets.sunnydayapp.data.model.Hourly
 import com.emikhalets.sunnydayapp.databinding.ItemHourlyBinding
 import com.emikhalets.sunnydayapp.utils.buildIconUrl
-import com.emikhalets.sunnydayapp.utils.formatTime
 import com.emikhalets.sunnydayapp.utils.getBackgroundColor
 import com.emikhalets.sunnydayapp.utils.setTemperature
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class HourlyAdapter : ListAdapter<Hourly, HourlyAdapter.ViewHolder>(HourlyDiffCallback()) {
 
@@ -44,6 +47,14 @@ class HourlyAdapter : ListAdapter<Hourly, HourlyAdapter.ViewHolder>(HourlyDiffCa
             if (!currentWeather.contains("n")) {
                 binding.root.setBackgroundColor(getBackgroundColor(binding.root.context, icon))
             }
+        }
+
+        private fun formatTime(timestamp: Long, timezone: String): String {
+            val time = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(timestamp * 1000),
+                ZoneId.of(timezone)
+            )
+            return time.format(DateTimeFormatter.ofPattern("HH:mm"))
         }
     }
 

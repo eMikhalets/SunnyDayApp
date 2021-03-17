@@ -40,7 +40,7 @@ class CityListFragment : Fragment(), DeleteCityDialog.DeleteCityListener {
         loadCities()
         citiesViewModel.savedCities.observe(viewLifecycleOwner) { savedCitiesObserver(it) }
         mainViewModel.location.observe(viewLifecycleOwner) { locationObserver(it) }
-        mainViewModel.searching.observe(viewLifecycleOwner) { searchingObserver(it) }
+        mainViewModel.searchingCity.observe(viewLifecycleOwner) { searchingObserver(it) }
         binding.textLocationCity.setOnClickListener { onLocationCityClick() }
     }
 
@@ -76,15 +76,16 @@ class CityListFragment : Fragment(), DeleteCityDialog.DeleteCityListener {
 
     private fun onLocationCityClick() {
         mainViewModel.isWeatherLoaded = false
-        mainViewModel.selecting.value = null
-        mainViewModel.location.value?.let {
-            mainViewModel.sendWeatherRequest(it.latitude, it.longitude)
+        mainViewModel.selectingCityCallback.value = null
+        mainViewModel.location.value?.let { location ->
+            mainViewModel.currentCity = getCityFromLocation(requireContext(), location)
+            mainViewModel.sendWeatherRequest(location.latitude, location.longitude)
         }
     }
 
     private fun onCityClick(city: City) {
         mainViewModel.isWeatherLoaded = false
-        mainViewModel.selecting.value = city
+        mainViewModel.selectingCityCallback.value = city
         citiesViewModel.saveCity(city)
         mainViewModel.apply {
             currentCity = "${city.name}, ${city.country}"

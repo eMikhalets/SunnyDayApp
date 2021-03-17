@@ -41,19 +41,13 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
             }
         }
 
-        language.setOnPreferenceChangeListener { _, newValue ->
-            val units = mainViewModel.prefs.value?.get(KEY_UNITS)
-                ?: getString(R.string.pref_unit_metric)
-            val map = mapOf(KEY_LANG to newValue as String, KEY_UNITS to units)
-            mainViewModel.prefs.value = map
+        language.setOnPreferenceChangeListener { _, _ ->
+            mainViewModel.isPreferencesChanged = true
             true
         }
 
-        units.setOnPreferenceChangeListener { _, newValue ->
-            val lang = mainViewModel.prefs.value?.get(KEY_LANG)
-                ?: getString(R.string.pref_lang_en)
-            val map = mapOf(KEY_LANG to lang, KEY_UNITS to newValue as String)
-            mainViewModel.prefs.value = map
+        units.setOnPreferenceChangeListener { _, _ ->
+            mainViewModel.isPreferencesChanged = true
             true
         }
     }
@@ -69,10 +63,5 @@ class PreferencePagerFragment : PreferenceFragmentCompat() {
         val config = resources.configuration
         config.setLocale(locale)
         resources.updateConfiguration(config, resources.displayMetrics)
-    }
-
-    companion object {
-        private const val KEY_LANG = "key_language"
-        private const val KEY_UNITS = "key_units"
     }
 }

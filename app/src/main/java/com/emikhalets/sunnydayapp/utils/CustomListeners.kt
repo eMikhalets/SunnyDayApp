@@ -27,3 +27,11 @@ open class CustomSearchQueryListener : SearchView.OnQueryTextListener {
         return onQueryTextChange(newText)
     }
 }
+
+interface OnLocationSettingsClick {
+    fun onLocationSettingsClick()
+}
+
+interface OnThemeListener {
+    fun onThemeChange(isNight: Boolean)
+}

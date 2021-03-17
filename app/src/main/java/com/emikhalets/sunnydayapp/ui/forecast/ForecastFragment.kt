@@ -44,7 +44,7 @@ class ForecastFragment : Fragment() {
         with(mainViewModel) {
             weather.observe(viewLifecycleOwner) { weatherObserver(it) }
             error.observe(viewLifecycleOwner) { binding.textNotice.text = it }
-            searchingState.observe(viewLifecycleOwner) { updateInterface(it) }
+            weatherState.observe(viewLifecycleOwner) { updateInterface(it) }
         }
         binding.btnLocationSettings.setOnClickListener { onLocationSettingsClick() }
     }

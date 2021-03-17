@@ -1,5 +1,7 @@
 package com.emikhalets.sunnydayapp.ui.pager
 
+import android.content.Context
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.databinding.FragmentPagerBinding
@@ -15,11 +18,10 @@ import com.emikhalets.sunnydayapp.ui.MainViewModel
 import com.emikhalets.sunnydayapp.ui.citylist.CityListFragment
 import com.emikhalets.sunnydayapp.ui.forecast.ForecastFragment
 import com.emikhalets.sunnydayapp.ui.weather.WeatherFragment
-import com.emikhalets.sunnydayapp.utils.Conf
-import com.emikhalets.sunnydayapp.utils.CustomSearchQueryListener
-import com.emikhalets.sunnydayapp.utils.State
+import com.emikhalets.sunnydayapp.utils.*
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ViewPagerFragment : Fragment() {
@@ -32,7 +34,9 @@ class ViewPagerFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPagerBinding.inflate(inflater, container, false)
         return binding.root
@@ -40,15 +44,18 @@ class ViewPagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Timber.d("ViewPager перезагружен")
+        initPreferences()
         initViewPager()
         initSearchView()
-        mainViewModel.database.observe(viewLifecycleOwner) { updateInterface(it) }
-        mainViewModel.error.observe(viewLifecycleOwner) { errorObserver(it) }
-        mainViewModel.weather.observe(viewLifecycleOwner) { weatherObserver() }
-        mainViewModel.prefs.observe(viewLifecycleOwner) { preferencesObserver(it) }
-        mainViewModel.location.observe(viewLifecycleOwner) { locationObserver() }
-        mainViewModel.selecting.observe(viewLifecycleOwner) { selectSearchingObserver() }
-        mainViewModel.scrollCallback.observe(viewLifecycleOwner) { scrollCallbackObserver(it) }
+        with(mainViewModel) {
+            database.observe(viewLifecycleOwner) { databaseObserver(it) }
+            error.observe(viewLifecycleOwner) { errorObserver(it) }
+            location.observe(viewLifecycleOwner) { locationObserver(it) }
+            selectingCityCallback.observe(viewLifecycleOwner) { selectingCityObserver() }
+            weather.observe(viewLifecycleOwner) { weatherObserver() }
+            hourlyScrollCallback.observe(viewLifecycleOwner) { hourlyScrollObserver(it) }
+        }
         binding.toolbar.findViewById<View>(R.id.menu_pager_preference)
             .setOnClickListener { onSettingsClick() }
     }
@@ -56,6 +63,29 @@ class ViewPagerFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun initPreferences() {
+        Timber.d("Получение настроек приложения")
+        val pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        var prefLang = pref.getString(
+            getString(R.string.key_pref_lang),
+            getString(R.string.pref_lang_en_val)
+        ) ?: getString(R.string.pref_lang_en_val)
+        var prefUnits = pref.getString(
+            getString(R.string.key_pref_units),
+            getString(R.string.pref_unit_metric_val)
+        ) ?: getString(R.string.pref_unit_metric_val)
+        if (prefUnits == "1") prefLang = getString(R.string.pref_lang_en_val)
+        if (prefUnits == "1") prefUnits = getString(R.string.pref_unit_metric_val)
+        RequestConfig.lang = prefLang
+        RequestConfig.units = prefUnits
+        Timber.d("Получены настройки приложения: lang='$prefLang' units='$prefUnits'")
+        if (mainViewModel.isPreferencesChanged) {
+            Timber.d("Смена языка")
+            setLocale(requireActivity(), prefLang)
+            mainViewModel.sendWeatherRequest()
+        }
     }
 
     private fun initViewPager() {
@@ -79,46 +109,58 @@ class ViewPagerFragment : Fragment() {
         searchView.setOnCloseListener(searchCloseListener())
     }
 
+    /**
+     * Observes the successful addition of cities to the database.
+     * @param state Interface visibility state
+     */
+    private fun databaseObserver(state: State) {
+        Timber.d("База городов создана")
+        if (state == State.LOADED) requireActivity()
+            .getSharedPreferences(Tags.SP_FILE_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(Tags.SP_DB_STATUS, true).apply()
+        updateInterface(state)
+    }
+
+    /**
+     * Inserting text error when adding cities to the database.
+     * @param message Text error
+     */
     private fun errorObserver(message: String) {
+        Timber.e("Error while adding cities to the database: $message")
         binding.textNotice.text = message
-        updateInterface(State.ERROR)
     }
 
-    private fun weatherObserver() {
-        with(binding) {
-            toolbar.subtitle = mainViewModel.currentCity
-            if (viewPager.currentItem == 0) viewPager.setCurrentItem(1, true)
+    /**
+     * Sending a request when receiving a location.
+     * @param location Received location
+     */
+    private fun locationObserver(location: Location) {
+        if (!mainViewModel.isWeatherLoaded) {
+            mainViewModel.currentCity = getCityFromLocation(requireContext(), location)
+            binding.viewPager.setCurrentItem(1, true)
+            mainViewModel.sendWeatherRequest(location.latitude, location.longitude)
         }
     }
 
-    private fun preferencesObserver(map: Map<String, String>) {
-        val lang = map[KEY_LANG] ?: ""
-        val units = map[KEY_UNITS] ?: ""
-        if (units != mainViewModel.currentUnits || lang != mainViewModel.currentLang) {
-            mainViewModel.currentLang = lang
-            mainViewModel.currentUnits = units
-            Conf.lang = lang
-            Conf.units = units
-            if (mainViewModel.currentLat != 0.0 && mainViewModel.currentLong != 0.0) {
-                mainViewModel.sendWeatherRequest(
-                    mainViewModel.currentLat,
-                    mainViewModel.currentLong
-                )
-            }
-        }
-    }
-
-    private fun selectSearchingObserver() {
+    /**
+     * Closes the SearchView and scrolls to the second page
+     */
+    private fun selectingCityObserver() {
+        binding.viewPager.setCurrentItem(1, true)
         searchView.setQuery("", false)
         searchView.onActionViewCollapsed()
+    }
+
+    /**
+     * Sets the city name in the toolbar and scrolls on the second page
+     */
+    private fun weatherObserver() {
+        binding.toolbar.subtitle = mainViewModel.currentCity
         binding.viewPager.setCurrentItem(1, true)
     }
 
-    private fun locationObserver() {
-        binding.viewPager.setCurrentItem(1, true)
-    }
-
-    private fun scrollCallbackObserver(isCanScroll: Boolean) {
+    private fun hourlyScrollObserver(isCanScroll: Boolean) {
         binding.viewPager.isUserInputEnabled = isCanScroll
     }
 
@@ -138,6 +180,7 @@ class ViewPagerFragment : Fragment() {
     private fun searchCloseListener() = SearchView.OnCloseListener {
         mainViewModel.cancelSearchingCities()
         searchView.setQuery("", false)
+        searchView.onActionViewCollapsed()
         searchView.onActionViewCollapsed()
         true
     }
@@ -177,10 +220,5 @@ class ViewPagerFragment : Fragment() {
             1 -> WeatherFragment()
             else -> ForecastFragment()
         }
-    }
-
-    companion object {
-        private const val KEY_LANG = "key_language"
-        private const val KEY_UNITS = "key_units"
     }
 }

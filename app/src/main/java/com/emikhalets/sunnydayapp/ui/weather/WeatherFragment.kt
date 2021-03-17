@@ -16,6 +16,10 @@ import com.emikhalets.sunnydayapp.databinding.FragmentWeatherBinding
 import com.emikhalets.sunnydayapp.ui.MainViewModel
 import com.emikhalets.sunnydayapp.utils.*
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class WeatherFragment : Fragment() {
@@ -52,7 +56,7 @@ class WeatherFragment : Fragment() {
         with(mainViewModel) {
             weather.observe(viewLifecycleOwner) { setWeatherData(it) }
             error.observe(viewLifecycleOwner) { binding.textNotice.text = it }
-            searchingState.observe(viewLifecycleOwner) { updateInterface(it) }
+            weatherState.observe(viewLifecycleOwner) { updateInterface(it) }
         }
         binding.btnLocationSettings.setOnClickListener { onLocationSettingsClick() }
     }
@@ -144,12 +148,28 @@ class WeatherFragment : Fragment() {
         }
     }
 
+    private fun formatDate(timestamp: Long, timezone: String): String {
+        val date = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(timestamp * 1000),
+            ZoneId.of(timezone)
+        )
+        return date.format(DateTimeFormatter.ofPattern("E, d MMM"))
+    }
+
     private fun setViewSunTimeData(response: WeatherResponse) {
         binding.viewSunTime.setTime(
             formatTime(response.current.dt, response.timezone),
             formatTime(response.current.sunrise, response.timezone),
             formatTime(response.current.sunset, response.timezone)
         )
+    }
+
+    private fun formatTime(timestamp: Long, timezone: String): String {
+        val time = LocalDateTime.ofInstant(
+            Instant.ofEpochMilli(timestamp * 1000),
+            ZoneId.of(timezone)
+        )
+        return time.format(DateTimeFormatter.ofPattern("HH:mm"))
     }
 
     private fun setRecyclerData(response: WeatherResponse) {
@@ -181,14 +201,14 @@ class WeatherFragment : Fragment() {
                     val isScrollingRight = e.x < lastX
                     val layoutManager = binding.listHourly.layoutManager as LinearLayoutManager
                     val itemCount = binding.listHourly.adapter?.itemCount?.minus(1)
-                    mainViewModel.scrollCallback.value = isScrollingRight &&
+                    mainViewModel.hourlyScrollCallback.value = isScrollingRight &&
                             layoutManager.findLastCompletelyVisibleItemPosition() == itemCount ||
                             !isScrollingRight &&
                             layoutManager.findFirstCompletelyVisibleItemPosition() == 0
                 }
                 MotionEvent.ACTION_UP -> {
                     lastX = 0
-                    mainViewModel.scrollCallback.value = true
+                    mainViewModel.hourlyScrollCallback.value = true
                 }
                 MotionEvent.ACTION_DOWN -> {
                     lastX = e.x.toInt()

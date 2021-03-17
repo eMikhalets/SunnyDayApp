@@ -10,6 +10,10 @@ import com.emikhalets.sunnydayapp.R
 import com.emikhalets.sunnydayapp.data.model.Daily
 import com.emikhalets.sunnydayapp.databinding.ItemDailyBinding
 import com.emikhalets.sunnydayapp.utils.*
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallback()) {
 
@@ -54,6 +58,14 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.ViewHolder>(DailyDiffCallba
             if (!currentWeather.contains("n")) {
                 binding.root.setBackgroundColor(getBackgroundColor(binding.root.context, icon))
             }
+        }
+
+        private fun formatDateWithWeek(timestamp: Long, timezone: String): String {
+            val date = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(timestamp * 1000),
+                ZoneId.of(timezone)
+            )
+            return date.format(DateTimeFormatter.ofPattern("E, d MMM y"))
         }
     }
 
